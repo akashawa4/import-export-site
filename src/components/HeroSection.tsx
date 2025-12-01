@@ -79,7 +79,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
   return (
     <section
       id="home"
-      className="relative min-h-screen overflow-hidden"
+      className="relative min-h-[70vh] md:min-h-screen overflow-hidden"
     >
       {/* Background images with smooth crossfade */}
       {slideOrder.map((slideKey) => {
@@ -101,7 +101,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       })}
       <div className="absolute inset-0 bg-black/20 z-10"></div>
 
-      <div className="relative h-screen flex items-center z-20">
+      <div className="relative h-[70vh] md:h-screen flex items-center z-20">
         <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
           <div className="relative">
             {slideOrder.map((slideKey) => {
@@ -113,7 +113,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
               return (
                 <div
                   key={slideKey}
-                  className={`text-white space-y-6 transition-all duration-1000 ease-in-out ${
+                  className={`text-white space-y-3 md:space-y-6 transition-all duration-1000 ease-in-out ${
                     isActive ? 'relative' : 'absolute inset-0 pointer-events-none'
                   }`}
                   style={{
@@ -125,18 +125,18 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
                         : 'translateX(30px) translateY(10px)',
                   }}
                 >
-                  <p className="text-sm md:text-base font-medium tracking-wider uppercase">
+                  <p className="text-xs md:text-sm lg:text-base font-medium tracking-wider uppercase">
                     {slide.label}
                   </p>
-                  <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif font-bold leading-none">
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold leading-tight md:leading-none">
                     {slide.title}
                   </h1>
-                  <p className="text-base md:text-lg leading-relaxed max-w-2xl">
+                  <p className="text-sm md:text-base lg:text-lg leading-relaxed max-w-2xl">
                     {slide.description}
                   </p>
                   <button
                     onClick={slide.onButtonClick}
-                    className="inline-flex items-center gap-3 mt-8 text-sm md:text-base font-semibold uppercase tracking-wider hover:gap-5 transition-all duration-300 group"
+                    className="inline-flex items-center gap-2 md:gap-3 mt-4 md:mt-8 text-xs md:text-sm lg:text-base font-semibold uppercase tracking-wider hover:gap-3 md:hover:gap-5 transition-all duration-300 group"
                   >
                     {slide.buttonText}
                     <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
@@ -149,21 +149,21 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
 
         <button
           onClick={goToPrevSlide}
-          className="absolute left-6 md:left-12 top-1/2 -translate-y-1/2 z-30 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/20 hover:border-white/50 transition-all duration-300 group"
+          className="absolute left-3 md:left-6 lg:left-12 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full bg-white/10 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/20 hover:border-white/50 transition-all duration-300 group"
           aria-label="Previous slide"
         >
-          <ChevronLeft size={28} className="text-white group-hover:scale-110 transition-transform" />
+          <ChevronLeft size={20} className="md:w-7 md:h-7 text-white group-hover:scale-110 transition-transform" />
         </button>
 
         <button
           onClick={nextSlide}
-          className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 z-30 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/20 hover:border-white/50 transition-all duration-300 group"
+          className="absolute right-3 md:right-6 lg:right-12 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full bg-white/10 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/20 hover:border-white/50 transition-all duration-300 group"
           aria-label="Next slide"
         >
-          <ChevronRight size={28} className="text-white group-hover:scale-110 transition-transform" />
+          <ChevronRight size={20} className="md:w-7 md:h-7 text-white group-hover:scale-110 transition-transform" />
         </button>
 
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-30 flex gap-2">
+        <div className="absolute bottom-16 md:bottom-20 left-1/2 transform -translate-x-1/2 z-30 flex gap-2">
           {slideOrder.map((slideKey) => (
             <button
               key={slideKey}
@@ -171,27 +171,27 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
                 setPreviousSlide(activeSlide);
                 setActiveSlide(slideKey);
               }}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              className={`h-2 rounded-full transition-all duration-300 ${
                 slideKey === activeSlide
-                  ? 'bg-white w-8'
-                  : 'bg-white/40 hover:bg-white/60'
+                  ? 'bg-white w-6 md:w-8'
+                  : 'bg-white/40 hover:bg-white/60 w-2'
               }`}
               aria-label={`Go to ${slideKey} slide`}
             />
           ))}
         </div>
 
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30">
+        <div className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-30">
           <button
             onClick={handleScrollDown}
-            className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 animate-bounce"
+            className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 animate-bounce"
             aria-label="Scroll down"
           >
-            <ChevronDown size={24} className="text-white" />
+            <ChevronDown size={20} className="md:w-6 md:h-6 text-white" />
           </button>
         </div>
 
-        <div className="absolute bottom-6 left-6 md:left-12 z-30">
+        <div className="absolute bottom-4 left-4 md:left-6 lg:left-12 z-30">
           <p className="text-white/60 text-xs md:text-sm">
             premium-exports.com
           </p>

@@ -24,59 +24,61 @@ export default function FilterBar({
   onSearchChange,
 }: FilterBarProps) {
   return (
-    <div className="bg-white border-b border-gray-200 sticky top-16 z-40 py-2">
-      <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-          <input
-            type="text"
-            placeholder="Search Product"
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white"
-          />
-        </div>
+    <div className="bg-white border-b border-gray-200 sticky top-16 z-40 py-3 px-4 md:px-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col gap-3">
+          <div className="relative w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              placeholder="Search Product"
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white"
+            />
+          </div>
 
-        <div className="flex gap-4">
-          <select
-            value={selectedCategory}
-            onChange={(e) => onCategoryChange(e.target.value)}
-            className={`px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white cursor-pointer ${
-              selectedCategory !== 'all' ? 'border-amber-500' : 'border-gray-300'
-            }`}
-          >
-            <option value="all">All Categories</option>
-            <option value="towels">Towels</option>
-            <option value="cow-dung">Cow Dung Products</option>
-          </select>
-
-          {availableTypes.length > 0 && (
+          <div className="flex flex-wrap gap-2 md:gap-4">
             <select
-              value={selectedType}
-              onChange={(e) => onTypeChange(e.target.value)}
-              className={`px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white cursor-pointer ${
-                selectedType !== 'all' ? 'border-amber-500' : 'border-gray-300'
+              value={selectedCategory}
+              onChange={(e) => onCategoryChange(e.target.value)}
+              className={`flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white cursor-pointer ${
+                selectedCategory !== 'all' ? 'border-amber-500' : 'border-gray-300'
               }`}
             >
-              <option value="all">All Types</option>
-              {availableTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
+              <option value="all">All Categories</option>
+              <option value="towels">Towels</option>
+              <option value="cow-dung">Cow Dung Products</option>
             </select>
-          )}
 
-          <select
-            value={sortBy}
-            onChange={(e) => onSortChange(e.target.value)}
-            className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white cursor-pointer"
-          >
-            <option value="newest">Newest</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-            <option value="name">Name: A to Z</option>
-          </select>
+            {availableTypes.length > 0 && (
+              <select
+                value={selectedType}
+                onChange={(e) => onTypeChange(e.target.value)}
+                className={`flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white cursor-pointer ${
+                  selectedType !== 'all' ? 'border-amber-500' : 'border-gray-300'
+                }`}
+              >
+                <option value="all">All Types</option>
+                {availableTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            <select
+              value={sortBy}
+              onChange={(e) => onSortChange(e.target.value)}
+              className="flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white cursor-pointer"
+            >
+              <option value="newest">Newest</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="name">Name: A to Z</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>

@@ -253,11 +253,11 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
 
       <div className="pt-4">
         <div className="bg-white">
-          <div className="max-w-7xl mx-auto px-6 py-3">
-            <div className="mb-3 flex items-center justify-between">
+          <div className="max-w-7xl mx-auto px-4 md:px-6 py-3">
+            <div className="mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h1 className="text-3xl font-bold text-slate-900 mb-1">Management Product</h1>
-                <p className="text-slate-600 text-sm">Add Product to your store</p>
+                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-1">Management Product</h1>
+                <p className="text-slate-600 text-xs md:text-sm">Add Product to your store</p>
               </div>
               <button
                 onClick={() => {
@@ -266,7 +266,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                   setSelectedType('all');
                   setSearchQuery('');
                 }}
-                className="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-3 py-1.5 text-xs md:text-sm text-slate-600 hover:text-slate-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap"
               >
                 ← Back
               </button>
@@ -290,18 +290,18 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
         </div>
 
         <div className="bg-gray-50">
-          <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
             {filteredAndSortedProducts.length === 0 ? (
               <EmptyState onReset={handleReset} />
             ) : (
               <>
                 <div className="mb-4 flex items-center justify-between">
-                  <div className="text-sm text-slate-600">
+                  <div className="text-xs md:text-sm text-slate-600">
                     Showing {filteredAndSortedProducts.length} product
                     {filteredAndSortedProducts.length !== 1 ? 's' : ''}
                   </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                   {filteredAndSortedProducts.map((product) => (
                     <ProductCard key={product.id} {...product} />
                   ))}

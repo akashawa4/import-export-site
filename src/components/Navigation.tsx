@@ -49,7 +49,7 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
 
   return (
     <nav
-      className={`sticky top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`sticky top-0 left-0 right-0 z-[100] transition-all duration-300 ${
         isScrolled
           ? 'bg-[#FAF8F3]/98 backdrop-blur-lg shadow-lg border-b border-amber-200/30'
           : 'bg-[#FAF8F3]/95 backdrop-blur-md'
@@ -83,29 +83,40 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
           </div>
 
           <button
-            className="md:hidden p-2.5 rounded-lg transition-all duration-300 text-slate-600 hover:text-amber-700 hover:bg-amber-100/50"
+            className="md:hidden p-2.5 rounded-lg transition-all duration-300 text-slate-700 hover:text-amber-700 hover:bg-amber-100/50 z-[110] relative"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMobileMenuOpen ? <X size={24} className="text-slate-800" /> : <Menu size={24} className="text-slate-800" />}
           </button>
         </div>
       </div>
 
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t animate-in slide-in-from-top-2 duration-300 bg-[#FAF8F3]/98 backdrop-blur-lg border-amber-200/30 shadow-lg">
-          <div className="px-6 py-4 space-y-2">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => handleLinkClick(link.href, e)}
-                className="block font-semibold py-3 px-4 rounded-lg uppercase tracking-wide transition-all duration-300 text-slate-700 hover:text-amber-700 hover:bg-amber-100/50"
-              >
-                {link.label}
-              </a>
-            ))}
+        <>
+          <div 
+            className="md:hidden fixed inset-0 bg-black/50 z-[45]"
+            style={{ top: '64px' }}
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          <div 
+            className="md:hidden fixed left-0 right-0 bottom-0 bg-[#FAF8F3] z-[60] border-t-2 border-amber-300 shadow-2xl overflow-y-auto"
+            style={{ top: '64px' }}
+          >
+            <div className="px-6 py-6 space-y-3">
+              {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => handleLinkClick(link.href, e)}
+                  className="block font-semibold py-4 px-4 rounded-lg uppercase tracking-wide transition-all duration-300 text-slate-900 hover:text-amber-700 hover:bg-amber-100 bg-white border-2 border-amber-200 shadow-md active:bg-amber-100"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </nav>
   );
