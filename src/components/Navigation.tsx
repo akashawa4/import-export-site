@@ -48,6 +48,7 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
   ];
 
   return (
+    <>
     <nav
       className={`sticky top-0 left-0 right-0 z-[100] transition-all duration-300 ${
         isScrolled
@@ -92,32 +93,46 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
         </div>
       </div>
 
-      {isMobileMenuOpen && (
-        <>
-          <div 
-            className="md:hidden fixed inset-0 bg-black/50 z-[45]"
-            style={{ top: '64px' }}
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-          <div 
-            className="md:hidden fixed left-0 right-0 bottom-0 bg-[#FAF8F3] z-[60] border-t-2 border-amber-300 shadow-2xl overflow-y-auto"
-            style={{ top: '64px' }}
-          >
-            <div className="px-6 py-6 space-y-3">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => handleLinkClick(link.href, e)}
-                  className="block font-semibold py-4 px-4 rounded-lg uppercase tracking-wide transition-all duration-300 text-slate-900 hover:text-amber-700 hover:bg-amber-100 bg-white border-2 border-amber-200 shadow-md active:bg-amber-100"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
     </nav>
+    {isMobileMenuOpen && (
+      <>
+        {/* Backdrop with blur - rendered outside nav */}
+        <div 
+          className="md:hidden fixed left-0 right-0 bottom-0 bg-black/10 backdrop-blur-xl z-[9998] transition-opacity duration-300"
+          style={{ top: '64px' }}
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+        {/* Menu - slides in from right */}
+        <div 
+          className="md:hidden fixed right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-[#FAF8F3]/70 backdrop-blur-3xl z-[9999] border-l-2 border-amber-300/30 shadow-2xl overflow-y-auto animate-slide-in-right"
+          style={{ top: '64px' }}
+        >
+          {/* Menu items */}
+          <div className="px-6 py-6 pt-8 space-y-4">
+            {navLinks.map((link, index) => (
+              <button
+                key={link.href}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLinkClick(link.href, e);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full text-left font-bold py-5 px-5 rounded-xl uppercase tracking-wider transition-all duration-300 text-slate-900 hover:text-amber-700 hover:scale-[1.02] hover:shadow-xl bg-transparent backdrop-blur-md border-2 border-amber-200/40 shadow-lg hover:border-amber-400/60 active:scale-[0.98] group"
+                style={{
+                  animation: `slideInUp 0.3s ease-out ${index * 50}ms both`
+                }}
+              >
+                <span className="relative z-10 flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                  {link.label}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </>
+    )}
+    </>
   );
 }
