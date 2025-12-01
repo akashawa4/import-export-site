@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { collection, getDocs, updateDoc, doc, addDoc } from 'firebase/firestore';
-import { db, auth } from '../firebase';
+import { collection, getDocs, updateDoc, doc, addDoc, deleteDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, auth, storage } from '../firebase';
 import { demoProducts, Product as CatalogProduct, getImageForType } from './ProductsPage';
 
 interface AdminPageProps {
@@ -13,6 +14,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [newProduct, setNewProduct] = useState<Omit<CatalogProduct, 'id'>>({
@@ -94,6 +96,24 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
       setError(err.message || 'Failed to save changes');
     } finally {
       setSavingId(null);
+    }
+  };
+
+  const handleDelete = async (productId: string) => {
+    if (!productId) return;
+    const confirmDelete = window.confirm('Are you sure you want to delete this product?');
+    if (!confirmDelete) return;
+
+    try {
+      setDeletingId(productId);
+      setError(null);
+      const ref = doc(db, 'products', productId);
+      await deleteDoc(ref);
+      setProducts((prev) => prev.filter((p) => p.id !== productId));
+    } catch (err: any) {
+      setError(err.message || 'Failed to delete product');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -223,9 +243,35 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                 placeholder="/towel/bathtowel/bathtowel (1).jpg"
               />
               <p className="text-[11px] text-slate-500">
-                Use paths from the <code className="font-mono">public/towel/</code> folder. If left empty, we try to pick
-                an image automatically based on type.
+                Use paths from the <code className="font-mono">public/towel/</code> folder, or upload an image below. If
+                left empty, we try to pick an image automatically based on type.
               </p>
+              <div className="mt-2">
+                <label className="text-[11px] font-semibold text-slate-600 uppercase">Or Upload Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    try {
+                      setError(null);
+                      const storageRef = ref(
+                        storage,
+                        `product-images/new/${Date.now()}-${file.name}`
+                      );
+                      await uploadBytes(storageRef, file);
+                      const downloadUrl = await getDownloadURL(storageRef);
+                      setNewProduct((p) => ({ ...p, imageUrl: downloadUrl }));
+                    } catch (err: any) {
+                      setError(err.message || 'Failed to upload image');
+                    } finally {
+                      e.target.value = '';
+                    }
+                  }}
+                  className="mt-1 block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100"
+                />
+              </div>
             </div>
             <div className="space-y-2 md:col-span-2">
               <label className="text-xs font-semibold text-slate-600 uppercase">Description</label>
@@ -458,9 +504,39 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                     placeholder="/towel/bathtowel/bathtowel (1).jpg"
                   />
                   <p className="text-[11px] text-slate-500">
-                    Use images from <code className="font-mono">public/towel/</code>. If left empty, the card may fall
-                    back to the emoji.
+                    Use images from <code className="font-mono">public/towel/</code>, or upload an image below. If left
+                    empty, the card may fall back to the emoji.
                   </p>
+                  <div className="mt-2">
+                    <label className="text-[11px] font-semibold text-slate-600 uppercase">Or Upload Image</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        try {
+                          setError(null);
+                          const storageRef = ref(
+                            storage,
+                            `product-images/${product.id}/${Date.now()}-${file.name}`
+                          );
+                          await uploadBytes(storageRef, file);
+                          const downloadUrl = await getDownloadURL(storageRef);
+                          setProducts((prev) =>
+                            prev.map((p) =>
+                              p.id === product.id ? { ...p, imageUrl: downloadUrl } : p
+                            )
+                          );
+                        } catch (err: any) {
+                          setError(err.message || 'Failed to upload image');
+                        } finally {
+                          e.target.value = '';
+                        }
+                      }}
+                      className="mt-1 block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100"
+                    />
+                  </div>
                 </div>
                 <div className="space-y-2 md:col-span-2">
                   <label className="text-xs font-semibold text-slate-600 uppercase">Description</label>
@@ -478,6 +554,15 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                 </div>
               </div>
               <div className="flex items-center justify-end gap-2">
+                <button
+                  onClick={() => handleDelete(product.id)}
+                  disabled={deletingId === product.id}
+                  className={`rounded-full px-4 py-2 text-sm font-semibold border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 transition ${
+                    deletingId === product.id ? 'cursor-not-allowed opacity-60' : ''
+                  }`}
+                >
+                  {deletingId === product.id ? 'Deleting...' : 'Delete'}
+                </button>
                 <button
                   onClick={() => handleSave(product)}
                   disabled={savingId === product.id}

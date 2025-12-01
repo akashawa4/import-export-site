@@ -1,7 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 
 interface ProductCardProps {
-  id: number;
   name: string;
   category: string;
   description: string;

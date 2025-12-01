@@ -9,7 +9,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { db, auth } from '../firebase';
 
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   category: string;
   categorySlug: string;
@@ -41,7 +41,7 @@ const ADMIN_EMAIL = 'admin@123.com';
 
 export const demoProducts: Product[] = [
   {
-    id: 1,
+    id: '1',
     name: 'Premium Cotton Bath Towels',
     category: 'Towels',
     categorySlug: 'towels',
@@ -55,7 +55,7 @@ export const demoProducts: Product[] = [
     imageUrl: getImageForType('Bath Towel'),
   },
   {
-    id: 2,
+    id: '2',
     name: 'Luxury Hand Towels Set',
     category: 'Towels',
     categorySlug: 'towels',
@@ -69,7 +69,7 @@ export const demoProducts: Product[] = [
     imageUrl: getImageForType('Napkin'),
   },
   {
-    id: 3,
+    id: '3',
     name: 'Egyptian Cotton Face Towels',
     category: 'Towels',
     categorySlug: 'towels',
@@ -82,7 +82,7 @@ export const demoProducts: Product[] = [
     imageUrl: getImageForType('Face Towel'),
   },
   {
-    id: 4,
+    id: '4',
     name: 'Beach Towel Collection',
     category: 'Towels',
     categorySlug: 'towels',
@@ -95,7 +95,7 @@ export const demoProducts: Product[] = [
     imageUrl: getImageForType('Beach Towel'),
   },
   {
-    id: 5,
+    id: '5',
     name: 'Organic Cow Dung Cakes',
     category: 'Cow Dung Products',
     categorySlug: 'cow-dung',
@@ -108,7 +108,7 @@ export const demoProducts: Product[] = [
     createdAt: 5,
   },
   {
-    id: 6,
+    id: '6',
     name: 'Aromatic Dhoop Sticks',
     category: 'Cow Dung Products',
     categorySlug: 'cow-dung',
@@ -121,7 +121,7 @@ export const demoProducts: Product[] = [
     createdAt: 6,
   },
   {
-    id: 7,
+    id: '7',
     name: 'Natural Incense Cones',
     category: 'Cow Dung Products',
     categorySlug: 'cow-dung',
@@ -133,7 +133,7 @@ export const demoProducts: Product[] = [
     createdAt: 7,
   },
   {
-    id: 8,
+    id: '8',
     name: 'Organic Fertilizer Pellets',
     category: 'Cow Dung Products',
     categorySlug: 'cow-dung',
@@ -183,7 +183,8 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
               : `₹${priceValue.toFixed(2)}`;
 
             return {
-              id: data.id ?? 0,
+              // Use Firestore document ID to guarantee uniqueness
+              id: d.id,
               name: data.name ?? '',
               category: data.category ?? '',
               categorySlug: data.categorySlug ?? 'towels',
@@ -396,8 +397,14 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                   {filteredAndSortedProducts.map((product) => (
                     <ProductCard
-                      key={`${product.id}-${product.productType}`}
-                      {...product}
+                      key={product.id}
+                      name={product.name}
+                      category={product.category}
+                      description={product.description}
+                      price={product.price}
+                      imageEmoji={product.imageEmoji}
+                      imageUrl={product.imageUrl}
+                      highlight={product.highlight}
                       showAdminControls={isAdmin}
                       onEdit={() => onNavigate?.('admin')}
                       onClick={() => setSelectedProduct(product)}
@@ -434,6 +441,15 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                     {selectedProduct.imageEmoji}
                   </div>
                 )}
+                {/* Mobile close button - over image */}
+                <button
+                  onClick={() => setSelectedProduct(null)}
+                  className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white shadow-md transition md:hidden"
+                  aria-label="Close product details"
+                >
+                  <span className="sr-only">Close</span>
+                  ✕
+                </button>
               </div>
               {/* Info right */}
               <div className="md:w-1/2 p-6 md:p-8 flex flex-col gap-4">
@@ -451,9 +467,10 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                       </p>
                     )}
                   </div>
+                  {/* Desktop close button - top right of content card */}
                   <button
                     onClick={() => setSelectedProduct(null)}
-                    className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition"
+                    className="hidden md:inline-flex p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition"
                     aria-label="Close product details"
                   >
                     <span className="sr-only">Close</span>
