@@ -1,11 +1,14 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import FilterBar from '../components/FilterBar';
 import ProductCard from '../components/ProductCard';
 import EmptyState from '../components/EmptyState';
+import { collection, getDocs } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { db, auth } from '../firebase';
 
-interface Product {
+export interface Product {
   id: number;
   name: string;
   category: string;
@@ -17,9 +20,26 @@ interface Product {
   imageEmoji: string;
   highlight?: string;
   createdAt: number;
+  imageUrl?: string;
 }
 
-const allProducts: Product[] = [
+export const towelImageMap: Record<string, string> = {
+  'bath towel': '/towel/bathtowel/bathtowel (1).jpg',
+  napkin: '/towel/napkin/hand towel (1).jpg',
+  'face towel': '/towel/face towel/face towel (1).jpg',
+  'beach towel': '/towel/beach towel/beach towel (1).jpg',
+  bathrobe: '/towel/bathrobe/bathrobe (1).jpg',
+  'kitchen towel': '/towel/kitchn towel/kitchn towel (1).jpg',
+  'terry kitchen towel': '/towel/terry kitchen towel/terry kitchen towel (1).jpg',
+};
+
+export const getImageForType = (productType: string) => {
+  return towelImageMap[productType?.toLowerCase()] || undefined;
+};
+
+const ADMIN_EMAIL = 'admin@123.com';
+
+export const demoProducts: Product[] = [
   {
     id: 1,
     name: 'Premium Cotton Bath Towels',
@@ -27,11 +47,12 @@ const allProducts: Product[] = [
     categorySlug: 'towels',
     productType: 'Bath Towel',
     description: 'Ultra-soft 100% cotton bath towels with superior absorbency. Perfect for luxury hotels and spas.',
-    price: '$45.00',
+    price: '₹45.00',
     priceValue: 45,
     imageEmoji: '🧺',
     highlight: 'Best Seller',
     createdAt: 1,
+    imageUrl: getImageForType('Bath Towel'),
   },
   {
     id: 2,
@@ -40,11 +61,12 @@ const allProducts: Product[] = [
     categorySlug: 'towels',
     productType: 'Napkin',
     description: 'Set of 6 premium hand towels with elegant borders. Bulk orders available.',
-    price: '$32.00',
+    price: '₹32.00',
     priceValue: 32,
     imageEmoji: '🧺',
     highlight: 'Bulk Available',
     createdAt: 2,
+    imageUrl: getImageForType('Napkin'),
   },
   {
     id: 3,
@@ -53,10 +75,11 @@ const allProducts: Product[] = [
     categorySlug: 'towels',
     productType: 'Face Towel',
     description: 'Soft and durable face towels made from premium Egyptian cotton fibers.',
-    price: '$18.00',
+    price: '₹18.00',
     priceValue: 18,
     imageEmoji: '🧺',
     createdAt: 3,
+    imageUrl: getImageForType('Face Towel'),
   },
   {
     id: 4,
@@ -65,10 +88,11 @@ const allProducts: Product[] = [
     categorySlug: 'towels',
     productType: 'Beach Towel',
     description: 'Large, colorful beach towels perfect for resorts and beach clubs.',
-    price: '$52.00',
+    price: '₹52.00',
     priceValue: 52,
     imageEmoji: '🧺',
     createdAt: 4,
+    imageUrl: getImageForType('Beach Towel'),
   },
   {
     id: 5,
@@ -77,7 +101,7 @@ const allProducts: Product[] = [
     categorySlug: 'cow-dung',
     productType: 'Cow Dung Cakes',
     description: 'Traditional handmade cow dung cakes for rituals and eco-friendly purposes.',
-    price: '$12.00',
+    price: '₹12.00',
     priceValue: 12,
     imageEmoji: '🌿',
     highlight: 'Traditional',
@@ -90,7 +114,7 @@ const allProducts: Product[] = [
     categorySlug: 'cow-dung',
     productType: 'Dhoop Sticks',
     description: 'Pure organic dhoop sticks made from cow dung and natural herbs.',
-    price: '$15.00',
+    price: '₹15.00',
     priceValue: 15,
     imageEmoji: '🌿',
     highlight: 'Pure & Organic',
@@ -103,7 +127,7 @@ const allProducts: Product[] = [
     categorySlug: 'cow-dung',
     productType: 'Incense Cones',
     description: 'Handcrafted incense cones with natural fragrances. Chemical-free.',
-    price: '$10.00',
+    price: '₹10.00',
     priceValue: 10,
     imageEmoji: '🌿',
     createdAt: 7,
@@ -115,7 +139,7 @@ const allProducts: Product[] = [
     categorySlug: 'cow-dung',
     productType: 'Fertilizer',
     description: 'Rich organic fertilizer made from processed cow dung. Perfect for gardens.',
-    price: '$25.00',
+    price: '₹25.00',
     priceValue: 25,
     imageEmoji: '🌿',
     createdAt: 8,
@@ -123,7 +147,7 @@ const allProducts: Product[] = [
 ];
 
 interface ProductsPageProps {
-  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact') => void;
+  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
 }
 
 export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
@@ -132,9 +156,70 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
   const [selectedType, setSelectedType] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState<Product[]>(demoProducts);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, 'products'));
+        if (snapshot.empty) {
+          setProducts(demoProducts);
+        } else {
+          const list: Product[] = snapshot.docs.map((d) => {
+            const data = d.data() as any;
+            const imageFromType = getImageForType(data.productType ?? '');
+
+            let priceValue = Number(data.priceValue);
+            if (Number.isNaN(priceValue)) {
+              const numericFromString = parseFloat(String(data.price || '').replace(/[^0-9.]/g, ''));
+              priceValue = Number.isNaN(numericFromString) ? 0 : numericFromString;
+            }
+            const priceString = data.price
+              ? String(data.price).replace(/^\$/, '₹')
+              : `₹${priceValue.toFixed(2)}`;
+
+            return {
+              id: data.id ?? 0,
+              name: data.name ?? '',
+              category: data.category ?? '',
+              categorySlug: data.categorySlug ?? 'towels',
+              productType: data.productType ?? '',
+              description: data.description ?? '',
+              price: priceString,
+              priceValue,
+              imageEmoji: data.imageEmoji ?? '🧺',
+              highlight: data.highlight,
+              createdAt: data.createdAt ?? 0,
+              imageUrl: data.imageUrl ?? imageFromType,
+            };
+          });
+          setProducts(list);
+        }
+      } catch (err: any) {
+        console.error('Failed to load products from Firestore', err);
+        setLoadError(err.message || 'Failed to load products');
+        setProducts(demoProducts);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAdmin(user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+    });
+    return unsubscribe;
+  }, []);
 
   const filteredAndSortedProducts = useMemo(() => {
-    let filtered = allProducts;
+    let filtered = products;
 
     if (selectedCategory !== 'all') {
       filtered = filtered.filter((p) => p.categorySlug === selectedCategory);
@@ -168,7 +253,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
     }
 
     return sorted;
-  }, [selectedCategory, selectedType, sortBy, searchQuery]);
+  }, [products, selectedCategory, selectedType, sortBy, searchQuery]);
 
   const handleReset = () => {
     setSelectedCategory('all');
@@ -286,12 +371,19 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
             />
+            {loadError && (
+              <div className="text-sm text-red-600 mt-2">
+                {loadError}
+              </div>
+            )}
           </div>
         </div>
 
         <div className="bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
-            {filteredAndSortedProducts.length === 0 ? (
+            {isLoading ? (
+              <p className="text-sm text-slate-600">Loading products...</p>
+            ) : filteredAndSortedProducts.length === 0 ? (
               <EmptyState onReset={handleReset} />
             ) : (
               <>
@@ -303,7 +395,13 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                   {filteredAndSortedProducts.map((product) => (
-                    <ProductCard key={product.id} {...product} />
+                    <ProductCard
+                      key={`${product.id}-${product.productType}`}
+                      {...product}
+                      showAdminControls={isAdmin}
+                      onEdit={() => onNavigate?.('admin')}
+                      onClick={() => setSelectedProduct(product)}
+                    />
                   ))}
                 </div>
               </>
@@ -313,6 +411,100 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
       </div>
 
       <Footer />
+
+      {/* Product detail modal */}
+      {selectedProduct && (
+        <div className="fixed inset-0 z-[1050] flex items-center justify-center px-4">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            onClick={() => setSelectedProduct(null)}
+          ></div>
+          <div className="relative z-[1051] w-full max-w-4xl bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden">
+            <div className="flex flex-col md:flex-row">
+              {/* Image left */}
+              <div className="md:w-1/2 relative">
+                {selectedProduct.imageUrl ? (
+                  <img
+                    src={selectedProduct.imageUrl}
+                    alt={selectedProduct.name}
+                    className="w-full h-64 md:h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-64 md:h-full flex items-center justify-center bg-slate-100 text-7xl">
+                    {selectedProduct.imageEmoji}
+                  </div>
+                )}
+              </div>
+              {/* Info right */}
+              <div className="md:w-1/2 p-6 md:p-8 flex flex-col gap-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide">
+                      {selectedProduct.category}
+                    </p>
+                    <h2 className="mt-1 text-2xl md:text-3xl font-bold text-slate-900">
+                      {selectedProduct.name}
+                    </h2>
+                    {selectedProduct.productType && (
+                      <p className="mt-1 text-sm text-slate-600">
+                        Type: <span className="font-semibold">{selectedProduct.productType}</span>
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => setSelectedProduct(null)}
+                    className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition"
+                    aria-label="Close product details"
+                  >
+                    <span className="sr-only">Close</span>
+                    ✕
+                  </button>
+                </div>
+
+                {selectedProduct.highlight && (
+                  <span className="inline-flex self-start rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                    {selectedProduct.highlight}
+                  </span>
+                )}
+
+                <p className="text-sm md:text-base text-slate-700 leading-relaxed">
+                  {selectedProduct.description}
+                </p>
+
+                <div className="mt-2 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-slate-500">Price</p>
+                    <p className="text-2xl font-bold text-slate-900">{selectedProduct.price}</p>
+                  </div>
+                  <div className="text-right text-xs text-slate-500">
+                    <p>Category: {selectedProduct.category}</p>
+                    {selectedProduct.productType && <p>Type: {selectedProduct.productType}</p>}
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <button
+                    className="inline-flex items-center justify-center rounded-full bg-slate-900 text-white px-5 py-2 text-sm font-semibold hover:bg-slate-800 transition"
+                  >
+                    Enquire Now
+                  </button>
+                  {isAdmin && (
+                    <button
+                      onClick={() => {
+                        setSelectedProduct(null);
+                        onNavigate?.('admin');
+                      }}
+                      className="inline-flex items-center justify-center rounded-full border border-amber-500 text-amber-800 px-4 py-2 text-sm font-semibold hover:bg-amber-50 transition"
+                    >
+                      Edit in Admin Panel
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

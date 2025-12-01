@@ -10,12 +10,13 @@ import Footer from './components/Footer';
 import ProductsPage from './pages/ProductsPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import AdminPage from './pages/AdminPage';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'products' | 'about' | 'contact'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'products' | 'about' | 'contact' | 'admin'>('home');
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const handleNavigation = (page: 'home' | 'products' | 'about' | 'contact') => {
+  const handleNavigation = (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => {
     setIsTransitioning(true);
     setTimeout(() => {
       setCurrentPage(page);
@@ -48,6 +49,14 @@ function App() {
     return (
       <div className={`transition-opacity duration-200 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
         <ContactPage onNavigate={handleNavigation} />
+      </div>
+    );
+  }
+
+  if (currentPage === 'admin') {
+    return (
+      <div className={`transition-opacity duration-200 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+        <AdminPage onNavigate={handleNavigation} />
       </div>
     );
   }

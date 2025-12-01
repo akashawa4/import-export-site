@@ -1,0 +1,497 @@
+import { useEffect, useState } from 'react';
+import { collection, getDocs, updateDoc, doc, addDoc } from 'firebase/firestore';
+import { db, auth } from '../firebase';
+import { demoProducts, Product as CatalogProduct, getImageForType } from './ProductsPage';
+
+interface AdminPageProps {
+  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
+}
+
+type Product = Omit<CatalogProduct, 'id'> & { id: string };
+
+export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [newProduct, setNewProduct] = useState<Omit<CatalogProduct, 'id'>>({
+    name: '',
+    category: 'Towels',
+    categorySlug: 'towels',
+    productType: 'Bath Towel',
+    description: '',
+    price: '₹0.00',
+    priceValue: 0,
+    imageEmoji: '🧺',
+    highlight: '',
+    createdAt: Date.now(),
+    imageUrl: getImageForType('Bath Towel'),
+  });
+
+  const user = auth.currentUser;
+  const ADMIN_EMAIL = 'admin@123.com';
+  const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    const fetchProducts = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, 'products'));
+        const list: Product[] = snapshot.docs.map((d) => {
+          const data = d.data() as CatalogProduct & { id?: number };
+          const { id: _ignored, ...rest } = data;
+
+          let priceValue = Number(rest.priceValue);
+          if (Number.isNaN(priceValue)) {
+            const numericFromString = parseFloat(String(rest.price || '').replace(/[^0-9.]/g, ''));
+            priceValue = Number.isNaN(numericFromString) ? 0 : numericFromString;
+          }
+          const priceString = rest.price
+            ? String(rest.price).replace(/^\$/, '₹')
+            : `₹${priceValue.toFixed(2)}`;
+
+          return {
+            ...rest,
+            priceValue,
+            price: priceString,
+            id: d.id,
+          };
+        });
+        setProducts(list);
+      } catch (err: any) {
+        setError(err.message || 'Failed to load products');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [isAdmin]);
+
+  const handleSave = async (product: Product) => {
+    try {
+      setSavingId(product.id);
+      setError(null);
+      const ref = doc(db, 'products', product.id);
+      const priceValue = Number(product.priceValue) || 0;
+      const priceString = product.price || `₹${priceValue.toFixed(2)}`;
+
+      await updateDoc(ref, {
+        name: product.name ?? '',
+        category: product.category ?? '',
+        categorySlug: product.categorySlug ?? 'towels',
+        productType: product.productType ?? '',
+        description: product.description ?? '',
+        price: priceString,
+        priceValue,
+        imageEmoji: product.imageEmoji ?? (product.categorySlug === 'towels' ? '🧺' : '🌿'),
+        highlight: product.highlight ?? '',
+        imageUrl: product.imageUrl ?? getImageForType(product.productType ?? ''),
+      });
+    } catch (err: any) {
+      setError(err.message || 'Failed to save changes');
+    } finally {
+      setSavingId(null);
+    }
+  };
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
+        <div className="max-w-md w-full rounded-2xl bg-white shadow-lg p-8 text-center space-y-4">
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">Admin Access Only</h1>
+          <p className="text-slate-600 text-sm">
+            You must be signed in as <span className="font-semibold">admin@123.com</span> to access the admin panel.
+          </p>
+          <button
+            onClick={() => onNavigate?.('home')}
+            className="mt-2 inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            Back to Home
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-50">
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-20">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Admin Panel</h1>
+            <p className="text-sm text-slate-600">Manage product descriptions for your store.</p>
+          </div>
+          <button
+            onClick={() => onNavigate?.('products')}
+            className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            View Storefront
+          </button>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-6 py-8 space-y-6">
+        {loading && <p className="text-slate-600 text-sm">Loading products...</p>}
+        {error && <p className="text-sm text-red-600">{error}</p>}
+
+        {/* Create new product */}
+        <section className="rounded-2xl bg-white shadow-md border border-slate-100 p-6 space-y-4">
+          <h2 className="text-lg font-semibold text-slate-900">Add New Product</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-slate-600 uppercase">Name</label>
+              <input
+                type="text"
+                value={newProduct.name}
+                onChange={(e) => setNewProduct((p) => ({ ...p, name: e.target.value }))}
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                placeholder="Product name"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-slate-600 uppercase">Category</label>
+              <select
+                value={newProduct.categorySlug}
+                onChange={(e) => {
+                  const slug = e.target.value as 'towels' | 'cow-dung';
+                  setNewProduct((p) => ({
+                    ...p,
+                    categorySlug: slug,
+                    category: slug === 'towels' ? 'Towels' : 'Cow Dung Products',
+                    imageEmoji: slug === 'towels' ? '🧺' : '🌿',
+                  }));
+                }}
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 bg-white"
+              >
+                <option value="towels">Towels</option>
+                <option value="cow-dung">Cow Dung Products</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-slate-600 uppercase">Towel Type</label>
+              <input
+                type="text"
+                value={newProduct.productType}
+                onChange={(e) =>
+                  setNewProduct((p) => ({
+                    ...p,
+                    productType: e.target.value,
+                    imageUrl: getImageForType(e.target.value) || p.imageUrl,
+                  }))
+                }
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                placeholder="e.g. Bath Towel, Face Towel, Napkin"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-slate-600 uppercase">Price (INR)</label>
+              <input
+                type="number"
+                min={0}
+                step={0.01}
+                value={newProduct.priceValue}
+                onChange={(e) =>
+                  setNewProduct((p) => ({
+                    ...p,
+                    priceValue: Number(e.target.value),
+                    price: `$${Number(e.target.value || 0).toFixed(2)}`,
+                  }))
+                }
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+              />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-xs font-semibold text-slate-600 uppercase">Highlight Badge (optional)</label>
+              <input
+                type="text"
+                value={newProduct.highlight ?? ''}
+                onChange={(e) => setNewProduct((p) => ({ ...p, highlight: e.target.value }))}
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                placeholder="e.g. Best Seller, New, Limited Stock"
+              />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-xs font-semibold text-slate-600 uppercase">Image URL (optional)</label>
+              <input
+                type="text"
+                value={newProduct.imageUrl ?? ''}
+                onChange={(e) => setNewProduct((p) => ({ ...p, imageUrl: e.target.value }))}
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                placeholder="/towel/bathtowel/bathtowel (1).jpg"
+              />
+              <p className="text-[11px] text-slate-500">
+                Use paths from the <code className="font-mono">public/towel/</code> folder. If left empty, we try to pick
+                an image automatically based on type.
+              </p>
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-xs font-semibold text-slate-600 uppercase">Description</label>
+              <textarea
+                value={newProduct.description}
+                onChange={(e) => setNewProduct((p) => ({ ...p, description: e.target.value }))}
+                rows={3}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2 text-sm text-slate-800 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                placeholder="Write a clear, attractive description for this product..."
+              />
+            </div>
+          </div>
+          <div className="flex items-center justify-end gap-3">
+            <button
+              onClick={async () => {
+                try {
+                  setCreating(true);
+                  setError(null);
+                  const createdAt = Date.now();
+                  const priceValue = Number(newProduct.priceValue) || 0;
+                  const price = newProduct.price || `₹${priceValue.toFixed(2)}`;
+                  const imageUrl = newProduct.imageUrl ?? getImageForType(newProduct.productType);
+
+                  await addDoc(collection(db, 'products'), {
+                    ...newProduct,
+                    createdAt,
+                    priceValue,
+                    price,
+                    imageUrl,
+                  });
+
+                  const snapshot = await getDocs(collection(db, 'products'));
+                  const list: Product[] = snapshot.docs.map((d) => {
+                    const data = d.data() as CatalogProduct & { id?: number };
+                    const { id: _ignored, ...rest } = data;
+                    return {
+                      ...rest,
+                      id: d.id,
+                    };
+                  });
+                  setProducts(list);
+
+                  setNewProduct({
+                    name: '',
+                    category: 'Towels',
+                    categorySlug: 'towels',
+                    productType: 'Bath Towel',
+                    description: '',
+                    price: '₹0.00',
+                    priceValue: 0,
+                    imageEmoji: '🧺',
+                    highlight: '',
+                    createdAt: Date.now(),
+                    imageUrl: getImageForType('Bath Towel'),
+                  });
+                } catch (err: any) {
+                  setError(err.message || 'Failed to create product');
+                } finally {
+                  setCreating(false);
+                }
+              }}
+              disabled={creating}
+              className={`rounded-full px-5 py-2 text-sm font-semibold text-white bg-amber-600 hover:bg-amber-700 shadow-sm transition ${
+                creating ? 'opacity-60 cursor-not-allowed' : ''
+              }`}
+            >
+              {creating ? 'Adding...' : 'Add Product'}
+            </button>
+          </div>
+        </section>
+
+        {!loading && products.length === 0 && (
+          <div className="space-y-3">
+            <p className="text-slate-600 text-sm">
+              No products found. You can seed demo products into the{' '}
+              <code className="font-mono text-xs">products</code> collection.
+            </p>
+            <button
+              onClick={async () => {
+                try {
+                  setError(null);
+                  for (const product of demoProducts) {
+                    await addDoc(collection(db, 'products'), {
+                      ...product,
+                    });
+                  }
+                  const snapshot = await getDocs(collection(db, 'products'));
+                  const list: Product[] = snapshot.docs.map((d) => {
+                    const data = d.data() as CatalogProduct & { id?: number };
+                    const { id: _ignored, ...rest } = data;
+                    return {
+                      ...rest,
+                      id: d.id,
+                    };
+                  });
+                  setProducts(list);
+                } catch (err: any) {
+                  setError(err.message || 'Failed to create demo products');
+                }
+              }}
+              className="inline-flex items-center rounded-full border border-amber-400 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100 transition"
+            >
+              Create Demo Products
+            </button>
+          </div>
+        )}
+
+        <div className="grid gap-6 md:grid-cols-2">
+          {products.map((product) => (
+            <div key={product.id} className="rounded-2xl bg-white shadow-md border border-slate-100 p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-slate-900">
+                  {product.name || 'Untitled Product'}
+                </h2>
+                {typeof product.priceValue === 'number' && !Number.isNaN(product.priceValue) && (
+                  <span className="text-sm font-semibold text-amber-700">
+                    ${product.priceValue.toFixed(2)}
+                  </span>
+                )}
+              </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Name</label>
+                  <input
+                    type="text"
+                    value={product.name}
+                    onChange={(e) =>
+                      setProducts((prev) =>
+                        prev.map((p) => (p.id === product.id ? { ...p, name: e.target.value } : p))
+                      )
+                    }
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Category</label>
+                  <select
+                    value={product.categorySlug}
+                    onChange={(e) => {
+                      const slug = e.target.value as 'towels' | 'cow-dung';
+                      setProducts((prev) =>
+                        prev.map((p) =>
+                          p.id === product.id
+                            ? {
+                                ...p,
+                                categorySlug: slug,
+                                category: slug === 'towels' ? 'Towels' : 'Cow Dung Products',
+                                imageEmoji: slug === 'towels' ? '🧺' : '🌿',
+                              }
+                            : p
+                        )
+                      );
+                    }}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 bg-white"
+                  >
+                    <option value="towels">Towels</option>
+                    <option value="cow-dung">Cow Dung Products</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Type</label>
+                  <input
+                    type="text"
+                    value={product.productType}
+                    onChange={(e) =>
+                      setProducts((prev) =>
+                        prev.map((p) =>
+                          p.id === product.id
+                            ? {
+                                ...p,
+                                productType: e.target.value,
+                                imageUrl: getImageForType(e.target.value) || p.imageUrl,
+                              }
+                            : p
+                        )
+                      )
+                    }
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Price (INR)</label>
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    value={product.priceValue}
+                    onChange={(e) => {
+                      const value = Number(e.target.value) || 0;
+                      setProducts((prev) =>
+                        prev.map((p) =>
+                          p.id === product.id
+                            ? {
+                                ...p,
+                                priceValue: value,
+                                price: `$${value.toFixed(2)}`,
+                              }
+                            : p
+                        )
+                      );
+                    }}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                  />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Highlight (optional)</label>
+                  <input
+                    type="text"
+                    value={product.highlight ?? ''}
+                    onChange={(e) =>
+                      setProducts((prev) =>
+                        prev.map((p) => (p.id === product.id ? { ...p, highlight: e.target.value } : p))
+                      )
+                    }
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                    placeholder="e.g. Best Seller, New, Limited Stock"
+                  />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Image URL</label>
+                  <input
+                    type="text"
+                    value={product.imageUrl ?? ''}
+                    onChange={(e) =>
+                      setProducts((prev) =>
+                        prev.map((p) => (p.id === product.id ? { ...p, imageUrl: e.target.value } : p))
+                      )
+                    }
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                    placeholder="/towel/bathtowel/bathtowel (1).jpg"
+                  />
+                  <p className="text-[11px] text-slate-500">
+                    Use images from <code className="font-mono">public/towel/</code>. If left empty, the card may fall
+                    back to the emoji.
+                  </p>
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Description</label>
+                  <textarea
+                    value={product.description ?? ''}
+                    onChange={(e) =>
+                      setProducts((prev) =>
+                        prev.map((p) => (p.id === product.id ? { ...p, description: e.target.value } : p))
+                      )
+                    }
+                    rows={3}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2 text-sm text-slate-800 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                    placeholder="Write a clear, attractive description for this product..."
+                  />
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-2">
+                <button
+                  onClick={() => handleSave(product)}
+                  disabled={savingId === product.id}
+                  className={`rounded-full px-4 py-2 text-sm font-semibold text-white bg-amber-600 hover:bg-amber-700 shadow-sm transition ${
+                    savingId === product.id ? 'cursor-not-allowed opacity-60' : ''
+                  }`}
+                >
+                  {savingId === product.id ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
+    </div>
+  );
+}
