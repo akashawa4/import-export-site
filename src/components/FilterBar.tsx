@@ -1,15 +1,19 @@
 import { Search } from 'lucide-react';
+import { Dispatch, SetStateAction } from 'react';
 
-interface FilterBarProps {
+export interface FilterBarProps {
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
   selectedType: string;
-  onTypeChange: (type: string) => void;
+  onTypeChange: ((type: string) => void) | Dispatch<SetStateAction<string>>;
   availableTypes: string[];
   sortBy: string;
   onSortChange: (sort: string) => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  selectedTowelType?: string;
+  onTowelTypeChange?: (type: string) => void;
+  towelTypes?: string[];
 }
 
 export default function FilterBar({
@@ -22,6 +26,9 @@ export default function FilterBar({
   onSortChange,
   searchQuery,
   onSearchChange,
+  selectedTowelType = '',
+  onTowelTypeChange,
+  towelTypes = [],
 }: FilterBarProps) {
   return (
     <div className="bg-white border-b border-gray-200 sticky top-16 z-40 py-3 px-4 md:px-6">
@@ -37,6 +44,32 @@ export default function FilterBar({
               className="w-full pl-10 pr-4 py-2.5 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white"
             />
           </div>
+
+          {/* Towel Types Row - Only show when category is towels */}
+          {selectedCategory === 'towels' && towelTypes.length > 0 && (
+            <div className="flex flex-wrap gap-2 md:gap-2 overflow-x-auto pb-2">
+              {towelTypes.map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => {
+                    if (onTowelTypeChange) {
+                      const newType = selectedTowelType === type ? '' : type;
+                      onTowelTypeChange(newType);
+                      onTypeChange('all'); // Reset subtype when changing main type
+                    }
+                  }}
+                  className={`px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
+                    selectedTowelType === type
+                      ? 'bg-amber-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="flex flex-wrap gap-2 md:gap-4">
             <select
@@ -59,7 +92,9 @@ export default function FilterBar({
                   selectedType !== 'all' ? 'border-amber-500' : 'border-gray-300'
                 }`}
               >
-                <option value="all">All Types</option>
+                <option value="all">
+                  {selectedCategory === 'towels' && selectedTowelType ? 'All Subtypes' : 'All Types'}
+                </option>
                 {availableTypes.map((type) => (
                   <option key={type} value={type}>
                     {type}

@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { collection, getDocs, updateDoc, doc, addDoc, deleteDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, auth, storage } from '../firebase';
-import { demoProducts, Product as CatalogProduct, getImageForType } from './ProductsPage';
+import { demoProducts, Product as CatalogProduct, getImageForType, towelTypesData } from './ProductsPage';
 
 interface AdminPageProps {
   onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
@@ -17,11 +17,24 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const [selectedTowelType, setSelectedTowelType] = useState<string>('Bath Towel');
+  const [selectedSubtype, setSelectedSubtype] = useState<string>('');
+  const towelTypes = Object.keys(towelTypesData);
+  
+  // Compute available subtypes based on selected towel type
+  const availableSubtypes = useMemo(() => {
+    if (selectedTowelType && towelTypesData[selectedTowelType]) {
+      return towelTypesData[selectedTowelType].subtypes;
+    }
+    return [];
+  }, [selectedTowelType]);
+  
   const [newProduct, setNewProduct] = useState<Omit<CatalogProduct, 'id'>>({
     name: '',
     category: 'Towels',
     categorySlug: 'towels',
     productType: 'Bath Towel',
+    productSubtype: '',
     description: '',
     price: '₹0.00',
     priceValue: 0,
@@ -59,6 +72,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
             priceValue,
             price: priceString,
             id: d.id,
+            productSubtype: rest.productSubtype ?? '',
           };
         });
         setProducts(list);
@@ -85,6 +99,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
         category: product.category ?? '',
         categorySlug: product.categorySlug ?? 'towels',
         productType: product.productType ?? '',
+        productSubtype: product.productSubtype ?? '',
         description: product.description ?? '',
         price: priceString,
         priceValue,
@@ -177,11 +192,20 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                 value={newProduct.categorySlug}
                 onChange={(e) => {
                   const slug = e.target.value as 'towels' | 'cow-dung';
+                  if (slug === 'towels') {
+                    setSelectedTowelType('Bath Towel');
+                    setSelectedSubtype('');
+                  } else {
+                    setSelectedTowelType('');
+                    setSelectedSubtype('');
+                  }
                   setNewProduct((p) => ({
                     ...p,
                     categorySlug: slug,
                     category: slug === 'towels' ? 'Towels' : 'Cow Dung Products',
                     imageEmoji: slug === 'towels' ? '🧺' : '🌿',
+                    productType: slug === 'towels' ? 'Bath Towel' : '',
+                    productSubtype: '',
                   }));
                 }}
                 className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 bg-white"
@@ -190,22 +214,73 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                 <option value="cow-dung">Cow Dung Products</option>
               </select>
             </div>
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-slate-600 uppercase">Towel Type</label>
-              <input
-                type="text"
-                value={newProduct.productType}
-                onChange={(e) =>
-                  setNewProduct((p) => ({
-                    ...p,
-                    productType: e.target.value,
-                    imageUrl: getImageForType(e.target.value) || p.imageUrl,
-                  }))
-                }
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
-                placeholder="e.g. Bath Towel, Face Towel, Napkin"
-              />
-            </div>
+            {newProduct.categorySlug === 'towels' ? (
+              <>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Towel Type</label>
+                  <select
+                    value={selectedTowelType}
+                    onChange={(e) => {
+                      const type = e.target.value;
+                      setSelectedTowelType(type);
+                      setSelectedSubtype('');
+                      setNewProduct((p) => ({
+                        ...p,
+                        productType: type,
+                        productSubtype: '',
+                        imageUrl: getImageForType(type) || p.imageUrl,
+                      }));
+                    }}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 bg-white"
+                  >
+                    {towelTypes.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Towel Subtype</label>
+                  <select
+                    value={selectedSubtype}
+                    onChange={(e) => {
+                      const subtype = e.target.value;
+                      setSelectedSubtype(subtype);
+                      setNewProduct((p) => ({
+                        ...p,
+                        productSubtype: subtype,
+                      }));
+                    }}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 bg-white"
+                  >
+                    <option value="">Select Subtype (Optional)</option>
+                    {availableSubtypes.map((subtype: string) => (
+                      <option key={subtype} value={subtype}>
+                        {subtype}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            ) : (
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-slate-600 uppercase">Type</label>
+                <input
+                  type="text"
+                  value={newProduct.productType}
+                  onChange={(e) =>
+                    setNewProduct((p) => ({
+                      ...p,
+                      productType: e.target.value,
+                      imageUrl: getImageForType(e.target.value) || p.imageUrl,
+                    }))
+                  }
+                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                  placeholder="e.g. Cow Dung Cakes, Dhoop Sticks"
+                />
+              </div>
+            )}
             <div className="space-y-2">
               <label className="text-xs font-semibold text-slate-600 uppercase">Price (INR)</label>
               <input
@@ -314,11 +389,14 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                   });
                   setProducts(list);
 
+                  setSelectedTowelType('Bath Towel');
+                  setSelectedSubtype('');
                   setNewProduct({
                     name: '',
                     category: 'Towels',
                     categorySlug: 'towels',
                     productType: 'Bath Towel',
+                    productSubtype: '',
                     description: '',
                     price: '₹0.00',
                     priceValue: 0,
@@ -420,6 +498,8 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                                 categorySlug: slug,
                                 category: slug === 'towels' ? 'Towels' : 'Cow Dung Products',
                                 imageEmoji: slug === 'towels' ? '🧺' : '🌿',
+                                productType: slug === 'towels' ? 'Bath Towel' : p.productType,
+                                productSubtype: slug === 'towels' ? '' : p.productSubtype,
                               }
                             : p
                         )
@@ -431,27 +511,90 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                     <option value="cow-dung">Cow Dung Products</option>
                   </select>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-slate-600 uppercase">Type</label>
-                  <input
-                    type="text"
-                    value={product.productType}
-                    onChange={(e) =>
-                      setProducts((prev) =>
-                        prev.map((p) =>
-                          p.id === product.id
-                            ? {
-                                ...p,
-                                productType: e.target.value,
-                                imageUrl: getImageForType(e.target.value) || p.imageUrl,
-                              }
-                            : p
+                {product.categorySlug === 'towels' ? (
+                  <>
+                    <div className="space-y-2">
+                      <label className="text-xs font-semibold text-slate-600 uppercase">Towel Type</label>
+                      <select
+                        value={product.productType}
+                        onChange={(e) => {
+                          const type = e.target.value;
+                          setProducts((prev) =>
+                            prev.map((p) =>
+                              p.id === product.id
+                                ? {
+                                    ...p,
+                                    productType: type,
+                                    productSubtype: '', // Reset subtype when type changes
+                                    imageUrl: getImageForType(type) || p.imageUrl,
+                                  }
+                                : p
+                            )
+                          );
+                        }}
+                        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 bg-white"
+                      >
+                        {towelTypes.map((type) => (
+                          <option key={type} value={type}>
+                            {type}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-semibold text-slate-600 uppercase">Towel Subtype</label>
+                      <select
+                        value={product.productSubtype || ''}
+                        onChange={(e) => {
+                          const subtype = e.target.value;
+                          setProducts((prev) =>
+                            prev.map((p) =>
+                              p.id === product.id
+                                ? {
+                                    ...p,
+                                    productSubtype: subtype,
+                                  }
+                                : p
+                            )
+                          );
+                        }}
+                        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 bg-white"
+                      >
+                        <option value="">Select Subtype (Optional)</option>
+                        {(product.productType && towelTypesData[product.productType]
+                          ? towelTypesData[product.productType].subtypes
+                          : []
+                        ).map((subtype: string) => (
+                          <option key={subtype} value={subtype}>
+                            {subtype}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </>
+                ) : (
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-slate-600 uppercase">Type</label>
+                    <input
+                      type="text"
+                      value={product.productType}
+                      onChange={(e) =>
+                        setProducts((prev) =>
+                          prev.map((p) =>
+                            p.id === product.id
+                              ? {
+                                  ...p,
+                                  productType: e.target.value,
+                                  imageUrl: getImageForType(e.target.value) || p.imageUrl,
+                                }
+                              : p
+                          )
                         )
-                      )
-                    }
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
-                  />
-                </div>
+                      }
+                      className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                    />
+                  </div>
+                )}
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-slate-600 uppercase">Price (INR)</label>
                   <input
