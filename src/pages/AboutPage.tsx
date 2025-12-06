@@ -8,7 +8,7 @@ import CompanyTimeline from '../components/about/CompanyTimeline';
 import AboutCTA from '../components/about/AboutCTA';
 
 interface AboutPageProps {
-  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact') => void;
+  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
 }
 
 export default function AboutPage({ onNavigate }: AboutPageProps = {}) {
