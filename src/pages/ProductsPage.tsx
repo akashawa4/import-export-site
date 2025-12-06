@@ -151,8 +151,19 @@ interface ProductsPageProps {
 }
 
 export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
-  const [viewMode, setViewMode] = useState<'categories' | 'products'>('categories');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  // Check if we should go directly to products view (from homepage card click)
+  const shouldShowProductsDirectly = sessionStorage.getItem('navigateToProducts') === 'true';
+  const savedCategory = sessionStorage.getItem('selectedCategory') || 'all';
+  const [viewMode, setViewMode] = useState<'categories' | 'products'>(shouldShowProductsDirectly ? 'products' : 'categories');
+  const [selectedCategory, setSelectedCategory] = useState(savedCategory);
+  
+  // Clear the flags after using them
+  useEffect(() => {
+    if (shouldShowProductsDirectly) {
+      sessionStorage.removeItem('navigateToProducts');
+      sessionStorage.removeItem('selectedCategory');
+    }
+  }, [shouldShowProductsDirectly]);
   const [selectedType, setSelectedType] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [searchQuery, setSearchQuery] = useState('');

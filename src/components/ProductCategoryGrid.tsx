@@ -17,13 +17,13 @@ export default function ProductCategoryGrid({ onNavigate }: ProductCategoryGridP
     {
       id: 'towels',
       name: 'Towels',
-      image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=1200',
+      image: '/towel/Towelmain/banner.jpg',
       description: 'Premium export-quality cotton towels',
     },
     {
       id: 'cow-dung',
       name: 'Cow Dung Products',
-      image: 'https://images.pexels.com/photos/3807517/pexels-photo-3807517.jpeg?auto=compress&cs=tinysrgb&w=1200',
+      image: '/cow dung/cowbanner/banner.jpg',
       description: 'Organic cow dung cakes & dhoop',
     },
   ];

@@ -10,12 +10,16 @@ const products = [
     name: 'Premium Towels Collection',
     highlight: 'Export Quality',
     category: 'Towels',
+    categorySlug: 'towels',
+    image: '/towel/Towelmain/banner.jpg',
   },
   {
     id: 2,
     name: 'Cow Dung Products',
     highlight: 'Traditional & Natural',
     category: 'Cow Dung Products',
+    categorySlug: 'cow-dung',
+    image: '/cow dung/cowbanner/banner.jpg',
   },
 ];
 
@@ -36,15 +40,22 @@ export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps =
           {products.map((product) => (
             <div
               key={product.id}
-              className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-slate-200"
+              onClick={() => {
+                // Set flag to show products directly (skip categories)
+                sessionStorage.setItem('navigateToProducts', 'true');
+                // Store the selected category slug
+                sessionStorage.setItem('selectedCategory', product.categorySlug);
+                onNavigate?.('products');
+              }}
+              className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-slate-200 cursor-pointer"
             >
-              <div className="aspect-square bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center relative overflow-hidden">
-                <div className="text-7xl group-hover:scale-110 transition-transform duration-300">
-                  {product.category === 'Towels' && '🧺'}
-                  {product.category === 'Cow Dung Products' && '🌿'}
-                  {product.category === 'Organic Items' && '🌱'}
-                </div>
-                <div className="absolute top-4 right-4 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+              <div className="aspect-square bg-gradient-to-br from-slate-100 to-slate-200 relative overflow-hidden">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+                <div className="absolute top-4 right-4 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full z-10">
                   {product.highlight}
                 </div>
               </div>
@@ -56,13 +67,10 @@ export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps =
                 <h3 className="text-xl font-bold text-slate-900 mb-4">
                   {product.name}
                 </h3>
-                <button
-                  onClick={() => onNavigate?.('products')}
-                  className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all duration-200"
-                >
+                <div className="inline-flex items-center gap-2 text-blue-600 font-semibold group-hover:gap-3 transition-all duration-200">
                   View Details
                   <ArrowRight size={18} />
-                </button>
+                </div>
               </div>
             </div>
           ))}

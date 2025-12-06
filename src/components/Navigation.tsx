@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import {
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut,
   onAuthStateChanged,
   User,
@@ -57,12 +59,42 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
     }
   };
 
+  // Check for redirect result on mount (when user returns from Google OAuth)
+  useEffect(() => {
+    const checkRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result) {
+          // User successfully signed in via redirect
+          setIsAuthModalOpen(false);
+          setIsAuthLoading(false);
+          setAuthError(null);
+        }
+      } catch (error: any) {
+        console.error('Redirect sign-in error:', error);
+        // Only show error if modal is open
+        if (isAuthModalOpen) {
+          setAuthError('Failed to sign in with Google. Please try again.');
+        }
+        setIsAuthLoading(false);
+      }
+    };
+    checkRedirectResult();
+  }, []); // Empty dependency array - only run on mount
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
     });
     return () => unsubscribe();
   }, []);
+
+  // Helper function to detect mobile devices
+  const isMobileDevice = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    ) || window.innerWidth < 768;
+  };
 
   const openAuthModal = () => {
     setIsAuthModalOpen(true);
@@ -80,11 +112,38 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
   const handleGoogleSignIn = async () => {
     try {
       setIsAuthLoading(true);
-      await signInWithPopup(auth, googleProvider);
-      closeAuthModal();
-    } catch (error) {
+      
+      // Use redirect on mobile devices, popup on desktop
+      if (isMobileDevice()) {
+        // On mobile, use redirect which works better
+        await signInWithRedirect(auth, googleProvider);
+        // Note: The modal will close automatically when redirect happens
+        // User will be redirected back after authentication
+      } else {
+        // On desktop, use popup
+        await signInWithPopup(auth, googleProvider);
+        closeAuthModal();
+      }
+    } catch (error: any) {
       console.error('Google sign-in failed:', error);
-    } finally {
+      
+      // Check if error is due to popup being blocked (fallback to redirect)
+      if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+        try {
+          await signInWithRedirect(auth, googleProvider);
+        } catch (redirectError) {
+          setAuthError('Failed to sign in with Google. Please try again.');
+          setIsAuthLoading(false);
+        }
+      } else {
+        setAuthError(error.message || 'Failed to sign in with Google. Please try again.');
+        setIsAuthLoading(false);
+      }
+    }
+    
+    // Only set loading to false if we're not using redirect
+    // (redirect will cause page navigation)
+    if (!isMobileDevice()) {
       setIsAuthLoading(false);
     }
   };
