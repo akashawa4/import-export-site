@@ -255,7 +255,7 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
       </div>
 
     </nav>
-      {isMobileMenuOpen && (
+      {isMobileMenuOpen && !isAuthModalOpen && (
       <>
         {/* Backdrop with blur - rendered outside nav */}
         <div 
@@ -267,6 +267,7 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
         <div 
           className="md:hidden fixed right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-[#FAF8F3]/70 backdrop-blur-3xl z-[9999] border-l-2 border-amber-300/30 shadow-2xl overflow-y-auto animate-slide-in-right"
           style={{ top: '64px' }}
+          onClick={(e) => e.stopPropagation()}
         >
           {/* Menu items */}
           <div className="px-6 py-6 pt-4 space-y-4">
@@ -307,10 +308,17 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 if (currentUser) {
+                  setIsMobileMenuOpen(false);
                   handleSignOut();
                 } else {
-                  openAuthModal();
+                  // Close menu and open modal immediately
+                  setIsMobileMenuOpen(false);
+                  // Use requestAnimationFrame to ensure menu closes before modal opens
+                  requestAnimationFrame(() => {
+                    openAuthModal();
+                  });
                 }
               }}
               disabled={isAuthLoading}
@@ -330,9 +338,9 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
     )}
     {/* Auth modal */}
     {isAuthModalOpen && !currentUser && (
-      <div className="fixed inset-0 z-[1100] flex items-center justify-center px-4">
+      <div className="fixed inset-0 z-[10000] flex items-center justify-center px-4">
         <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={closeAuthModal}></div>
-        <div className="relative z-[1101] w-full max-w-lg rounded-3xl bg-white/95 backdrop-blur-xl p-8 shadow-2xl space-y-6 animate-in fade-in duration-300">
+        <div className="relative z-[10001] w-full max-w-lg rounded-3xl bg-white/95 backdrop-blur-xl p-8 shadow-2xl space-y-6 animate-in fade-in duration-300">
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-bold text-slate-900">Continue to Premium Exports</h3>
             <button

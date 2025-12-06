@@ -295,6 +295,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
       emoji: '🧺',
       description: 'Premium export-quality cotton towels',
       slug: 'towels',
+      image: '/towel/Towelmain/banner.jpg',
     },
     {
       id: 'cow-dung',
@@ -302,6 +303,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
       emoji: '🌿',
       description: 'Organic cow dung cakes & dhoop',
       slug: 'cow-dung',
+      image: '/cow dung/cowbanner/banner.jpg',
     },
   ];
 
@@ -325,10 +327,12 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                   onClick={() => handleCategorySelect(category.slug)}
                   className="group bg-white rounded-xl border-2 border-gray-200 hover:border-amber-500 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden"
                 >
-                  <div className="aspect-video bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-8">
-                    <div className="text-8xl group-hover:scale-110 transition-transform duration-300">
-                      {category.emoji}
-                    </div>
+                  <div className="aspect-video bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
                   </div>
                   <div className="p-6">
                     <h3 className="text-2xl font-bold text-slate-900 mb-2">{category.name}</h3>
