@@ -1090,6 +1090,167 @@ export const towelTypesData: Record<string, { name: string; subtypes: string[] }
   }
 };
 
+interface EnquiryFormProps {
+  product: Product;
+  onClose: () => void;
+}
+
+function EnquiryForm({ product, onClose }: EnquiryFormProps) {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+    quantity: '',
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Format the message for WhatsApp
+    const whatsappMessage = `*Product Enquiry*\n\n` +
+      `*Product:* ${product.name}\n` +
+      `*Category:* ${product.category}\n` +
+      `*Type:* ${product.productType || 'N/A'}\n` +
+      `*Price:* ${product.price}\n\n` +
+      `*Customer Details:*\n` +
+      `Name: ${formData.name}\n` +
+      `Email: ${formData.email}\n` +
+      `Phone: ${formData.phone}\n` +
+      `Quantity: ${formData.quantity || 'Not specified'}\n\n` +
+      `*Message:*\n${formData.message || 'No additional message'}`;
+
+    // Encode the message for URL
+    const encodedMessage = encodeURIComponent(whatsappMessage);
+    
+    // WhatsApp API URL (738553529 is the phone number)
+    const whatsappUrl = `https://wa.me/91738553529?text=${encodedMessage}`;
+    
+    // Open WhatsApp in a new tab
+    window.open(whatsappUrl, '_blank');
+    
+    // Close the form
+    onClose();
+    
+    // Reset form
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      message: '',
+      quantity: '',
+    });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
+          Name <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          value={formData.name}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent"
+          placeholder="Your full name"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
+          Email <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent"
+          placeholder="your.email@example.com"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-1">
+          Phone Number <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          required
+          value={formData.phone}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent"
+          placeholder="+91 1234567890"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="quantity" className="block text-sm font-medium text-slate-700 mb-1">
+          Quantity
+        </label>
+        <input
+          type="text"
+          id="quantity"
+          name="quantity"
+          value={formData.quantity}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent"
+          placeholder="e.g., 100 pieces"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-1">
+          Additional Message
+        </label>
+        <textarea
+          id="message"
+          name="message"
+          rows={4}
+          value={formData.message}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent resize-none"
+          placeholder="Any specific requirements or questions..."
+        />
+      </div>
+
+      <div className="flex gap-3 pt-2">
+        <button
+          type="button"
+          onClick={onClose}
+          className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+          </svg>
+          Send via WhatsApp
+        </button>
+      </div>
+    </form>
+  );
+}
+
 interface ProductsPageProps {
   onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
 }
@@ -1117,6 +1278,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [showEnquiryForm, setShowEnquiryForm] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -1289,7 +1451,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                 <div
                   key={category.id}
                   onClick={() => handleCategorySelect(category.slug)}
-                  className="group bg-white rounded-xl border-2 border-gray-200 hover:border-amber-500 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden"
+                  className="group bg-white rounded-xl border-2 border-gray-200 hover:border-blue-600 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden"
                 >
                   <div className="aspect-video bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
                     <img
@@ -1439,7 +1601,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
               <div className="md:w-1/2 p-6 md:p-8 flex flex-col gap-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide">
+                    <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide">
                       {selectedProduct.category}
                     </p>
                     <h2 className="mt-1 text-2xl md:text-3xl font-bold text-slate-900">
@@ -1463,7 +1625,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                 </div>
 
                 {selectedProduct.highlight && (
-                  <span className="inline-flex self-start rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                  <span className="inline-flex self-start rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                     {selectedProduct.highlight}
                   </span>
                 )}
@@ -1485,6 +1647,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
 
                 <div className="mt-4 flex flex-wrap gap-3">
                   <button
+                    onClick={() => setShowEnquiryForm(true)}
                     className="inline-flex items-center justify-center rounded-full bg-slate-900 text-white px-5 py-2 text-sm font-semibold hover:bg-slate-800 transition"
                   >
                     Enquire Now
@@ -1495,12 +1658,51 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                         setSelectedProduct(null);
                         onNavigate?.('admin');
                       }}
-                      className="inline-flex items-center justify-center rounded-full border border-amber-500 text-amber-800 px-4 py-2 text-sm font-semibold hover:bg-amber-50 transition"
+                      className="inline-flex items-center justify-center rounded-full border border-blue-600 text-blue-800 px-4 py-2 text-sm font-semibold hover:bg-blue-50 transition"
                     >
                       Edit in Admin Panel
                     </button>
                   )}
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Enquiry Form Modal */}
+      {showEnquiryForm && selectedProduct && (
+        <div className="fixed inset-0 z-[1060] flex items-center justify-center px-4 py-4">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            onClick={() => setShowEnquiryForm(false)}
+          ></div>
+          <div className="relative z-[1061] w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="flex-shrink-0 p-6 border-b border-slate-200">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-bold text-slate-900">Product Enquiry</h3>
+                <button
+                  onClick={() => setShowEnquiryForm(false)}
+                  className="p-2 rounded-full hover:bg-slate-100 transition"
+                  aria-label="Close enquiry form"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto">
+              <div className="p-6 pt-4">
+                <div className="mb-4 p-4 bg-slate-50 rounded-lg">
+                  <p className="text-sm text-slate-600 mb-1">Product:</p>
+                  <p className="font-semibold text-slate-900">{selectedProduct.name}</p>
+                  <p className="text-sm text-slate-600 mt-1">Price: {selectedProduct.price}</p>
+                </div>
+
+                <EnquiryForm
+                  product={selectedProduct}
+                  onClose={() => setShowEnquiryForm(false)}
+                />
               </div>
             </div>
           </div>

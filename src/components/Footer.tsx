@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <div>
-            <h3 className="text-white text-xl font-bold mb-4">Premium Exports</h3>
+            <h3 className="text-white text-xl font-bold mb-4">Amritva Overseas</h3>
             <p className="text-sm leading-relaxed mb-4">
               Your trusted partner for premium towels, organic cow dung products, and eco-friendly exports from India to the world.
             </p>
@@ -71,11 +71,15 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2">
                 <Mail size={18} className="mt-0.5 flex-shrink-0" />
-                <span>info@premiumexports.com</span>
+                <span>amritvaverseas009@gmail.com</span>
               </li>
               <li className="flex items-start gap-2">
                 <Phone size={18} className="mt-0.5 flex-shrink-0" />
-                <span>+91 1234567890</span>
+                <span>+91 9309578076</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Phone size={18} className="mt-0.5 flex-shrink-0" />
+                <span>+91 7219075505</span>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin size={18} className="mt-0.5 flex-shrink-0" />
@@ -88,7 +92,7 @@ export default function Footer() {
         <div className="border-t border-slate-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm">
-              &copy; {currentYear} Premium Exports. All rights reserved.
+              &copy; {currentYear} Amritva Overseas. All rights reserved.
             </p>
             <div className="flex gap-4">
               <a

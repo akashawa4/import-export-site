@@ -5,10 +5,10 @@ interface HeroSectionProps {
   onNavigate?: (page: 'home' | 'products' | 'about' | 'contact') => void;
 }
 
-type SlideKey = 'purpose' | 'products' | 'people';
+type SlideKey = 'welcome' | 'why' | 'products' | 'global';
 
 export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
-  const [activeSlide, setActiveSlide] = useState<SlideKey>('purpose');
+  const [activeSlide, setActiveSlide] = useState<SlideKey>('welcome');
   const [_previousSlide, setPreviousSlide] = useState<SlideKey | null>(null);
 
   const handleScrollDown = () => {
@@ -26,33 +26,41 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
     onButtonClick: () => void;
     backgroundImage: string;
   }> = {
-    purpose: {
-      label: 'GUIDED BY OUR',
-      title: 'Purpose',
-      description: 'As a global import-export merchant we help connect businesses worldwide, working to create fair and sustainable value through quality products and reliable partnerships for the benefit of current and future generations.',
-      buttonText: 'DISCOVER WHO WE ARE',
+    welcome: {
+      label: 'WELCOME TO',
+      title: 'Amritva Overseas',
+      description: 'Your trusted partner in global trade. We connect markets with quality imports and exports, ensuring reliability, integrity, and long-term partnerships.',
+      buttonText: 'LEARN MORE',
       onButtonClick: () => onNavigate?.('about'),
       backgroundImage: '/hero/purpose.jpg'
     },
+    why: {
+      label: 'WHY CHOOSE US',
+      title: 'Why Choose Us',
+      description: 'We prioritize transparent communication, consistent quality, and on-time delivery so you can scale confidently with a partner who is invested in your success.',
+      buttonText: 'OUR ADVANTAGE',
+      onButtonClick: () => onNavigate?.('about'),
+      backgroundImage: '/hero/people.webp'
+    },
     products: {
-      label: 'PASSIONATE ABOUT OUR',
-      title: 'Products',
-      description: 'We offer a curated selection of premium products carefully sourced from sustainable suppliers around the world. Each item represents our commitment to quality, ethics, and environmental responsibility.',
-      buttonText: 'EXPLORE ALL PRODUCTS',
+      label: 'OUR PRODUCT RANGE',
+      title: 'Our Products',
+      description: 'Explore a curated portfolio sourced from vetted suppliers worldwide, selected for their quality, sustainability, and value.',
+      buttonText: 'EXPLORE PRODUCTS',
       onButtonClick: () => onNavigate?.('products'),
       backgroundImage: '/hero/product.png'
     },
-    people: {
-      label: 'INSPIRED BY OUR',
-      title: 'People',
-      description: 'Our diverse team of professionals brings expertise from across the globe. We are united by a shared vision of creating sustainable value and meaningful partnerships with our clients and suppliers.',
-      buttonText: 'MEET OUR TEAM',
-      onButtonClick: () => onNavigate?.('about'),
+    global: {
+      label: 'GLOBAL CONNECTION',
+      title: 'Global Connection',
+      description: 'With a worldwide network and logistics expertise, we bridge continents to deliver dependable trade solutions wherever you operate.',
+      buttonText: 'CONTACT US',
+      onButtonClick: () => onNavigate?.('contact'),
       backgroundImage: '/hero/people.webp'
     }
   };
 
-  const slideOrder: SlideKey[] = ['purpose', 'products', 'people'];
+  const slideOrder: SlideKey[] = ['welcome', 'why', 'products', 'global'];
 
   const nextSlide = () => {
     const currentIndex = slideOrder.indexOf(activeSlide);
@@ -193,7 +201,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
 
         <div className="absolute bottom-4 left-4 md:left-6 lg:left-12 z-30">
           <p className="text-white/60 text-xs md:text-sm">
-            premium-exports.com
+            Amritva Overseas
           </p>
         </div>
       </div>

@@ -182,7 +182,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                 type="text"
                 value={newProduct.name}
                 onChange={(e) => setNewProduct((p) => ({ ...p, name: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                 placeholder="Product name"
               />
             </div>
@@ -208,7 +208,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                     productSubtype: '',
                   }));
                 }}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 bg-white"
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 bg-white"
               >
                 <option value="towels">Towels</option>
                 <option value="cow-dung">Cow Dung Products</option>
@@ -231,7 +231,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                         imageUrl: getImageForType(type) || p.imageUrl,
                       }));
                     }}
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 bg-white"
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 bg-white"
                   >
                     {towelTypes.map((type) => (
                       <option key={type} value={type}>
@@ -252,7 +252,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                         productSubtype: subtype,
                       }));
                     }}
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 bg-white"
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 bg-white"
                   >
                     <option value="">Select Subtype (Optional)</option>
                     {availableSubtypes.map((subtype: string) => (
@@ -276,7 +276,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                       imageUrl: getImageForType(e.target.value) || p.imageUrl,
                     }))
                   }
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                   placeholder="e.g. Cow Dung Cakes, Dhoop Sticks"
                 />
               </div>
@@ -295,7 +295,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                     price: `$${Number(e.target.value || 0).toFixed(2)}`,
                   }))
                 }
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
               />
             </div>
             <div className="space-y-2 md:col-span-2">
@@ -304,7 +304,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                 type="text"
                 value={newProduct.highlight ?? ''}
                 onChange={(e) => setNewProduct((p) => ({ ...p, highlight: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                 placeholder="e.g. Best Seller, New, Limited Stock"
               />
             </div>
@@ -314,7 +314,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                 type="text"
                 value={newProduct.imageUrl ?? ''}
                 onChange={(e) => setNewProduct((p) => ({ ...p, imageUrl: e.target.value }))}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                 placeholder="/towel/bathtowel/bathtowel (1).jpg"
               />
               <p className="text-[11px] text-slate-500">
@@ -344,7 +344,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                       e.target.value = '';
                     }
                   }}
-                  className="mt-1 block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100"
+                  className="mt-1 block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                 />
               </div>
             </div>
@@ -354,7 +354,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                 value={newProduct.description}
                 onChange={(e) => setNewProduct((p) => ({ ...p, description: e.target.value }))}
                 rows={3}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2 text-sm text-slate-800 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2 text-sm text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                 placeholder="Write a clear, attractive description for this product..."
               />
             </div>
@@ -412,7 +412,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                 }
               }}
               disabled={creating}
-              className={`rounded-full px-5 py-2 text-sm font-semibold text-white bg-amber-600 hover:bg-amber-700 shadow-sm transition ${
+              className={`rounded-full px-5 py-2 text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 shadow-sm transition ${
                 creating ? 'opacity-60 cursor-not-allowed' : ''
               }`}
             >
@@ -450,7 +450,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                   setError(err.message || 'Failed to create demo products');
                 }
               }}
-              className="inline-flex items-center rounded-full border border-amber-400 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100 transition"
+              className="inline-flex items-center rounded-full border border-blue-500 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-900 hover:bg-blue-100 transition"
             >
               Create Demo Products
             </button>
@@ -465,7 +465,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                   {product.name || 'Untitled Product'}
                 </h2>
                 {typeof product.priceValue === 'number' && !Number.isNaN(product.priceValue) && (
-                  <span className="text-sm font-semibold text-amber-700">
+                  <span className="text-sm font-semibold text-blue-700">
                     ${product.priceValue.toFixed(2)}
                   </span>
                 )}
@@ -481,7 +481,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                         prev.map((p) => (p.id === product.id ? { ...p, name: e.target.value } : p))
                       )
                     }
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                   />
                 </div>
                 <div className="space-y-2">
@@ -505,7 +505,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                         )
                       );
                     }}
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 bg-white"
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 bg-white"
                   >
                     <option value="towels">Towels</option>
                     <option value="cow-dung">Cow Dung Products</option>
@@ -532,7 +532,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                             )
                           );
                         }}
-                        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 bg-white"
+                        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 bg-white"
                       >
                         {towelTypes.map((type) => (
                           <option key={type} value={type}>
@@ -558,7 +558,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                             )
                           );
                         }}
-                        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100 bg-white"
+                        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 bg-white"
                       >
                         <option value="">Select Subtype (Optional)</option>
                         {(product.productType && towelTypesData[product.productType]
@@ -591,7 +591,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                           )
                         )
                       }
-                      className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                      className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                     />
                   </div>
                 )}
@@ -616,7 +616,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                         )
                       );
                     }}
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
@@ -629,7 +629,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                         prev.map((p) => (p.id === product.id ? { ...p, highlight: e.target.value } : p))
                       )
                     }
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                     placeholder="e.g. Best Seller, New, Limited Stock"
                   />
                 </div>
@@ -643,7 +643,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                         prev.map((p) => (p.id === product.id ? { ...p, imageUrl: e.target.value } : p))
                       )
                     }
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                     placeholder="/towel/bathtowel/bathtowel (1).jpg"
                   />
                   <p className="text-[11px] text-slate-500">
@@ -677,7 +677,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                           e.target.value = '';
                         }
                       }}
-                      className="mt-1 block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100"
+                      className="mt-1 block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                     />
                   </div>
                 </div>
@@ -691,7 +691,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                       )
                     }
                     rows={3}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2 text-sm text-slate-800 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2 text-sm text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                     placeholder="Write a clear, attractive description for this product..."
                   />
                 </div>
@@ -709,7 +709,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                 <button
                   onClick={() => handleSave(product)}
                   disabled={savingId === product.id}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold text-white bg-amber-600 hover:bg-amber-700 shadow-sm transition ${
+                  className={`rounded-full px-4 py-2 text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 shadow-sm transition ${
                     savingId === product.id ? 'cursor-not-allowed opacity-60' : ''
                   }`}
                 >

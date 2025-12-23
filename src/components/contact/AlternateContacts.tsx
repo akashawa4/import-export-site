@@ -1,11 +1,11 @@
-import { Mail, Phone, MessageCircle, Linkedin, Twitter } from 'lucide-react';
+import { Mail, Phone, MessageCircle, Linkedin, Twitter, Instagram } from 'lucide-react';
 
 const contactMethods = [
   {
     icon: Mail,
     title: 'Email Us',
     description: 'Send us an email for detailed enquiries',
-    link: 'mailto:info@premiumexports.com',
+    link: 'mailto:amritvaverseas009@gmail.com',
     linkText: 'Send Email',
     bgColor: 'bg-blue-50',
     iconColor: 'text-blue-600',
@@ -14,7 +14,7 @@ const contactMethods = [
     icon: Phone,
     title: 'Call Us',
     description: 'Direct phone support for bulk orders',
-    link: 'tel:+919876543210',
+    link: 'tel:+919309578076',
     linkText: 'Call Now',
     bgColor: 'bg-purple-50',
     iconColor: 'text-purple-600',
@@ -23,7 +23,7 @@ const contactMethods = [
     icon: MessageCircle,
     title: 'WhatsApp',
     description: 'Quick responses on WhatsApp Business',
-    link: 'https://wa.me/919876543210',
+    link: 'https://wa.me/919309578076',
     linkText: 'Chat Now',
     bgColor: 'bg-green-50',
     iconColor: 'text-green-600',
@@ -88,20 +88,30 @@ export default function AlternateContacts() {
             <a
               href="#"
               className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-200"
+              title="LinkedIn"
             >
               <Linkedin size={24} />
             </a>
             <a
               href="#"
               className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center hover:bg-blue-400 hover:text-white transition-all duration-200"
+              title="Twitter"
             >
               <Twitter size={24} />
             </a>
             <a
-              href="https://wa.me/919876543210"
+              href="#"
+              className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all duration-200"
+              title="Instagram"
+            >
+              <Instagram size={24} />
+            </a>
+            <a
+              href="https://wa.me/919309578076"
               target="_blank"
               rel="noopener noreferrer"
               className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center hover:bg-green-500 hover:text-white transition-all duration-200"
+              title="WhatsApp"
             >
               <MessageCircle size={24} />
             </a>

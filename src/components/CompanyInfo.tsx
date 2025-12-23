@@ -37,7 +37,7 @@ export default function CompanyInfo() {
               Our Value Chain
             </h2>
             <p className="text-lg text-slate-600 leading-relaxed mb-6">
-              Premium Exports is a leading global import-export merchant dedicated to connecting businesses worldwide with high-quality products from sustainable suppliers.
+              Amritva Overseas is a leading global import-export merchant dedicated to connecting businesses worldwide with high-quality products from sustainable suppliers.
             </p>
             <p className="text-lg text-slate-600 leading-relaxed mb-8">
               With over 25 years of experience in international trade, we specialize in agricultural commodities, textiles, pharmaceuticals, and specialty products. Our commitment to excellence, sustainability, and fair partnerships has made us a trusted partner for businesses across more than 50 countries.

@@ -49,7 +49,7 @@ export default function ProductCard({
         )}
 
         {highlight && (
-          <div className="absolute top-3 right-3 bg-amber-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-md">
+          <div className="absolute top-3 right-3 bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-md">
             {highlight}
           </div>
         )}
@@ -68,7 +68,7 @@ export default function ProductCard({
       </div>
 
       <div className="p-5">
-        <p className="text-xs text-amber-600 font-medium mb-2 uppercase tracking-wide">
+        <p className="text-xs text-blue-700 font-medium mb-2 uppercase tracking-wide">
           {category}
         </p>
         <h3 className="text-lg font-bold text-slate-900 mb-2 line-clamp-1">
@@ -81,7 +81,7 @@ export default function ProductCard({
           <p className="font-bold text-slate-900 text-xl">
             {price}
           </p>
-          <div className="flex items-center gap-1 text-amber-600">
+          <div className="flex items-center gap-1 text-blue-700">
             <span className="text-sm font-semibold">★</span>
             <span className="text-sm font-medium">4.6</span>
           </div>

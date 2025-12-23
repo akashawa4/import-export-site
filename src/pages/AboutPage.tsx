@@ -6,6 +6,7 @@ import MissionVisionValues from '../components/about/MissionVisionValues';
 import ExportCapabilities from '../components/about/ExportCapabilities';
 import CompanyTimeline from '../components/about/CompanyTimeline';
 import AboutCTA from '../components/about/AboutCTA';
+import AboutProducts from '../components/about/AboutProducts';
 
 interface AboutPageProps {
   onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
@@ -19,6 +20,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps = {}) {
       <BrandStory />
       <MissionVisionValues />
       <ExportCapabilities />
+      <AboutProducts />
       <CompanyTimeline />
       <AboutCTA />
       <Footer />

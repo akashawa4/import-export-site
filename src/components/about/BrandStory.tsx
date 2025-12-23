@@ -5,16 +5,10 @@ export default function BrandStory() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
-              Who We Are
+              About Company
             </h2>
             <p className="text-lg text-slate-600 leading-relaxed">
-              Premium Exports is a leading Indian exporter specializing in high-quality towels, organic cow dung products, and eco-friendly items. Established with a vision to bring India's finest products to the global market, we have built our reputation on trust, quality, and reliability.
-            </p>
-            <p className="text-lg text-slate-600 leading-relaxed">
-              With over a decade of experience in international trade, we understand the unique requirements of export markets. Our products meet stringent quality standards and are backed by comprehensive certifications, ensuring seamless customs clearance and customer satisfaction worldwide.
-            </p>
-            <p className="text-lg text-slate-600 leading-relaxed">
-              From luxurious cotton towels to traditional organic cow dung products, we source directly from trusted manufacturers across India. Our commitment to sustainability, fair trade practices, and exceptional customer service has made us a preferred partner for wholesalers, retailers, and distributors in over 20 countries.
+              Amritva Overseas is a trusted and growing export-import firm based in India, specialized in the global trade of high-quality Indian products. We are committed to delivering excellence, sustainability, and authenticity in every consignment, serving clients across the globe with integrity and professionalism.
             </p>
           </div>
 

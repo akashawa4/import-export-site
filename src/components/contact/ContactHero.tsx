@@ -6,7 +6,7 @@ export default function ContactHero() {
           Contact Us
         </h1>
         <p className="text-lg md:text-xl text-slate-600 leading-relaxed">
-          Reach out to us for bulk orders, export enquiries, or product information.
+          Reach out to us for bulk orders, export enquiries, or product information. We're here to help you grow your business.
         </p>
       </div>
     </section>

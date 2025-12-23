@@ -2,19 +2,20 @@ import { Target, Eye, Heart } from 'lucide-react';
 
 const pillars = [
   {
-    icon: Target,
-    title: 'Our Mission',
-    description: 'To deliver premium Indian export products that meet international quality standards while supporting sustainable practices and fair trade.',
-  },
-  {
     icon: Eye,
     title: 'Our Vision',
-    description: 'To become the most trusted global supplier of quality towels and organic products from India, expanding to new markets while maintaining excellence.',
+    description: 'To become a globally recognized and respected name in the export-import industry by promoting traditional Indian products and ensuring customer satisfaction through reliable service.',
   },
   {
-    icon: Heart,
-    title: 'Our Values',
-    description: 'Quality first, sustainable sourcing, transparency in business, ethical manufacturing, and building long-term partnerships with our clients.',
+    icon: Target,
+    title: 'Our Mission',
+    description: (
+      <ul className="list-disc pl-4 space-y-2 text-left">
+        <li>To provide premium quality goods that meet international standards.</li>
+        <li>To build long-term relationships with global partners through transparency and timely delivery.</li>
+        <li>To empower local artisans and rural suppliers by connecting them to international markets.</li>
+      </ul>
+    ),
   },
 ];
 
@@ -22,7 +23,7 @@ export default function MissionVisionValues() {
   return (
     <section className="py-16 bg-slate-50">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {pillars.map((pillar) => {
             const Icon = pillar.icon;
             return (
@@ -36,9 +37,9 @@ export default function MissionVisionValues() {
                 <h3 className="text-xl font-bold text-slate-900 mb-4">
                   {pillar.title}
                 </h3>
-                <p className="text-slate-600 leading-relaxed">
+                <div className="text-slate-600 leading-relaxed">
                   {pillar.description}
-                </p>
+                </div>
               </div>
             );
           })}

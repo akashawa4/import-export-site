@@ -52,9 +52,12 @@ export default function ContactForm() {
         <div className="grid md:grid-cols-2 gap-12">
           <div className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-slate-900 mb-8">
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">
                 Get in Touch
               </h2>
+              <p className="text-lg text-slate-600 mb-8">
+                We'd love to hear from you. Choose your preferred way to connect.
+              </p>
             </div>
 
             <div className="space-y-6">
@@ -65,10 +68,10 @@ export default function ContactForm() {
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-1">Email</h3>
                   <a
-                    href="mailto:info@premiumexports.com"
+                    href="mailto:amritvaverseas009@gmail.com"
                     className="text-slate-600 hover:text-blue-600 transition-colors"
                   >
-                    info@premiumexports.com
+                    amritvaverseas009@gmail.com
                   </a>
                 </div>
               </div>
@@ -79,12 +82,20 @@ export default function ContactForm() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-1">Phone</h3>
-                  <a
-                    href="tel:+919876543210"
-                    className="text-slate-600 hover:text-blue-600 transition-colors"
-                  >
-                    +91 9876 543 210
-                  </a>
+                  <div className="space-y-1">
+                    <a
+                      href="tel:+919309578076"
+                      className="block text-slate-600 hover:text-blue-600 transition-colors"
+                    >
+                      +91 9309578076
+                    </a>
+                    <a
+                      href="tel:+917219075505"
+                      className="block text-slate-600 hover:text-blue-600 transition-colors"
+                    >
+                      +91 7219075505
+                    </a>
+                  </div>
                 </div>
               </div>
 
@@ -111,7 +122,7 @@ export default function ContactForm() {
                     Location
                   </h3>
                   <p className="text-slate-600">
-                    New Delhi, India
+                    India
                     <br />
                     Export Hub - Pan India Operations
                   </p>
@@ -120,7 +131,7 @@ export default function ContactForm() {
             </div>
 
             <a
-              href="https://wa.me/919876543210"
+              href="https://wa.me/919309578076"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full inline-flex items-center justify-center gap-3 px-6 py-4 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl mt-6"

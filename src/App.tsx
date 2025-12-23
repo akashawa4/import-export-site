@@ -4,7 +4,7 @@ import HeroSection from './components/HeroSection';
 import CompanyInfo from './components/CompanyInfo';
 import FeaturedProducts from './components/FeaturedProducts';
 import TrustSection from './components/TrustSection';
-import AboutPreview from './components/AboutPreview';
+
 import CTABlock from './components/CTABlock';
 import Footer from './components/Footer';
 import ProductsPage from './pages/ProductsPage';
@@ -66,9 +66,9 @@ function App() {
       <Navigation onNavigate={handleNavigation} />
       <HeroSection onNavigate={handleNavigation} />
       <CompanyInfo />
-      <FeaturedProducts onNavigate={handleNavigation} />
       <TrustSection />
-      <AboutPreview />
+      <FeaturedProducts onNavigate={handleNavigation} />
+
       <CTABlock />
       <Footer />
     </div>

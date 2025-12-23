@@ -8,8 +8,17 @@ export default function AboutCTA() {
           Want to know more or discuss bulk orders?
         </h2>
         <p className="text-xl text-blue-50 mb-10">
-          Our team is ready to answer your questions and provide personalized export solutions
+          Our team is ready to answer your questions and provide personalized export solutions.
         </p>
+
+        <div className="mb-10 space-y-2 text-blue-50">
+          <p className="text-lg">
+            <span className="font-semibold">Contact Numbers:</span> +91 9309578076, +91 7219075505
+          </p>
+          <p className="text-lg">
+            <span className="font-semibold">Email:</span> amritvaverseas009@gmail.com
+          </p>
+        </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href="#contact"
@@ -19,7 +28,7 @@ export default function AboutCTA() {
             Contact Us
           </a>
           <a
-            href="https://wa.me/1234567890"
+            href="https://wa.me/919309578076"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"

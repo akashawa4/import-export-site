@@ -41,42 +41,17 @@ export default function FilterBar({
               placeholder="Search Product"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white"
+              className="w-full pl-10 pr-4 py-2.5 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white"
             />
           </div>
 
-          {/* Towel Types Row - Only show when category is towels */}
-          {selectedCategory === 'towels' && towelTypes.length > 0 && (
-            <div className="flex flex-wrap gap-2 md:gap-2 overflow-x-auto pb-2">
-              {towelTypes.map((type) => (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => {
-                    if (onTowelTypeChange) {
-                      const newType = selectedTowelType === type ? '' : type;
-                      onTowelTypeChange(newType);
-                      onTypeChange('all'); // Reset subtype when changing main type
-                    }
-                  }}
-                  className={`px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
-                    selectedTowelType === type
-                      ? 'bg-amber-500 text-white shadow-md'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
-            </div>
-          )}
-
+          {/* Towel Types Dropdown - Only show when category is towels */}
           <div className="flex flex-wrap gap-2 md:gap-4">
             <select
               value={selectedCategory}
               onChange={(e) => onCategoryChange(e.target.value)}
-              className={`flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white cursor-pointer ${
-                selectedCategory !== 'all' ? 'border-amber-500' : 'border-gray-300'
+              className={`flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white cursor-pointer ${
+                selectedCategory !== 'all' ? 'border-blue-600' : 'border-gray-300'
               }`}
             >
               <option value="all">All Categories</option>
@@ -84,12 +59,34 @@ export default function FilterBar({
               <option value="cow-dung">Cow Dung Products</option>
             </select>
 
+            {selectedCategory === 'towels' && towelTypes.length > 0 && (
+              <select
+                value={selectedTowelType}
+                onChange={(e) => {
+                  if (onTowelTypeChange) {
+                    onTowelTypeChange(e.target.value);
+                    onTypeChange('all');
+                  }
+                }}
+                className={`flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white cursor-pointer ${
+                  selectedTowelType ? 'border-blue-600' : 'border-gray-300'
+                }`}
+              >
+                <option value="">All Towel Types</option>
+                {towelTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            )}
+
             {availableTypes.length > 0 && (
               <select
                 value={selectedType}
                 onChange={(e) => onTypeChange(e.target.value)}
-                className={`flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white cursor-pointer ${
-                  selectedType !== 'all' ? 'border-amber-500' : 'border-gray-300'
+                className={`flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white cursor-pointer ${
+                  selectedType !== 'all' ? 'border-blue-600' : 'border-gray-300'
                 }`}
               >
                 <option value="all">
@@ -106,7 +103,7 @@ export default function FilterBar({
             <select
               value={sortBy}
               onChange={(e) => onSortChange(e.target.value)}
-              className="flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white cursor-pointer"
+              className="flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white cursor-pointer"
             >
               <option value="newest">Newest</option>
               <option value="price-low">Price: Low to High</option>
