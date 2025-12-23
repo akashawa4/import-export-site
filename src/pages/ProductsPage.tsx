@@ -1568,7 +1568,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
 
       {/* Product detail modal */}
       {selectedProduct && (
-        <div className="fixed inset-0 z-[1050] flex items-end sm:items-center justify-center px-0 sm:px-4">
+        <div className="fixed inset-0 z-[1050] flex items-center justify-center px-4">
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-md"
             onClick={() => setSelectedProduct(null)}
