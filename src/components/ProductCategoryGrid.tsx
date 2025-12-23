@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+
 
 interface Category {
   id: string;
@@ -24,7 +24,7 @@ export default function ProductCategoryGrid({ onNavigate }: ProductCategoryGridP
       id: 'cow-dung',
       name: 'Cow Dung Products',
       image: '/cow dung/cowbanner/banner.jpg',
-      description: 'Organic cow dung cakes & dhoop',
+      description: 'Organic cow dung cakes & eco products',
     },
   ];
 

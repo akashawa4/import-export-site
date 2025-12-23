@@ -50,9 +50,8 @@ export default function FilterBar({
             <select
               value={selectedCategory}
               onChange={(e) => onCategoryChange(e.target.value)}
-              className={`flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white cursor-pointer ${
-                selectedCategory !== 'all' ? 'border-blue-600' : 'border-gray-300'
-              }`}
+              className={`flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white cursor-pointer ${selectedCategory !== 'all' ? 'border-blue-600' : 'border-gray-300'
+                }`}
             >
               <option value="all">All Categories</option>
               <option value="towels">Towels</option>
@@ -68,9 +67,8 @@ export default function FilterBar({
                     onTypeChange('all');
                   }
                 }}
-                className={`flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white cursor-pointer ${
-                  selectedTowelType ? 'border-blue-600' : 'border-gray-300'
-                }`}
+                className={`flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white cursor-pointer ${selectedTowelType ? 'border-blue-600' : 'border-gray-300'
+                  }`}
               >
                 <option value="">All Towel Types</option>
                 {towelTypes.map((type) => (
@@ -85,9 +83,8 @@ export default function FilterBar({
               <select
                 value={selectedType}
                 onChange={(e) => onTypeChange(e.target.value)}
-                className={`flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white cursor-pointer ${
-                  selectedType !== 'all' ? 'border-blue-600' : 'border-gray-300'
-                }`}
+                className={`flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white cursor-pointer ${selectedType !== 'all' ? 'border-blue-600' : 'border-gray-300'
+                  }`}
               >
                 <option value="all">
                   {selectedCategory === 'towels' && selectedTowelType ? 'All Subtypes' : 'All Types'}

@@ -20,7 +20,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
   const [selectedTowelType, setSelectedTowelType] = useState<string>('Bath Towel');
   const [selectedSubtype, setSelectedSubtype] = useState<string>('');
   const towelTypes = Object.keys(towelTypesData);
-  
+
   // Compute available subtypes based on selected towel type
   const availableSubtypes = useMemo(() => {
     if (selectedTowelType && towelTypesData[selectedTowelType]) {
@@ -28,7 +28,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
     }
     return [];
   }, [selectedTowelType]);
-  
+
   const [newProduct, setNewProduct] = useState<Omit<CatalogProduct, 'id'>>({
     name: '',
     category: 'Towels',
@@ -36,7 +36,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
     productType: 'Bath Towel',
     productSubtype: '',
     description: '',
-    price: '₹0.00',
+    price: 'Contact for Price',
     priceValue: 0,
     imageEmoji: '🧺',
     highlight: '',
@@ -398,7 +398,7 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                     productType: 'Bath Towel',
                     productSubtype: '',
                     description: '',
-                    price: '₹0.00',
+                    price: 'Contact for Price',
                     priceValue: 0,
                     imageEmoji: '🧺',
                     highlight: '',
@@ -412,9 +412,8 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                 }
               }}
               disabled={creating}
-              className={`rounded-full px-5 py-2 text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 shadow-sm transition ${
-                creating ? 'opacity-60 cursor-not-allowed' : ''
-              }`}
+              className={`rounded-full px-5 py-2 text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 shadow-sm transition ${creating ? 'opacity-60 cursor-not-allowed' : ''
+                }`}
             >
               {creating ? 'Adding...' : 'Add Product'}
             </button>
@@ -494,13 +493,13 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                         prev.map((p) =>
                           p.id === product.id
                             ? {
-                                ...p,
-                                categorySlug: slug,
-                                category: slug === 'towels' ? 'Towels' : 'Cow Dung Products',
-                                imageEmoji: slug === 'towels' ? '🧺' : '🌿',
-                                productType: slug === 'towels' ? 'Bath Towel' : p.productType,
-                                productSubtype: slug === 'towels' ? '' : p.productSubtype,
-                              }
+                              ...p,
+                              categorySlug: slug,
+                              category: slug === 'towels' ? 'Towels' : 'Cow Dung Products',
+                              imageEmoji: slug === 'towels' ? '🧺' : '🌿',
+                              productType: slug === 'towels' ? 'Bath Towel' : p.productType,
+                              productSubtype: slug === 'towels' ? '' : p.productSubtype,
+                            }
                             : p
                         )
                       );
@@ -523,11 +522,11 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                             prev.map((p) =>
                               p.id === product.id
                                 ? {
-                                    ...p,
-                                    productType: type,
-                                    productSubtype: '', // Reset subtype when type changes
-                                    imageUrl: getImageForType(type) || p.imageUrl,
-                                  }
+                                  ...p,
+                                  productType: type,
+                                  productSubtype: '', // Reset subtype when type changes
+                                  imageUrl: getImageForType(type) || p.imageUrl,
+                                }
                                 : p
                             )
                           );
@@ -551,9 +550,9 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                             prev.map((p) =>
                               p.id === product.id
                                 ? {
-                                    ...p,
-                                    productSubtype: subtype,
-                                  }
+                                  ...p,
+                                  productSubtype: subtype,
+                                }
                                 : p
                             )
                           );
@@ -583,10 +582,10 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                           prev.map((p) =>
                             p.id === product.id
                               ? {
-                                  ...p,
-                                  productType: e.target.value,
-                                  imageUrl: getImageForType(e.target.value) || p.imageUrl,
-                                }
+                                ...p,
+                                productType: e.target.value,
+                                imageUrl: getImageForType(e.target.value) || p.imageUrl,
+                              }
                               : p
                           )
                         )
@@ -608,10 +607,10 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                         prev.map((p) =>
                           p.id === product.id
                             ? {
-                                ...p,
-                                priceValue: value,
-                                price: `$${value.toFixed(2)}`,
-                              }
+                              ...p,
+                              priceValue: value,
+                              price: `$${value.toFixed(2)}`,
+                            }
                             : p
                         )
                       );
@@ -700,18 +699,16 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                 <button
                   onClick={() => handleDelete(product.id)}
                   disabled={deletingId === product.id}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 transition ${
-                    deletingId === product.id ? 'cursor-not-allowed opacity-60' : ''
-                  }`}
+                  className={`rounded-full px-4 py-2 text-sm font-semibold border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 transition ${deletingId === product.id ? 'cursor-not-allowed opacity-60' : ''
+                    }`}
                 >
                   {deletingId === product.id ? 'Deleting...' : 'Delete'}
                 </button>
                 <button
                   onClick={() => handleSave(product)}
                   disabled={savingId === product.id}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 shadow-sm transition ${
-                    savingId === product.id ? 'cursor-not-allowed opacity-60' : ''
-                  }`}
+                  className={`rounded-full px-4 py-2 text-sm font-semibold text-white bg-blue-700 hover:bg-blue-800 shadow-sm transition ${savingId === product.id ? 'cursor-not-allowed opacity-60' : ''
+                    }`}
                 >
                   {savingId === product.id ? 'Saving...' : 'Save Changes'}
                 </button>
