@@ -1339,6 +1339,18 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
     return unsubscribe;
   }, []);
 
+  // Disable body scroll when modal is open
+  useEffect(() => {
+    if (selectedProduct || showEnquiryForm) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedProduct, showEnquiryForm]);
+
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = products;
 

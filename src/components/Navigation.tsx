@@ -193,8 +193,8 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
     <>
       <nav
         className={`sticky top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled
-            ? 'bg-[#F7F9FC]/98 backdrop-blur-lg shadow-lg border-b border-blue-200/40'
-            : 'bg-[#F7F9FC]/95 backdrop-blur-md'
+          ? 'bg-[#F7F9FC]/98 backdrop-blur-lg shadow-lg border-b border-blue-200/40'
+          : 'bg-[#F7F9FC]/95 backdrop-blur-md'
           }`}
       >
         <div className="max-w-7xl mx-auto px-6">
@@ -206,8 +206,7 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
               >
                 <img src="/favicon.jpg" alt="Amritva Overseas Logo" className="h-8 sm:h-10 w-auto" />
                 <span className="relative text-lg sm:text-2xl font-bold">
-                  <span className="relative z-10 hidden xs:inline">Amritva Overseas</span>
-                  <span className="relative z-10 xs:hidden">Amritva</span>
+                  <span className="relative z-10">Amritva Overseas</span>
                   <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-blue-700 transition-all duration-300 group-hover:w-full"></span>
                 </span>
               </button>
@@ -238,8 +237,8 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
                 onClick={currentUser ? handleSignOut : openAuthModal}
                 disabled={isAuthLoading}
                 className={`ml-2 inline-flex items-center gap-2 rounded-full border border-blue-500 px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-all duration-300 ${currentUser
-                    ? 'bg-blue-600/15 text-blue-900 hover:bg-blue-600/25'
-                    : 'bg-white/90 text-slate-800 hover:bg-white hover:shadow-lg btn-glow'
+                  ? 'bg-blue-600/15 text-blue-900 hover:bg-blue-600/25'
+                  : 'bg-white/90 text-slate-800 hover:bg-white hover:shadow-lg btn-glow'
                   } ${isAuthLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
               >
                 {currentUser ? `Sign out (${currentUser.displayName?.split(' ')[0] ?? 'User'})` : 'Sign In'}
@@ -325,8 +324,8 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
                 }}
                 disabled={isAuthLoading}
                 className={`w-full text-left font-bold py-4 px-5 rounded-xl uppercase tracking-wider transition-all duration-300 ${currentUser
-                    ? 'text-blue-900 bg-blue-200/40 hover:bg-blue-200/60'
-                    : 'text-slate-900 bg-white/80 hover:bg-white btn-glow'
+                  ? 'text-blue-900 bg-blue-200/40 hover:bg-blue-200/60'
+                  : 'text-slate-900 bg-white/80 hover:bg-white btn-glow'
                   } backdrop-blur-md border-2 border-blue-200/40 shadow-lg active:scale-[0.98] ${isAuthLoading ? 'opacity-60 cursor-not-allowed' : ''
                   }`}
               >
