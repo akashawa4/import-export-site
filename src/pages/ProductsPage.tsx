@@ -7,6 +7,7 @@ import EmptyState from '../components/EmptyState';
 import { collection, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { db, auth } from '../firebase';
+import { getProductSpecifications } from '../data/productSpecifications';
 
 export interface Product {
   id: string;
@@ -1106,7 +1107,7 @@ function EnquiryForm({ product, onClose }: EnquiryFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Format the message for WhatsApp
     const whatsappMessage = `*Product Enquiry*\n\n` +
       `*Product:* ${product.name}\n` +
@@ -1122,16 +1123,16 @@ function EnquiryForm({ product, onClose }: EnquiryFormProps) {
 
     // Encode the message for URL
     const encodedMessage = encodeURIComponent(whatsappMessage);
-    
+
     // WhatsApp API URL (738553529 is the phone number)
     const whatsappUrl = `https://wa.me/91738553529?text=${encodedMessage}`;
-    
+
     // Open WhatsApp in a new tab
     window.open(whatsappUrl, '_blank');
-    
+
     // Close the form
     onClose();
-    
+
     // Reset form
     setFormData({
       name: '',
@@ -1242,7 +1243,7 @@ function EnquiryForm({ product, onClose }: EnquiryFormProps) {
           className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
           </svg>
           Send via WhatsApp
         </button>
@@ -1261,7 +1262,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
   const savedCategory = sessionStorage.getItem('selectedCategory') || 'all';
   const [viewMode, setViewMode] = useState<'categories' | 'products'>(shouldShowProductsDirectly ? 'products' : 'categories');
   const [selectedCategory, setSelectedCategory] = useState(savedCategory);
-  
+
   // Clear the flags after using them
   useEffect(() => {
     if (shouldShowProductsDirectly) {
@@ -1353,8 +1354,8 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
     // Filter by subtype if selected
     if (selectedType !== 'all') {
       // Filter by subtype if it exists, otherwise by productType
-      filtered = filtered.filter((p) => 
-        (p.productSubtype && p.productSubtype === selectedType) || 
+      filtered = filtered.filter((p) =>
+        (p.productSubtype && p.productSubtype === selectedType) ||
         (!p.productSubtype && p.productType === selectedType)
       );
     }
@@ -1395,7 +1396,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
 
   const towelTypes = Object.keys(towelTypesData);
   const cowDungTypes = ['Cow Dung Cakes', 'Dhoop Sticks', 'Incense Cones', 'Fertilizer'];
-  
+
   // Get available types based on category and selected towel type
   const availableTypes = useMemo(() => {
     if (selectedCategory === 'towels') {
@@ -1567,30 +1568,30 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
 
       {/* Product detail modal */}
       {selectedProduct && (
-        <div className="fixed inset-0 z-[1050] flex items-center justify-center px-4">
+        <div className="fixed inset-0 z-[1050] flex items-end sm:items-center justify-center px-0 sm:px-4">
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-md"
             onClick={() => setSelectedProduct(null)}
           ></div>
-          <div className="relative z-[1051] w-full max-w-4xl bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden">
-            <div className="flex flex-col md:flex-row">
+          <div className="relative z-[1051] w-full max-w-4xl bg-white/95 backdrop-blur-xl rounded-t-2xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] sm:max-h-[85vh] flex flex-col">
+            <div className="flex flex-col md:flex-row overflow-y-auto">
               {/* Image left */}
-              <div className="md:w-1/2 relative">
+              <div className="md:w-1/2 relative flex-shrink-0">
                 {selectedProduct.imageUrl ? (
                   <img
                     src={selectedProduct.imageUrl}
                     alt={selectedProduct.name}
-                    className="w-full h-64 md:h-full object-cover"
+                    className="w-full h-48 sm:h-64 md:h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-64 md:h-full flex items-center justify-center bg-slate-100 text-7xl">
+                  <div className="w-full h-48 sm:h-64 md:h-full flex items-center justify-center bg-slate-100 text-6xl sm:text-7xl">
                     {selectedProduct.imageEmoji}
                   </div>
                 )}
                 {/* Mobile close button - over image */}
                 <button
                   onClick={() => setSelectedProduct(null)}
-                  className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white shadow-md transition md:hidden"
+                  className="absolute top-3 right-3 p-2.5 rounded-full bg-white/90 hover:bg-white shadow-md transition md:hidden min-h-0"
                   aria-label="Close product details"
                 >
                   <span className="sr-only">Close</span>
@@ -1598,13 +1599,13 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                 </button>
               </div>
               {/* Info right */}
-              <div className="md:w-1/2 p-6 md:p-8 flex flex-col gap-4">
-                <div className="flex items-start justify-between gap-4">
+              <div className="md:w-1/2 p-4 sm:p-6 md:p-8 flex flex-col gap-3 sm:gap-4 overflow-y-auto">
+                <div className="flex items-start justify-between gap-3 sm:gap-4">
                   <div>
                     <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide">
                       {selectedProduct.category}
                     </p>
-                    <h2 className="mt-1 text-2xl md:text-3xl font-bold text-slate-900">
+                    <h2 className="mt-1 text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
                       {selectedProduct.name}
                     </h2>
                     {selectedProduct.productType && (
@@ -1616,7 +1617,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                   {/* Desktop close button - top right of content card */}
                   <button
                     onClick={() => setSelectedProduct(null)}
-                    className="hidden md:inline-flex p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition"
+                    className="hidden md:inline-flex p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition min-h-0"
                     aria-label="Close product details"
                   >
                     <span className="sr-only">Close</span>
@@ -1634,6 +1635,77 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                   {selectedProduct.description}
                 </p>
 
+                {/* Product Specifications */}
+                {(() => {
+                  const specs = getProductSpecifications(selectedProduct.productType);
+                  if (specs) {
+                    return (
+                      <div className="mt-6 p-4 bg-slate-50 rounded-lg">
+                        <h3 className="text-sm font-bold text-slate-900 mb-3 uppercase tracking-wide">Product Specifications</h3>
+                        <div className="space-y-2">
+                          {specs.material && (
+                            <div className="text-sm">
+                              <span className="font-semibold text-slate-700">Material:</span>
+                              <span className="text-slate-600 ml-2">{specs.material}</span>
+                            </div>
+                          )}
+                          {specs.features && specs.features.length > 0 && (
+                            <div className="text-sm">
+                              <span className="font-semibold text-slate-700">Features:</span>
+                              <span className="text-slate-600 ml-2">{specs.features.join(', ')}</span>
+                            </div>
+                          )}
+                          {specs.use && specs.use.length > 0 && (
+                            <div className="text-sm">
+                              <span className="font-semibold text-slate-700">Use:</span>
+                              <span className="text-slate-600 ml-2">{specs.use.join(', ')}</span>
+                            </div>
+                          )}
+                          {specs.sizes && specs.sizes.length > 0 && (
+                            <div className="text-sm">
+                              <span className="font-semibold text-slate-700">Sizes:</span>
+                              <span className="text-slate-600 ml-2">{specs.sizes.join(', ')}</span>
+                            </div>
+                          )}
+                          {specs.dimensions && (
+                            <div className="text-sm">
+                              <span className="font-semibold text-slate-700">Dimensions:</span>
+                              <span className="text-slate-600 ml-2">{specs.dimensions}</span>
+                            </div>
+                          )}
+                          {specs.length && (
+                            <div className="text-sm">
+                              <span className="font-semibold text-slate-700">Length:</span>
+                              <span className="text-slate-600 ml-2">{specs.length}</span>
+                            </div>
+                          )}
+                          {specs.applications && specs.applications.length > 0 && (
+                            <div className="text-sm">
+                              <span className="font-semibold text-slate-700">Applications:</span>
+                              <ul className="mt-1 ml-6 list-disc text-slate-600 space-y-1">
+                                {specs.applications.map((app, idx) => (
+                                  <li key={idx}>{app}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {specs.benefits && specs.benefits.length > 0 && (
+                            <div className="text-sm">
+                              <span className="font-semibold text-slate-700">Benefits:</span>
+                              <ul className="mt-1 ml-6 list-disc text-slate-600 space-y-1">
+                                {specs.benefits.map((benefit, idx) => (
+                                  <li key={idx}>{benefit}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
+
                 <div className="mt-2 flex items-center justify-between">
                   <div>
                     <p className="text-xs uppercase tracking-wide text-slate-500">Price</p>
@@ -1645,10 +1717,10 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                   </div>
                 </div>
 
-                <div className="mt-4 flex flex-wrap gap-3">
+                <div className="mt-4 flex flex-wrap gap-2 sm:gap-3">
                   <button
                     onClick={() => setShowEnquiryForm(true)}
-                    className="inline-flex items-center justify-center rounded-full bg-slate-900 text-white px-5 py-2 text-sm font-semibold hover:bg-slate-800 transition"
+                    className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-full bg-slate-900 text-white px-4 sm:px-5 py-2.5 sm:py-2 text-sm font-semibold hover:bg-slate-800 transition min-h-0"
                   >
                     Enquire Now
                   </button>
