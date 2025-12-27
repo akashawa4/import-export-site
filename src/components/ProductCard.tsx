@@ -29,7 +29,7 @@ export default function ProductCard({
 
   return (
     <div
-      className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer"
+      className="group bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 hover:border-blue-400/40 transition-all duration-300 overflow-hidden cursor-pointer"
       onClick={onClick}
     >
       <div className="relative overflow-hidden">
@@ -41,7 +41,7 @@ export default function ProductCard({
             loading="lazy"
           />
         ) : (
-          <div className="aspect-square bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center relative overflow-hidden">
+          <div className="aspect-square bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center relative overflow-hidden">
             <div className="text-8xl group-hover:scale-110 transition-transform duration-300">
               {imageEmoji}
             </div>
@@ -49,7 +49,7 @@ export default function ProductCard({
         )}
 
         {highlight && (
-          <div className="absolute top-3 right-3 bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-md">
+          <div className="absolute top-3 right-3 bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-md">
             {highlight}
           </div>
         )}
@@ -67,18 +67,18 @@ export default function ProductCard({
         )}
       </div>
 
-      <div className="p-5">
-        <p className="text-xs text-blue-700 font-medium mb-2 uppercase tracking-wide">
+      <div className="p-5 bg-slate-900/50 backdrop-blur-sm">
+        <p className="text-xs text-blue-400 font-medium mb-2 uppercase tracking-wide">
           {category}
         </p>
-        <h3 className="text-lg font-bold text-slate-900 mb-2 line-clamp-1">
+        <h3 className="text-lg font-bold text-white mb-2 line-clamp-1">
           {name}
         </h3>
-        <p className="text-sm text-slate-600 mb-4 line-clamp-2 min-h-[2.5rem]">
+        <p className="text-sm text-slate-300 mb-4 line-clamp-2 min-h-[2.5rem]">
           {description}
         </p>
-        <div className="flex items-center pt-3 border-t border-gray-100">
-          <p className="font-bold text-slate-900 text-xl">
+        <div className="flex items-center pt-3 border-t border-white/10">
+          <p className="font-bold text-white text-xl">
             {price}
           </p>
         </div>

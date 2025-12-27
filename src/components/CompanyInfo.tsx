@@ -25,22 +25,35 @@ export default function CompanyInfo() {
   ];
 
   return (
-    <section className="bg-white py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="relative py-24 overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url('/hero/purpose.jpg')`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          backgroundAttachment: 'fixed', // Parallax effect
+        }}
+      >
+        <div className="absolute inset-0 bg-slate-900/60"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left Content */}
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 mb-6">
-              <span className="w-2 h-2 rounded-full bg-blue-600"></span>
-              <span className="text-sm font-semibold text-blue-800 uppercase tracking-wide">About Our Company</span>
+          <div className="text-white">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-600/30 border border-blue-500/50 mb-6">
+              <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+              <span className="text-sm font-semibold text-blue-300 uppercase tracking-wide">About Our Company</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-serif text-slate-900 mb-6 leading-tight">
-              Bridging Markets with <span className="text-blue-700">Integrity</span>
+            <h2 className="text-4xl md:text-5xl font-serif text-white mb-6 leading-tight">
+              Bridging Markets with <span className="text-blue-400">Integrity</span>
             </h2>
-            <p className="text-lg text-slate-600 leading-relaxed mb-6">
+            <p className="text-lg text-slate-300 leading-relaxed mb-6">
               Amritva Overseas is a leading global import-export merchant dedicated to connecting businesses worldwide with high-quality products from sustainable suppliers.
             </p>
-            <p className="text-lg text-slate-600 leading-relaxed mb-8">
+            <p className="text-lg text-slate-300 leading-relaxed mb-8">
               With over 25 years of experience in international trade, we specialize in agricultural commodities, textiles, pharmaceuticals, and specialty products. Our commitment to excellence has made us a trusted partner across more than 50 countries.
             </p>
 
@@ -53,15 +66,15 @@ export default function CompanyInfo() {
               return (
                 <div
                   key={index}
-                  className="group bg-slate-50 rounded-2xl p-6 hover:bg-white hover:shadow-xl transition-all duration-300 border border-slate-100 hover:border-blue-100"
+                  className="group bg-white/10 backdrop-blur-md rounded-2xl p-6 hover:bg-white/15 hover:shadow-xl transition-all duration-300 border border-white/10 hover:border-blue-400/30"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:border-blue-100 transition-all duration-300 shadow-sm">
-                    <Icon className="w-6 h-6 text-blue-600" />
+                  <div className="w-12 h-12 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:border-blue-400/50 transition-all duration-300">
+                    <Icon className="w-6 h-6 text-blue-400" />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-blue-700 transition-colors">
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
                     {feature.title}
                   </h3>
-                  <p className="text-slate-600 text-sm leading-relaxed">
+                  <p className="text-slate-400 text-sm leading-relaxed">
                     {feature.description}
                   </p>
                 </div>

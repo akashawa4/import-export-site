@@ -561,13 +561,26 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
 
   if (viewMode === 'categories') {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen relative">
+        {/* Background Image */}
+        <div
+          className="fixed inset-0 z-0"
+          style={{
+            backgroundImage: `url('/hero/productpage.avif')`,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundAttachment: 'fixed',
+          }}
+        >
+          <div className="absolute inset-0 bg-slate-900/70"></div>
+        </div>
+
         <Navigation onNavigate={onNavigate} />
-        <div className="pt-16 pb-20">
+        <div className="pt-16 pb-20 relative z-10">
           <div className="max-w-7xl mx-auto px-6 py-12">
             <div className="mb-12 text-center">
-              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Products</h2>
-              <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Products</h2>
+              <p className="text-lg text-slate-300 max-w-3xl mx-auto">
                 Discover our range of premium export products carefully sourced and crafted for quality and sustainability.
               </p>
             </div>
@@ -577,40 +590,55 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                 <div
                   key={category.id}
                   onClick={() => handleCategorySelect(category.slug)}
-                  className="group bg-white rounded-xl border-2 border-gray-200 hover:border-blue-600 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden"
+                  className="group bg-white/10 backdrop-blur-md rounded-xl border border-white/20 hover:border-blue-400/50 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden"
                 >
-                  <div className="aspect-video bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
+                  <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 relative overflow-hidden">
                     <img
                       src={category.image}
                       alt={category.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-bold text-slate-900 mb-2">{category.name}</h3>
-                    <p className="text-slate-600">{category.description}</p>
+                  <div className="p-6 bg-slate-900/50 backdrop-blur-sm">
+                    <h3 className="text-2xl font-bold text-white mb-2">{category.name}</h3>
+                    <p className="text-slate-300">{category.description}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
-        <Footer />
+        <div className="relative z-10">
+          <Footer />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen relative">
+      {/* Background Image */}
+      <div
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: `url('/hero/productpage.avif')`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          backgroundAttachment: 'fixed',
+        }}
+      >
+        <div className="absolute inset-0 bg-slate-900/75"></div>
+      </div>
+
       <Navigation onNavigate={onNavigate} />
 
-      <div className="pt-4">
-        <div className="bg-white">
+      <div className="pt-4 relative z-10">
+        <div className="bg-white/10 backdrop-blur-md border-b border-white/10">
           <div className="max-w-7xl mx-auto px-4 md:px-6 py-3">
             <div className="mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-1">Management Product</h1>
-                <p className="text-slate-600 text-xs md:text-sm">Add Product to your store</p>
+                <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">Our Products</h1>
+                <p className="text-slate-300 text-xs md:text-sm">Browse our premium collection</p>
               </div>
               <button
                 onClick={() => {
@@ -620,9 +648,9 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                   setSelectedTowelType('');
                   setSearchQuery('');
                 }}
-                className="px-3 py-1.5 text-xs md:text-sm text-slate-600 hover:text-slate-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap"
+                className="px-3 py-1.5 text-xs md:text-sm text-white hover:text-blue-300 border border-white/30 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap"
               >
-                ← Back
+                ← Back to Categories
               </button>
             </div>
 
@@ -645,23 +673,23 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
               towelTypes={towelTypes}
             />
             {loadError && (
-              <div className="text-sm text-red-600 mt-2">
+              <div className="text-sm text-red-400 mt-2">
                 {loadError}
               </div>
             )}
           </div>
         </div>
 
-        <div className="bg-gray-50">
+        <div className="bg-transparent">
           <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
             {isLoading ? (
-              <p className="text-sm text-slate-600">Loading products...</p>
+              <p className="text-sm text-slate-300">Loading products...</p>
             ) : filteredAndSortedProducts.length === 0 ? (
               <EmptyState onReset={handleReset} />
             ) : (
               <>
                 <div className="mb-4 flex items-center justify-between">
-                  <div className="text-xs md:text-sm text-slate-600">
+                  <div className="text-xs md:text-sm text-slate-300">
                     Showing {filteredAndSortedProducts.length} product
                     {filteredAndSortedProducts.length !== 1 ? 's' : ''}
                   </div>
@@ -689,7 +717,9 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
         </div>
       </div>
 
-      <Footer />
+      <div className="relative z-10">
+        <Footer />
+      </div>
 
       {/* Product detail modal */}
       {selectedProduct && (

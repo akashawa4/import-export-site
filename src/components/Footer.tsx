@@ -8,7 +8,10 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
         <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-8 mb-8 sm:mb-12">
           <div className="xs:col-span-2 lg:col-span-1">
-            <h3 className="text-white text-lg sm:text-xl font-bold mb-3 sm:mb-4">Amritva Overseas</h3>
+            <div className="flex items-center gap-3 mb-3 sm:mb-4">
+              <img src="/favicon.jpg" alt="Amritva Overseas Logo" className="h-10 sm:h-12 w-auto rounded-md" />
+              <h3 className="text-white text-lg sm:text-xl font-bold">Amritva Overseas</h3>
+            </div>
             <p className="text-sm leading-relaxed mb-4">
               Your trusted partner for premium towels, organic cow dung products, and eco-friendly exports from India to the world.
             </p>

@@ -1,81 +1,106 @@
-import { Globe, Users, TrendingUp, Award } from 'lucide-react';
+import { Globe, Users, TrendingUp, Award, CheckCircle2 } from 'lucide-react';
 
-const statsCards = [
+const stats = [
   {
     icon: Globe,
     value: '50+',
-    label: 'Countries',
-    subtitle: 'Global Reach',
+    label: 'Countries Served',
+    description: 'Trusted by partners across continents',
   },
   {
     icon: Users,
     value: '200+',
-    label: 'Professionals',
-    subtitle: 'Expert Team',
+    label: 'Expert Professionals',
+    description: 'Dedicated team ensuring quality',
   },
   {
     icon: TrendingUp,
     value: '500M+',
-    label: 'Annual Trade',
-    subtitle: 'Growth',
+    label: 'Annual Trade Volume',
+    description: 'Consistent growth and reliability',
   },
   {
     icon: Award,
     value: '25+',
-    label: 'Years Experience',
-    subtitle: 'Certified',
+    label: 'Years of Excellence',
+    description: 'Legacy of trust and integrity',
   },
+];
+
+const features = [
+  'Premium Quality Assurance',
+  'Global Logistics Network',
+  'Sustainable Sourcing',
+  '24/7 Customer Support',
 ];
 
 export default function TrustSection() {
   return (
-    <section className="py-20 md:py-24 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-center mb-14">
-          <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">
-            Why Choose Us
-          </p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-5">
-            Trusted by Businesses Worldwide
-          </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            We bring expertise in international trade, delivering premium quality products
-            with unmatched reliability and service.
-          </p>
-        </div>
+    <section className="relative py-24 overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url('/hero/purpose.jpg')`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          backgroundAttachment: 'fixed', // Parallax effect
+        }}
+      >
+        <div className="absolute inset-0 bg-slate-900/80"></div>
+      </div>
 
-        {/* Stats Cards Grid - 2x2 layout like the image */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
-          {statsCards.map((card) => {
-            const Icon = card.icon;
-            return (
-              <div
-                key={card.label}
-                className="bg-white rounded-2xl p-8 hover:shadow-lg transition-all duration-300 border border-slate-100"
-              >
-                {/* Icon */}
-                <div className="mb-6">
-                  <Icon size={40} className="text-blue-500" strokeWidth={1.5} />
-                </div>
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="flex flex-col md:flex-row gap-16 items-start">
 
-                {/* Value */}
-                <div className="text-4xl md:text-5xl font-bold text-slate-900 mb-1">
-                  {card.value}
-                </div>
+          {/* Text Content */}
+          <div className="flex-1 text-white">
+            <span className="inline-block py-1 px-3 rounded-full bg-blue-600/30 border border-blue-500/50 text-blue-300 text-xs font-semibold uppercase tracking-wider mb-6">
+              Why Choose Us
+            </span>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+              Excellence in Every <span className="text-blue-400">Shipment</span>
+            </h2>
+            <p className="text-slate-300 text-lg leading-relaxed mb-10 max-w-xl">
+              We connect the world through quality trade. With unmatched expertise and a commitment to sustainability, we ensure your business moves forward without barriers.
+            </p>
 
-                {/* Label */}
-                <div className="text-slate-500 text-sm mb-4">
-                  {card.label}
-                </div>
+            <ul className="grid sm:grid-cols-2 gap-4 mb-10">
+              {features.map((feature, idx) => (
+                <li key={idx} className="flex items-center gap-3 text-slate-200">
+                  <CheckCircle2 className="text-blue-400 flex-shrink-0" size={20} />
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
 
-                {/* Subtitle */}
-                <div className="text-slate-800 font-semibold">
-                  {card.subtitle}
-                </div>
-              </div>
-            );
-          })}
+            <button className="bg-white text-slate-900 hover:bg-blue-50 px-8 py-3 rounded-full font-bold transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+              Discover More
+            </button>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="flex-1 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {stats.map((stat, index) => {
+                const Icon = stat.icon;
+                return (
+                  <div
+                    key={index}
+                    className="group bg-white/10 backdrop-blur-md border border-white/10 p-6 rounded-2xl hover:bg-white/15 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+                  >
+                    <div className="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                      <Icon className="text-blue-400" size={24} />
+                    </div>
+                    <div className="text-3xl font-bold text-white mb-2">{stat.value}</div>
+                    <h3 className="text-lg font-semibold text-blue-100 mb-2">{stat.label}</h3>
+                    <p className="text-sm text-slate-400">{stat.description}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

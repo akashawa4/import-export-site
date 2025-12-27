@@ -25,13 +25,27 @@ const products = [
 
 export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps = {}) {
   return (
-    <section id="products" className="py-16 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="products" className="relative py-16 overflow-hidden">
+      {/* Background Image with Blur */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url('/hero/product.png')`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          filter: 'blur(4px)',
+          transform: 'scale(1.1)', // Prevents blur white edges
+        }}
+      />
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-slate-900/75 via-slate-800/70 to-blue-900/65" />
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Featured Products
           </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="text-lg text-slate-300 max-w-2xl mx-auto">
             Explore our handpicked selection of premium export products
           </p>
         </div>
@@ -47,7 +61,7 @@ export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps =
                 sessionStorage.setItem('selectedCategory', product.categorySlug);
                 onNavigate?.('products');
               }}
-              className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-slate-200 cursor-pointer"
+              className="group bg-white/10 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 border border-white/20 cursor-pointer"
             >
               <div className="aspect-square bg-gradient-to-br from-slate-100 to-slate-200 relative overflow-hidden">
                 <img
@@ -60,14 +74,14 @@ export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps =
                 </div>
               </div>
 
-              <div className="p-6">
-                <p className="text-sm text-teal-600 font-medium mb-2">
+              <div className="p-6 bg-slate-900/60 backdrop-blur-sm">
+                <p className="text-sm text-teal-400 font-medium mb-2">
                   {product.category}
                 </p>
-                <h3 className="text-xl font-bold text-slate-900 mb-4">
+                <h3 className="text-xl font-bold text-white mb-4">
                   {product.name}
                 </h3>
-                <div className="inline-flex items-center gap-2 text-blue-600 font-semibold group-hover:gap-3 transition-all duration-200">
+                <div className="inline-flex items-center gap-2 text-blue-400 font-semibold group-hover:gap-3 transition-all duration-200">
                   View Details
                   <ArrowRight size={18} />
                 </div>

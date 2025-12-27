@@ -193,8 +193,8 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
     <>
       <nav
         className={`sticky top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled
-          ? 'bg-[#F7F9FC]/98 backdrop-blur-lg shadow-lg border-b border-blue-200/40'
-          : 'bg-[#F7F9FC]/95 backdrop-blur-md'
+            ? 'bg-slate-900/95 backdrop-blur-lg shadow-lg border-b border-white/10'
+            : 'bg-slate-900/80 backdrop-blur-md'
           }`}
       >
         <div className="max-w-7xl mx-auto px-6">
@@ -202,12 +202,12 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
             <div className="flex-shrink-0">
               <button
                 onClick={() => onNavigate?.('home')}
-                className="flex items-center gap-2 sm:gap-3 text-slate-800 hover:text-blue-800 transition-colors duration-300 group"
+                className="flex items-center gap-2 sm:gap-3 text-white hover:text-blue-400 transition-colors duration-300 group"
               >
-                <img src="/favicon.jpg" alt="Amritva Overseas Logo" className="h-8 sm:h-10 w-auto" />
+                <img src="/favicon.jpg" alt="Amritva Overseas Logo" className="h-8 sm:h-10 w-auto rounded-md" />
                 <span className="relative text-lg sm:text-2xl font-bold">
                   <span className="relative z-10">Amritva Overseas</span>
-                  <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-blue-700 transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-blue-400 transition-all duration-300 group-hover:w-full"></span>
                 </span>
               </button>
             </div>
@@ -218,17 +218,17 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
                   key={link.href}
                   href={link.href}
                   onClick={(e) => handleLinkClick(link.href, e)}
-                  className="relative font-semibold text-sm transition-all duration-300 uppercase tracking-wider px-4 py-2 rounded-lg group text-slate-700 hover:text-blue-800"
+                  className="relative font-semibold text-sm transition-all duration-300 uppercase tracking-wider px-4 py-2 rounded-lg group text-slate-300 hover:text-white"
                 >
                   <span className="relative z-10">{link.label}</span>
-                  <span className="absolute inset-0 rounded-lg transition-all duration-300 opacity-0 group-hover:opacity-100 bg-blue-100/60 group-hover:bg-blue-100/60"></span>
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-0 bg-blue-700 transition-all duration-300 group-hover:w-3/4"></span>
+                  <span className="absolute inset-0 rounded-lg transition-all duration-300 opacity-0 group-hover:opacity-100 bg-white/10"></span>
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-0 bg-blue-400 transition-all duration-300 group-hover:w-3/4"></span>
                 </a>
               ))}
               {isAdmin && (
                 <button
                   onClick={() => onNavigate?.('admin')}
-                  className="ml-2 inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700 hover:bg-slate-100 transition"
+                  className="ml-2 inline-flex items-center gap-2 rounded-full border border-white/30 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-300 hover:bg-white/10 hover:text-white transition"
                 >
                   Admin Panel
                 </button>
@@ -236,9 +236,9 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
               <button
                 onClick={currentUser ? handleSignOut : openAuthModal}
                 disabled={isAuthLoading}
-                className={`ml-2 inline-flex items-center gap-2 rounded-full border border-blue-500 px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-all duration-300 ${currentUser
-                  ? 'bg-blue-600/15 text-blue-900 hover:bg-blue-600/25'
-                  : 'bg-white/90 text-slate-800 hover:bg-white hover:shadow-lg btn-glow'
+                className={`ml-2 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-all duration-300 ${currentUser
+                    ? 'border-blue-500/50 bg-blue-600/20 text-blue-300 hover:bg-blue-600/30'
+                    : 'border-blue-500 bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg'
                   } ${isAuthLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
               >
                 {currentUser ? `Sign out (${currentUser.displayName?.split(' ')[0] ?? 'User'})` : 'Sign In'}
@@ -246,11 +246,11 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
             </div>
 
             <button
-              className="md:hidden p-2.5 rounded-lg transition-all duration-300 text-slate-700 hover:text-blue-800 hover:bg-blue-100/60 z-[110] relative"
+              className="md:hidden p-2.5 rounded-lg transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10 z-[110] relative"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
-              {isMobileMenuOpen ? <X size={24} className="text-slate-800" /> : <Menu size={24} className="text-slate-800" />}
+              {isMobileMenuOpen ? <X size={24} className="text-white" /> : <Menu size={24} className="text-white" />}
             </button>
           </div>
         </div>
@@ -260,13 +260,13 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
         <>
           {/* Backdrop with blur - rendered outside nav */}
           <div
-            className="md:hidden fixed left-0 right-0 bottom-0 bg-black/10 backdrop-blur-xl z-[9998] transition-opacity duration-300"
+            className="md:hidden fixed left-0 right-0 bottom-0 bg-black/40 backdrop-blur-xl z-[9998] transition-opacity duration-300"
             style={{ top: '64px' }}
             onClick={() => setIsMobileMenuOpen(false)}
           />
           {/* Menu - slides in from right */}
           <div
-            className="md:hidden fixed right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-[#F7F9FC]/80 backdrop-blur-3xl z-[9999] border-l-2 border-blue-200/40 shadow-2xl overflow-y-auto animate-slide-in-right"
+            className="md:hidden fixed right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-slate-900/95 backdrop-blur-3xl z-[9999] border-l border-white/10 shadow-2xl overflow-y-auto animate-slide-in-right"
             style={{ top: '64px' }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -281,7 +281,7 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
                     handleLinkClick(link.href, e);
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full text-left font-bold py-5 px-5 rounded-xl uppercase tracking-wider transition-all duration-300 text-slate-900 hover:text-blue-800 hover:scale-[1.02] hover:shadow-xl bg-transparent backdrop-blur-md border-2 border-blue-200/50 shadow-lg hover:border-blue-500/70 active:scale-[0.98] group"
+                  className="w-full text-left font-bold py-5 px-5 rounded-xl uppercase tracking-wider transition-all duration-300 text-white hover:text-blue-400 hover:scale-[1.02] hover:shadow-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:border-blue-500/50 active:scale-[0.98] group"
                   style={{
                     animation: `slideInUp 0.3s ease-out ${index * 50}ms both`
                   }}
@@ -300,7 +300,7 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
                     onNavigate?.('admin');
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full text-left font-bold py-4 px-5 rounded-xl uppercase tracking-wider transition-all duration-300 text-slate-900 bg-blue-50/80 hover:bg-blue-50 backdrop-blur-md border-2 border-blue-200 shadow-lg"
+                  className="w-full text-left font-bold py-4 px-5 rounded-xl uppercase tracking-wider transition-all duration-300 text-blue-300 bg-blue-600/20 hover:bg-blue-600/30 backdrop-blur-md border border-blue-500/30 shadow-lg"
                 >
                   Admin Panel
                 </button>
@@ -324,9 +324,9 @@ export default function Navigation({ onNavigate }: NavigationProps = {}) {
                 }}
                 disabled={isAuthLoading}
                 className={`w-full text-left font-bold py-4 px-5 rounded-xl uppercase tracking-wider transition-all duration-300 ${currentUser
-                  ? 'text-blue-900 bg-blue-200/40 hover:bg-blue-200/60'
-                  : 'text-slate-900 bg-white/80 hover:bg-white btn-glow'
-                  } backdrop-blur-md border-2 border-blue-200/40 shadow-lg active:scale-[0.98] ${isAuthLoading ? 'opacity-60 cursor-not-allowed' : ''
+                    ? 'text-blue-300 bg-blue-600/20 hover:bg-blue-600/30'
+                    : 'text-white bg-blue-600 hover:bg-blue-700'
+                  } backdrop-blur-md border border-blue-500/50 shadow-lg active:scale-[0.98] ${isAuthLoading ? 'opacity-60 cursor-not-allowed' : ''
                   }`}
               >
                 {currentUser ? `Sign out (${currentUser.displayName?.split(' ')[0] ?? 'User'})` : 'Sign In'}
