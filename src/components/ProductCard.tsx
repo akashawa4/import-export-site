@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+
 
 interface ProductCardProps {
   name: string;
@@ -77,14 +77,10 @@ export default function ProductCard({
         <p className="text-sm text-slate-600 mb-4 line-clamp-2 min-h-[2.5rem]">
           {description}
         </p>
-        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+        <div className="flex items-center pt-3 border-t border-gray-100">
           <p className="font-bold text-slate-900 text-xl">
             {price}
           </p>
-          <div className="flex items-center gap-1 text-blue-700">
-            <span className="text-sm font-semibold">★</span>
-            <span className="text-sm font-medium">4.6</span>
-          </div>
         </div>
       </div>
     </div>

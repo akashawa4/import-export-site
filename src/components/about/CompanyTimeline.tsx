@@ -15,7 +15,7 @@ const milestones = [
     description: 'Achieved presence in 15+ countries with established distribution networks',
   },
   {
-    year: '2023',
+    year: '2025',
     title: 'Today',
     description: 'Leading exporter serving 20+ countries with a diverse product portfolio',
   },
@@ -41,9 +41,8 @@ export default function CompanyTimeline() {
             {milestones.map((milestone, index) => (
               <div
                 key={milestone.year}
-                className={`relative flex items-center ${
-                  index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                }`}
+                className={`relative flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+                  }`}
               >
                 <div className={`w-full md:w-1/2 ${index % 2 === 0 ? 'md:pr-12' : 'md:pl-12'}`}>
                   <div className="bg-white rounded-lg p-6 shadow-sm ml-16 md:ml-0">

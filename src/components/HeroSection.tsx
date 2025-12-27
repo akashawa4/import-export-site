@@ -32,7 +32,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       description: 'Your trusted partner in global trade. We connect markets with quality imports and exports, ensuring reliability, integrity, and long-term partnerships.',
       buttonText: 'LEARN MORE',
       onButtonClick: () => onNavigate?.('about'),
-      backgroundImage: '/hero/purpose.jpg'
+      backgroundImage: '/hero/welcome.jpeg'
     },
     why: {
       label: 'WHY CHOOSE US',
@@ -40,7 +40,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       description: 'We prioritize transparent communication, consistent quality, and on-time delivery so you can scale confidently with a partner who is invested in your success.',
       buttonText: 'OUR ADVANTAGE',
       onButtonClick: () => onNavigate?.('about'),
-      backgroundImage: '/hero/people.webp'
+      backgroundImage: '/hero/why%20choose%20us.avif'
     },
     products: {
       label: 'OUR PRODUCT RANGE',
@@ -56,7 +56,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       description: 'With a worldwide network and logistics expertise, we bridge continents to deliver dependable trade solutions wherever you operate.',
       buttonText: 'CONTACT US',
       onButtonClick: () => onNavigate?.('contact'),
-      backgroundImage: '/hero/people.webp'
+      backgroundImage: '/hero/global%20connection.avif'
     }
   };
 
@@ -117,20 +117,20 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
               const isActive = slideKey === activeSlide;
               const currentIndex = slideOrder.indexOf(activeSlide);
               const slideIndex = slideOrder.indexOf(slideKey);
-              
+
               return (
                 <div
                   key={slideKey}
-                  className={`text-white space-y-3 md:space-y-6 transition-all duration-1000 ease-in-out ${
-                    isActive ? 'relative' : 'absolute inset-0 pointer-events-none'
-                  }`}
+                  className={`text-white space-y-3 md:space-y-6 transition-all duration-1000 ease-in-out ${isActive ? 'relative' : 'absolute inset-0 pointer-events-none'
+                    }`}
                   style={{
                     opacity: isActive ? 1 : 0,
-                    transform: isActive 
-                      ? 'translateX(0) translateY(0)' 
-                      : slideIndex < currentIndex 
-                        ? 'translateX(-30px) translateY(10px)' 
+                    transform: isActive
+                      ? 'translateX(0) translateY(0)'
+                      : slideIndex < currentIndex
+                        ? 'translateX(-30px) translateY(10px)'
                         : 'translateX(30px) translateY(10px)',
+                    textShadow: '1px 1px 0 #000, -1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000',
                   }}
                 >
                   <p className="text-xs md:text-sm lg:text-base font-medium tracking-wider uppercase">
@@ -179,11 +179,10 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
                 setPreviousSlide(activeSlide);
                 setActiveSlide(slideKey);
               }}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                slideKey === activeSlide
-                  ? 'bg-white w-6 md:w-8'
-                  : 'bg-white/40 hover:bg-white/60 w-2'
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 ${slideKey === activeSlide
+                ? 'bg-white w-6 md:w-8'
+                : 'bg-white/40 hover:bg-white/60 w-2'
+                }`}
               aria-label={`Go to ${slideKey} slide`}
             />
           ))}
