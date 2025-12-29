@@ -31,7 +31,7 @@ export default function ExportCapabilities() {
           <div className="relative order-2 md:order-1">
             <div className="aspect-[4/3] rounded-xl border border-white/10 flex items-center justify-center overflow-hidden shadow-xl relative group">
               <img
-                src="/hero/why%20choose%20u%20-%20Copy.avif"
+                src="/hero/why%20choose%20u%20-%20Copy.JPG"
                 alt="Why Choose Us"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
@@ -51,8 +51,8 @@ export default function ExportCapabilities() {
                 const Icon = reason.icon;
                 return (
                   <div key={reason.text} className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-teal-500/20 backdrop-blur-sm border border-teal-500/30 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Icon size={20} className="text-teal-400" />
+                    <div className="w-10 h-10 bg-blue-500/20 backdrop-blur-sm border border-blue-500/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Icon size={20} className="text-blue-400" />
                     </div>
                     <p className="text-slate-300 font-medium leading-relaxed">
                       {reason.text}

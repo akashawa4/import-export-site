@@ -54,7 +54,7 @@ ${formData.message}`;
     const encodedMessage = encodeURIComponent(message);
 
     // WhatsApp URL with phone number and message
-    const whatsappUrl = `https://wa.me/919309578076?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/919960447001?text=${encodedMessage}`;
 
     // Open WhatsApp in a new tab
     window.open(whatsappUrl, '_blank');
@@ -88,16 +88,16 @@ ${formData.message}`;
 
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Mail size={24} className="text-blue-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">Email</h3>
                   <a
-                    href="mailto:amritvaverseas009@gmail.com"
+                    href="mailto:amritva009@amritvaoverseas.com"
                     className="text-slate-300 hover:text-blue-400 transition-colors"
                   >
-                    amritvaverseas009@gmail.com
+                    amritva009@amritvaoverseas.com
                   </a>
                 </div>
               </div>
@@ -108,20 +108,12 @@ ${formData.message}`;
                 </div>
                 <div>
                   <h3 className="font-semibold text-white mb-1">Phone</h3>
-                  <div className="space-y-1">
-                    <a
-                      href="tel:+919309578076"
-                      className="block text-slate-300 hover:text-blue-400 transition-colors"
-                    >
-                      +91 9309578076
-                    </a>
-                    <a
-                      href="tel:+917219075505"
-                      className="block text-slate-600 hover:text-blue-600 transition-colors"
-                    >
-                      +91 7219075505
-                    </a>
-                  </div>
+                  <a
+                    href="tel:+919960447001"
+                    className="block text-slate-300 hover:text-blue-400 transition-colors"
+                  >
+                    +91 9960447001
+                  </a>
                 </div>
               </div>
 
@@ -148,7 +140,7 @@ ${formData.message}`;
                     Location
                   </h3>
                   <p className="text-slate-600">
-                    India
+                    Kolhapur, Maharashtra, India
                     <br />
                     Export Hub - Pan India Operations
                   </p>
@@ -157,7 +149,7 @@ ${formData.message}`;
             </div>
 
             <a
-              href="https://wa.me/919309578076"
+              href="https://wa.me/919960447001"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full inline-flex items-center justify-center gap-3 px-6 py-4 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl mt-6"

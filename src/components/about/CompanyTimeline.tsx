@@ -1,21 +1,21 @@
 const milestones = [
   {
-    year: '2010',
+    year: '2023',
     title: 'Company Founded',
     description: 'Started as a small textile export business with a focus on quality towels',
   },
   {
-    year: '2014',
+    year: '2024',
     title: 'Expansion',
     description: 'Extended product line to include organic cow dung products and eco-friendly items',
   },
   {
-    year: '2018',
+    year: '2025',
     title: 'Global Reach',
     description: 'Achieved presence in 15+ countries with established distribution networks',
   },
   {
-    year: '2025',
+    year: '2026',
     title: 'Today',
     description: 'Leading exporter serving 20+ countries with a diverse product portfolio',
   },

@@ -1,10 +1,8 @@
 
-
 interface ProductCardProps {
   name: string;
   category: string;
   description: string;
-  price: string;
   imageEmoji: string;
   imageUrl?: string;
   highlight?: string;
@@ -17,7 +15,6 @@ export default function ProductCard({
   name,
   category,
   description,
-  price,
   imageEmoji,
   imageUrl,
   highlight,
@@ -74,14 +71,9 @@ export default function ProductCard({
         <h3 className="text-lg font-bold text-white mb-2 line-clamp-1">
           {name}
         </h3>
-        <p className="text-sm text-slate-300 mb-4 line-clamp-2 min-h-[2.5rem]">
+        <p className="text-sm text-slate-300 line-clamp-2 min-h-[2.5rem]">
           {description}
         </p>
-        <div className="flex items-center pt-3 border-t border-white/10">
-          <p className="font-bold text-white text-xl">
-            {price}
-          </p>
-        </div>
       </div>
     </div>
   );

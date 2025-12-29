@@ -48,7 +48,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       description: 'Explore a curated portfolio sourced from vetted suppliers worldwide, selected for their quality, sustainability, and value.',
       buttonText: 'EXPLORE PRODUCTS',
       onButtonClick: () => onNavigate?.('products'),
-      backgroundImage: '/hero/product.png'
+      backgroundImage: '/hero/product.avif'
     },
     global: {
       label: 'GLOBAL CONNECTION',

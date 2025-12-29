@@ -1,11 +1,11 @@
-import { Mail, Phone, MessageCircle, Linkedin, Twitter, Instagram } from 'lucide-react';
+import { Mail, Phone, MessageCircle, Linkedin, Facebook, Instagram } from 'lucide-react';
 
 const contactMethods = [
   {
     icon: Mail,
     title: 'Email Us',
     description: 'Send us an email for detailed enquiries',
-    link: 'mailto:amritvaverseas009@gmail.com',
+    link: 'mailto:amritva009@amritvaoverseas.com',
     linkText: 'Send Email',
     bgColor: 'bg-blue-500/20',
     iconColor: 'text-blue-400',
@@ -14,7 +14,7 @@ const contactMethods = [
     icon: Phone,
     title: 'Call Us',
     description: 'Direct phone support for bulk orders',
-    link: 'tel:+919309578076',
+    link: 'tel:+919960447001',
     linkText: 'Call Now',
     bgColor: 'bg-purple-500/20',
     iconColor: 'text-purple-400',
@@ -23,7 +23,7 @@ const contactMethods = [
     icon: MessageCircle,
     title: 'WhatsApp',
     description: 'Quick responses on WhatsApp Business',
-    link: 'https://wa.me/919309578076',
+    link: 'https://wa.me/919960447001',
     linkText: 'Chat Now',
     bgColor: 'bg-green-500/20',
     iconColor: 'text-green-400',
@@ -86,28 +86,34 @@ export default function AlternateContacts() {
           </div>
           <div className="flex justify-center gap-6">
             <a
-              href="#"
+              href="https://www.linkedin.com/in/amritva-overseas-038bb7379"
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-12 h-12 bg-[#0A66C2]/20 rounded-lg flex items-center justify-center text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white transition-all duration-200"
               title="LinkedIn"
             >
               <Linkedin size={24} />
             </a>
             <a
-              href="#"
-              className="w-12 h-12 bg-[#1DA1F2]/20 rounded-lg flex items-center justify-center text-[#1DA1F2] hover:bg-[#1DA1F2] hover:text-white transition-all duration-200"
-              title="Twitter"
+              href="https://www.facebook.com/share/1CjZXAFgmg/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-12 h-12 bg-[#1877F2]/20 rounded-lg flex items-center justify-center text-[#1877F2] hover:bg-[#1877F2] hover:text-white transition-all duration-200"
+              title="Facebook"
             >
-              <Twitter size={24} />
+              <Facebook size={24} />
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/amritva_7151"
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-12 h-12 bg-gradient-to-br from-[#F58529]/20 via-[#DD2A7B]/20 to-[#8134AF]/20 rounded-lg flex items-center justify-center text-[#E1306C] hover:bg-gradient-to-br hover:from-[#F58529] hover:via-[#DD2A7B] hover:to-[#8134AF] hover:text-white transition-all duration-200"
               title="Instagram"
             >
               <Instagram size={24} />
             </a>
             <a
-              href="https://wa.me/919309578076"
+              href="https://wa.me/919960447001"
               target="_blank"
               rel="noopener noreferrer"
               className="w-12 h-12 bg-[#25D366]/20 rounded-lg flex items-center justify-center text-[#25D366] hover:bg-[#25D366] hover:text-white transition-all duration-200"

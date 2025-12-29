@@ -247,7 +247,7 @@ function EnquiryForm({ product, onClose }: EnquiryFormProps) {
     const encodedMessage = encodeURIComponent(whatsappMessage);
 
     // WhatsApp API URL
-    const whatsappUrl = `https://wa.me/919309578076?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/919960447001?text=${encodedMessage}`;
 
     // Open WhatsApp in a new tab
     window.open(whatsappUrl, '_blank');

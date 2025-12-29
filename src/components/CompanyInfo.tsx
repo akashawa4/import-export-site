@@ -53,7 +53,7 @@ export default function CompanyInfo() {
               Amritva Overseas is a leading global import-export merchant dedicated to connecting businesses worldwide with high-quality products from sustainable suppliers.
             </p>
             <p className="text-lg text-slate-300 leading-relaxed mb-8">
-              With over 25 years of experience in international trade, we specialize in agricultural commodities, textiles, pharmaceuticals, and specialty products. Our commitment to excellence has made us a trusted partner across more than 50 countries.
+              With over 3+ years of experience in international trade, we specialize in agricultural commodities, textiles, pharmaceuticals, and specialty products. Our commitment to excellence has made us a trusted partner across more than 50 countries.
             </p>
 
           </div>

@@ -43,7 +43,7 @@ export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps =
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Featured Products
+            Featured <span className="text-blue-400">Products</span>
           </h2>
           <p className="text-lg text-slate-300 max-w-2xl mx-auto">
             Explore our handpicked selection of premium export products
@@ -75,7 +75,7 @@ export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps =
               </div>
 
               <div className="p-6 bg-slate-900/60 backdrop-blur-sm">
-                <p className="text-sm text-teal-400 font-medium mb-2">
+                <p className="text-sm text-blue-400 font-medium mb-2">
                   {product.category}
                 </p>
                 <h3 className="text-xl font-bold text-white mb-4">

@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, MessageCircle, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageCircle, Facebook, Linkedin, Instagram } from 'lucide-react';
 
 interface FooterProps {
   onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
@@ -109,34 +109,25 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
             <ul className="space-y-3 text-sm">
               <li>
                 <a
-                  href="mailto:amritvaverseas009@gmail.com"
+                  href="mailto:amritva009@amritvaoverseas.com"
                   className="flex items-start gap-2 hover:text-white transition-colors duration-200"
                 >
                   <Mail size={18} className="mt-0.5 flex-shrink-0" />
-                  <span className="break-all">amritvaverseas009@gmail.com</span>
+                  <span className="break-all">amritva009@amritvaoverseas.com</span>
                 </a>
               </li>
               <li>
                 <a
-                  href="tel:+919309578076"
+                  href="tel:+919960447001"
                   className="flex items-start gap-2 hover:text-white transition-colors duration-200"
                 >
                   <Phone size={18} className="mt-0.5 flex-shrink-0" />
-                  <span>+91 9309578076</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="tel:+917219075505"
-                  className="flex items-start gap-2 hover:text-white transition-colors duration-200"
-                >
-                  <Phone size={18} className="mt-0.5 flex-shrink-0" />
-                  <span>+91 7219075505</span>
+                  <span>+91 9960447001</span>
                 </a>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin size={18} className="mt-0.5 flex-shrink-0" />
-                <span>Mumbai, Maharashtra, India</span>
+                <span>Kolhapur, Maharashtra, India</span>
               </li>
             </ul>
           </div>
@@ -149,7 +140,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
             </p>
             <div className="flex gap-3">
               <a
-                href="https://wa.me/919309578076"
+                href="https://wa.me/919960447001"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors duration-200 min-h-0"
@@ -158,21 +149,27 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                 <MessageCircle size={18} />
               </a>
               <a
-                href="#"
-                className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-[#1DA1F2] hover:bg-[#1DA1F2] hover:text-white transition-colors duration-200 min-h-0"
-                aria-label="Twitter"
+                href="https://www.facebook.com/share/1CjZXAFgmg/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-[#1877F2] hover:bg-[#1877F2] hover:text-white transition-colors duration-200 min-h-0"
+                aria-label="Facebook"
               >
-                <Twitter size={18} />
+                <Facebook size={18} />
               </a>
               <a
-                href="#"
+                href="https://www.linkedin.com/in/amritva-overseas-038bb7379"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white transition-colors duration-200 min-h-0"
                 aria-label="LinkedIn"
               >
                 <Linkedin size={18} />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/amritva_7151"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-[#E1306C] hover:bg-gradient-to-br hover:from-[#F58529] hover:via-[#DD2A7B] hover:to-[#8134AF] hover:text-white transition-colors duration-200 min-h-0"
                 aria-label="Instagram"
               >
