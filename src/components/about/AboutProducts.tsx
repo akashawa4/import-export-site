@@ -9,11 +9,12 @@ export default function AboutProducts() {
         <div className="grid md:grid-cols-2 gap-8 md:gap-12">
           {/* Terry Towels */}
           <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:bg-white/15 transition-all duration-300">
-            <div className="h-64 bg-slate-800/50 relative overflow-hidden group">
+            <div className="h-80 bg-slate-800/50 relative overflow-hidden group">
               <img
-                src="/hero/banner1.jpg"
+                src="/hero/banner1.avif"
                 alt="Premium Terry Towels"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                style={{ objectPosition: '30% center' }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-60"></div>
             </div>
@@ -27,11 +28,12 @@ export default function AboutProducts() {
 
           {/* Cow Dung Products */}
           <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:bg-white/15 transition-all duration-300">
-            <div className="h-64 bg-slate-800/50 relative overflow-hidden group">
+            <div className="h-80 bg-slate-800/50 relative overflow-hidden group">
               <img
                 src="/hero/banner.jpg"
                 alt="Organic Cow Dung Products"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                style={{ objectPosition: 'center center' }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-60"></div>
             </div>

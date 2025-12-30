@@ -10,6 +10,17 @@ type SlideKey = 'welcome' | 'why' | 'products' | 'global';
 export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
   const [activeSlide, setActiveSlide] = useState<SlideKey>('welcome');
   const [_previousSlide, setPreviousSlide] = useState<SlideKey | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleScrollDown = () => {
     window.scrollTo({
@@ -26,6 +37,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
     onButtonClick: () => void;
     backgroundImage: string;
     backgroundPosition: string;
+    mobileBackgroundPosition?: string;
   }> = {
     welcome: {
       label: 'WELCOME TO',
@@ -34,7 +46,8 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       buttonText: 'LEARN MORE',
       onButtonClick: () => onNavigate?.('about'),
       backgroundImage: '/hero/welcome.avif',
-      backgroundPosition: 'center'
+      backgroundPosition: 'center',
+      mobileBackgroundPosition: 'center top'
     },
     why: {
       label: 'WHY CHOOSE US',
@@ -43,7 +56,8 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       buttonText: 'OUR ADVANTAGE',
       onButtonClick: () => onNavigate?.('about'),
       backgroundImage: '/hero/why%20choose%20us.avif',
-      backgroundPosition: 'center'
+      backgroundPosition: 'center',
+      mobileBackgroundPosition: 'center center'
     },
     products: {
       label: 'OUR PRODUCT RANGE',
@@ -52,7 +66,8 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       buttonText: 'EXPLORE PRODUCTS',
       onButtonClick: () => onNavigate?.('products'),
       backgroundImage: '/hero/product.avif',
-      backgroundPosition: 'right center'
+      backgroundPosition: 'right center',
+      mobileBackgroundPosition: '70% center'
     },
     global: {
       label: 'GLOBAL CONNECTION',
@@ -61,7 +76,8 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       buttonText: 'CONTACT US',
       onButtonClick: () => onNavigate?.('contact'),
       backgroundImage: '/hero/global%20connection.avif',
-      backgroundPosition: 'center'
+      backgroundPosition: 'center',
+      mobileBackgroundPosition: 'center center'
     }
   };
 
@@ -104,7 +120,9 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
             style={{
               backgroundImage: `url('${slide.backgroundImage}')`,
               backgroundSize: 'cover',
-              backgroundPosition: slide.backgroundPosition,
+              backgroundPosition: isMobile && slide.mobileBackgroundPosition
+                ? slide.mobileBackgroundPosition
+                : slide.backgroundPosition,
               backgroundRepeat: 'no-repeat',
               opacity: slideKey === activeSlide ? 1 : 0,
               zIndex: slideKey === activeSlide ? 1 : 0,

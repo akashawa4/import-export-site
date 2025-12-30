@@ -11,7 +11,7 @@ const products = [
     highlight: 'Export Quality',
     category: 'Towels',
     categorySlug: 'towels',
-    image: '/towel/Towelmain/banner.jpg',
+    image: '/towel/Towelmain/banner.avif',
   },
   {
     id: 2,

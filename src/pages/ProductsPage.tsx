@@ -568,7 +568,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
       emoji: '🧺',
       description: 'Premium export-quality cotton towels',
       slug: 'towels',
-      image: '/towel/Towelmain/banner.jpg',
+      image: '/towel/Towelmain/banner.avif',
     },
     {
       id: 'cow-dung',
