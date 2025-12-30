@@ -32,7 +32,6 @@ export default function CompanyInfo() {
           backgroundImage: `url('/hero/why choose u.avif')`,
           backgroundPosition: 'center',
           backgroundSize: 'cover',
-          backgroundAttachment: 'fixed',
         }}
       >
         <div className="absolute inset-0 bg-slate-900/90"></div>

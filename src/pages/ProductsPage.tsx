@@ -671,7 +671,6 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
           backgroundImage: `url('${getBackgroundImage()}')`,
           backgroundPosition: 'center',
           backgroundSize: 'cover',
-          backgroundAttachment: 'fixed',
         }}
       >
         <div className="absolute inset-0 bg-slate-900/75"></div>
@@ -748,7 +747,6 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                       name={product.name}
                       category={product.category}
                       description={product.description}
-                      price={product.price}
                       imageEmoji={product.imageEmoji}
                       imageUrl={product.imageUrl}
                       highlight={product.highlight}

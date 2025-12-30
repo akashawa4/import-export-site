@@ -22,7 +22,6 @@ export default function AboutPage({ onNavigate }: AboutPageProps = {}) {
           backgroundImage: `url('/hero/About-Us.avif')`,
           backgroundPosition: 'center',
           backgroundSize: 'cover',
-          backgroundAttachment: 'fixed',
         }}
       >
         <div className="absolute inset-0 bg-slate-900/80"></div>

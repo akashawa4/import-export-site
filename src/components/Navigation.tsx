@@ -217,7 +217,7 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
                 onClick={() => onNavigate?.('home')}
                 className="flex items-center gap-2 sm:gap-3 text-slate-800 hover:text-blue-800 transition-colors duration-300 group"
               >
-                <img src="/favicon.avif" alt="Amritva Overseas Logo" className="h-10 sm:h-12 w-auto rounded-md" />
+                <img src="/favicom.avif" alt="Amritva Overseas Logo" className="h-10 sm:h-12 w-auto rounded-md" />
                 <span className="relative text-lg sm:text-2xl font-bold font-serif">
                   <span className="relative z-10">Amritva Overseas</span>
                   <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-blue-700 transition-all duration-300 group-hover:w-full"></span>

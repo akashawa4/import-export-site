@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Rounded rectangle background -->
+  <rect x="5" y="5" width="90" height="90" rx="12" ry="12" fill="#0f172a"/>
+  
+  <!-- Triangle A shape -->
+  <path d="M50 18 L78 72 H22 Z" fill="#22d3ee" stroke="#22d3ee" stroke-width="2" stroke-linejoin="round"/>
+  
+  <!-- Inner triangle cutout for the 'A' -->
+  <path d="M50 38 L62 62 H38 Z" fill="#0f172a"/>
+  
+  <!-- Horizontal bar of the 'A' -->
+  <rect x="35" y="52" width="30" height="6" fill="#22d3ee" rx="1"/>
+  
+  <!-- AMRITVA text -->
+  <text x="50" y="88" text-anchor="middle" fill="#22d3ee" font-family="Arial, sans-serif" font-size="10" font-weight="bold" letter-spacing="1">AMRITVA</text>
+</svg>

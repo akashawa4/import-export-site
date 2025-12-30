@@ -31,7 +31,6 @@ export default function CategoryHighlights() {
           backgroundImage: `url('/hero/global connection.avif')`,
           backgroundPosition: 'center',
           backgroundSize: 'cover',
-          backgroundAttachment: 'fixed',
         }}
       >
         <div className="absolute inset-0 bg-slate-900/80"></div>

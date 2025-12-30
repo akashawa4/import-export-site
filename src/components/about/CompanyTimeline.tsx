@@ -31,7 +31,6 @@ export default function CompanyTimeline() {
           backgroundImage: `url('/hero/people.webp')`,
           backgroundPosition: 'center',
           backgroundSize: 'cover',
-          backgroundAttachment: 'fixed',
         }}
       >
         <div className="absolute inset-0 bg-slate-900/85"></div>

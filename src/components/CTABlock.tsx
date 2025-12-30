@@ -10,7 +10,6 @@ export default function CTABlock() {
                     backgroundImage: `url('/hero/bulk.avif')`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
-                    backgroundAttachment: 'fixed',
                 }}
             >
                 <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/80 to-slate-900/60"></div>
