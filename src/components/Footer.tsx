@@ -20,8 +20,8 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
         <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-8 mb-8 sm:mb-12">
           <div className="xs:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
-              <img src="/favicon.jpg" alt="Amritva Overseas Logo" className="h-10 sm:h-12 w-auto rounded-md" />
-              <h3 className="text-white text-lg sm:text-xl font-bold">Amritva Overseas</h3>
+              <img src="/favicon.avif" alt="Amritva Overseas Logo" className="h-10 sm:h-12 w-auto rounded-md" />
+              <h3 className="text-white text-lg sm:text-xl font-bold font-serif">Amritva Overseas</h3>
             </div>
             <p className="text-sm leading-relaxed mb-4">
               Your trusted partner for premium towels, organic cow dung products, and eco-friendly exports from India to the world.
@@ -140,13 +140,13 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
             </p>
             <div className="flex gap-3">
               <a
-                href="https://wa.me/919960447001"
+                href="https://www.linkedin.com/in/amritva-overseas-038bb7379"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors duration-200 min-h-0"
-                aria-label="WhatsApp"
+                className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white transition-colors duration-200 min-h-0"
+                aria-label="LinkedIn"
               >
-                <MessageCircle size={18} />
+                <Linkedin size={18} />
               </a>
               <a
                 href="https://www.facebook.com/share/1CjZXAFgmg/"
@@ -158,15 +158,6 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                 <Facebook size={18} />
               </a>
               <a
-                href="https://www.linkedin.com/in/amritva-overseas-038bb7379"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white transition-colors duration-200 min-h-0"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={18} />
-              </a>
-              <a
                 href="https://www.instagram.com/amritva_7151"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -174,6 +165,15 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                 aria-label="Instagram"
               >
                 <Instagram size={18} />
+              </a>
+              <a
+                href="https://wa.me/919960447001"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors duration-200 min-h-0"
+                aria-label="WhatsApp"
+              >
+                <MessageCircle size={18} />
               </a>
             </div>
           </div>

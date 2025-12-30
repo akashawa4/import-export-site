@@ -25,6 +25,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
     buttonText: string;
     onButtonClick: () => void;
     backgroundImage: string;
+    backgroundPosition: string;
   }> = {
     welcome: {
       label: 'WELCOME TO',
@@ -32,7 +33,8 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       description: 'Your trusted partner in global trade. We connect markets with quality imports and exports, ensuring reliability, integrity, and long-term partnerships.',
       buttonText: 'LEARN MORE',
       onButtonClick: () => onNavigate?.('about'),
-      backgroundImage: '/hero/welcome.avif'
+      backgroundImage: '/hero/welcome.avif',
+      backgroundPosition: 'center'
     },
     why: {
       label: 'WHY CHOOSE US',
@@ -40,7 +42,8 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       description: 'We prioritize transparent communication, consistent quality, and on-time delivery so you can scale confidently with a partner who is invested in your success.',
       buttonText: 'OUR ADVANTAGE',
       onButtonClick: () => onNavigate?.('about'),
-      backgroundImage: '/hero/why%20choose%20us.avif'
+      backgroundImage: '/hero/why%20choose%20us.avif',
+      backgroundPosition: 'center'
     },
     products: {
       label: 'OUR PRODUCT RANGE',
@@ -48,7 +51,8 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       description: 'Explore a curated portfolio sourced from vetted suppliers worldwide, selected for their quality, sustainability, and value.',
       buttonText: 'EXPLORE PRODUCTS',
       onButtonClick: () => onNavigate?.('products'),
-      backgroundImage: '/hero/product.avif'
+      backgroundImage: '/hero/product.avif',
+      backgroundPosition: 'right center'
     },
     global: {
       label: 'GLOBAL CONNECTION',
@@ -56,7 +60,8 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       description: 'With a worldwide network and logistics expertise, we bridge continents to deliver dependable trade solutions wherever you operate.',
       buttonText: 'CONTACT US',
       onButtonClick: () => onNavigate?.('contact'),
-      backgroundImage: '/hero/global%20connection.avif'
+      backgroundImage: '/hero/global%20connection.avif',
+      backgroundPosition: 'center'
     }
   };
 
@@ -95,14 +100,16 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
         return (
           <div
             key={slideKey}
-            className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+            className="absolute inset-0"
             style={{
               backgroundImage: `url('${slide.backgroundImage}')`,
               backgroundSize: 'cover',
-              backgroundPosition: 'center',
+              backgroundPosition: slide.backgroundPosition,
               backgroundRepeat: 'no-repeat',
               opacity: slideKey === activeSlide ? 1 : 0,
               zIndex: slideKey === activeSlide ? 1 : 0,
+              transition: 'opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1)',
+              willChange: 'opacity',
             }}
           />
         );
@@ -115,21 +122,16 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
             {slideOrder.map((slideKey) => {
               const slide = slides[slideKey];
               const isActive = slideKey === activeSlide;
-              const currentIndex = slideOrder.indexOf(activeSlide);
-              const slideIndex = slideOrder.indexOf(slideKey);
 
               return (
                 <div
                   key={slideKey}
-                  className={`text-white space-y-3 md:space-y-6 transition-all duration-1000 ease-in-out ${isActive ? 'relative' : 'absolute inset-0 pointer-events-none'
+                  className={`text-white space-y-3 md:space-y-6 ${isActive ? 'relative' : 'absolute inset-0 pointer-events-none'
                     }`}
                   style={{
                     opacity: isActive ? 1 : 0,
-                    transform: isActive
-                      ? 'translateX(0) translateY(0)'
-                      : slideIndex < currentIndex
-                        ? 'translateX(-30px) translateY(10px)'
-                        : 'translateX(30px) translateY(10px)',
+                    transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                    willChange: 'opacity',
                   }}
                 >
                   <p className="text-xs md:text-sm lg:text-base font-medium tracking-wider uppercase">

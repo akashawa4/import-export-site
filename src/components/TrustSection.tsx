@@ -116,7 +116,7 @@ export default function TrustSection() {
             <span className="inline-block py-1 px-3 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-300 text-xs font-semibold uppercase tracking-wider mb-6 backdrop-blur-sm">
               Why Choose Us
             </span>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight text-white">
+            <h2 className="text-4xl md:text-5xl font-bold font-serif mb-6 leading-tight text-white">
               Excellence in Every <span className="text-blue-400">Shipment</span>
             </h2>
             <p className="text-slate-300 text-lg leading-relaxed mb-10 max-w-xl">

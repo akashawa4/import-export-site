@@ -583,46 +583,64 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
   if (viewMode === 'categories') {
     return (
       <div className="min-h-screen relative">
-        {/* Background Image */}
+        {/* Background Image with Blur */}
         <div
           className="fixed inset-0 z-0"
           style={{
             backgroundImage: `url('/hero/productpage.avif')`,
             backgroundPosition: 'center',
             backgroundSize: 'cover',
-            backgroundAttachment: 'fixed',
+            filter: 'blur(4px)',
+            transform: 'scale(1.1)',
           }}
-        >
-          <div className="absolute inset-0 bg-slate-900/70"></div>
-        </div>
+        />
+        {/* Dark Overlay */}
+        <div className="fixed inset-0 z-0 bg-gradient-to-br from-slate-900/75 via-slate-800/70 to-blue-900/65" />
 
         <Navigation onNavigate={onNavigate} activePage="products" />
-        <div className="pt-16 pb-20 relative z-10">
-          <div className="max-w-7xl mx-auto px-6 py-12">
-            <div className="mb-12 text-center">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Products</h2>
-              <p className="text-lg text-slate-300 max-w-3xl mx-auto">
+        <div className="py-16 relative z-10">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold font-serif text-white mb-4">
+                Our <span className="text-blue-400">Products</span>
+              </h2>
+              <p className="text-lg text-slate-300 max-w-2xl mx-auto">
                 Discover our range of premium export products carefully sourced and crafted for quality and sustainability.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="grid sm:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {categories.map((category) => (
                 <div
                   key={category.id}
                   onClick={() => handleCategorySelect(category.slug)}
-                  className="group bg-white/10 backdrop-blur-md rounded-xl border border-white/20 hover:border-blue-400/50 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden"
+                  className="group bg-white/10 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 border border-white/20 cursor-pointer"
                 >
-                  <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 relative overflow-hidden">
+                  <div className="aspect-square bg-gradient-to-br from-slate-100 to-slate-200 relative overflow-hidden">
                     <img
                       src={category.image}
                       alt={category.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     />
+                    <div className="absolute top-4 right-4 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full z-10">
+                      {category.id === 'towels' ? 'Export Quality' : 'Traditional & Natural'}
+                    </div>
                   </div>
-                  <div className="p-6 bg-slate-900/50 backdrop-blur-sm">
-                    <h3 className="text-2xl font-bold text-white mb-2">{category.name}</h3>
-                    <p className="text-slate-300">{category.description}</p>
+
+                  <div className="p-6 bg-slate-900/60 backdrop-blur-sm">
+                    <p className="text-sm text-blue-400 font-medium mb-2">
+                      {category.name}
+                    </p>
+                    <h3 className="text-xl font-bold font-serif text-white mb-4">
+                      {category.id === 'towels' ? 'Premium Towels Collection' : 'Cow Dung Products'}
+                    </h3>
+                    <div className="inline-flex items-center gap-2 text-blue-400 font-semibold group-hover:gap-3 transition-all duration-200">
+                      View Details
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -636,13 +654,21 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
     );
   }
 
+  // Dynamic background based on selected category
+  const getBackgroundImage = () => {
+    if (selectedCategory === 'cow-dung') {
+      return '/hero/cowdungbackground.avif';
+    }
+    return '/hero/productpage.avif';
+  };
+
   return (
     <div className="min-h-screen relative">
-      {/* Background Image */}
+      {/* Background Image - Dynamic based on category */}
       <div
         className="fixed inset-0 z-0"
         style={{
-          backgroundImage: `url('/hero/productpage.avif')`,
+          backgroundImage: `url('${getBackgroundImage()}')`,
           backgroundPosition: 'center',
           backgroundSize: 'cover',
           backgroundAttachment: 'fixed',
@@ -658,7 +684,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
           <div className="max-w-7xl mx-auto px-4 md:px-6 py-3">
             <div className="mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">Our Products</h1>
+                <h1 className="text-2xl md:text-3xl font-bold font-serif text-white mb-1">Our Products</h1>
                 <p className="text-slate-300 text-xs md:text-sm">Browse our premium collection</p>
               </div>
               <button
@@ -781,7 +807,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                     <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide">
                       {selectedProduct.category}
                     </p>
-                    <h2 className="mt-1 text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
+                    <h2 className="mt-1 text-xl sm:text-2xl md:text-3xl font-bold font-serif text-slate-900">
                       {selectedProduct.name}
                     </h2>
                     {selectedProduct.productType && (

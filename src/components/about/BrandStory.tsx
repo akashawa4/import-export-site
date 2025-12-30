@@ -4,7 +4,7 @@ export default function BrandStory() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="space-y-4 sm:space-y-6">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-serif text-white">
               About Company
             </h2>
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed">
@@ -21,7 +21,7 @@ export default function BrandStory() {
               />
               <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-500" />
               <div className="relative z-10 text-right p-6 sm:p-8">
-                <p className="text-white font-bold text-2xl sm:text-3xl drop-shadow-md">
+                <p className="text-white font-bold font-serif text-2xl sm:text-3xl drop-shadow-md">
                   Quality Manufacturing
                 </p>
               </div>

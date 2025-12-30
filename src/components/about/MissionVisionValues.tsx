@@ -34,7 +34,7 @@ export default function MissionVisionValues() {
                 <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-600/20 border border-blue-500/30 rounded-lg flex items-center justify-center mb-4 sm:mb-6">
                   <Icon size={24} className="sm:w-7 sm:h-7 text-blue-400" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">
+                <h3 className="text-lg sm:text-xl font-bold font-serif text-white mb-3 sm:mb-4">
                   {pillar.title}
                 </h3>
                 <div className="text-sm sm:text-base text-slate-300 leading-relaxed">

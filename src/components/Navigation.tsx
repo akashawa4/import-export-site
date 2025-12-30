@@ -217,8 +217,8 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
                 onClick={() => onNavigate?.('home')}
                 className="flex items-center gap-2 sm:gap-3 text-slate-800 hover:text-blue-800 transition-colors duration-300 group"
               >
-                <img src="/favicon.jpg" alt="Amritva Overseas Logo" className="h-8 sm:h-10 w-auto rounded-md" />
-                <span className="relative text-lg sm:text-2xl font-bold">
+                <img src="/favicon.avif" alt="Amritva Overseas Logo" className="h-10 sm:h-12 w-auto rounded-md" />
+                <span className="relative text-lg sm:text-2xl font-bold font-serif">
                   <span className="relative z-10">Amritva Overseas</span>
                   <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-blue-700 transition-all duration-300 group-hover:w-full"></span>
                 </span>
@@ -233,7 +233,7 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
                     key={link.href}
                     href={link.href}
                     onClick={(e) => handleLinkClick(link.href, e)}
-                    className={`relative font-semibold text-sm transition-all duration-300 uppercase tracking-wider px-4 py-2 rounded-lg group ${isActive ? 'text-blue-700' : 'text-slate-700 hover:text-blue-800'}`}
+                    className={`relative font-semibold font-serif text-sm transition-all duration-300 uppercase tracking-wider px-4 py-2 rounded-lg group ${isActive ? 'text-blue-700' : 'text-slate-700 hover:text-blue-800'}`}
                   >
                     <span className="relative z-10">{link.label}</span>
                     <span className={`absolute inset-0 rounded-lg transition-all duration-300 ${isActive ? 'bg-blue-50' : 'opacity-0 group-hover:opacity-100 bg-blue-100/60'}`}></span>
@@ -299,7 +299,7 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
                       handleLinkClick(link.href, e);
                       setIsMobileMenuOpen(false);
                     }}
-                    className={`w-full text-left font-bold py-5 px-5 rounded-xl uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] hover:shadow-xl bg-transparent backdrop-blur-md border-2 shadow-lg active:scale-[0.98] group ${isActive ? 'text-blue-800 border-blue-500/70 bg-blue-50/50' : 'text-slate-900 border-blue-200/50 hover:text-blue-800 hover:border-blue-500/70'}`}
+                    className={`w-full text-left font-bold font-serif py-5 px-5 rounded-xl uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] hover:shadow-xl bg-transparent backdrop-blur-md border-2 shadow-lg active:scale-[0.98] group ${isActive ? 'text-blue-800 border-blue-500/70 bg-blue-50/50' : 'text-slate-900 border-blue-200/50 hover:text-blue-800 hover:border-blue-500/70'}`}
                     style={{
                       animation: `slideInUp 0.3s ease-out ${index * 50}ms both`
                     }}

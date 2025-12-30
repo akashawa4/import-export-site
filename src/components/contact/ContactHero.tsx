@@ -13,7 +13,7 @@ export default function ContactHero() {
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/70 to-slate-900/90"></div>
 
       <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+        <h1 className="text-4xl md:text-5xl font-bold font-serif text-white mb-6">
           Contact Us
         </h1>
         <p className="text-lg md:text-xl text-slate-300 leading-relaxed">

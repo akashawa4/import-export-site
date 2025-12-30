@@ -68,7 +68,7 @@ export default function ProductCard({
         <p className="text-xs text-blue-400 font-medium mb-2 uppercase tracking-wide">
           {category}
         </p>
-        <h3 className="text-lg font-bold text-white mb-2 line-clamp-1">
+        <h3 className="text-lg font-bold font-serif text-white mb-2 line-clamp-1">
           {name}
         </h3>
         <p className="text-sm text-slate-300 line-clamp-2 min-h-[2.5rem]">

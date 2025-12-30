@@ -41,7 +41,6 @@ h6 {
 }
 
 p,
-span,
 a,
 button,
 input,
@@ -51,6 +50,11 @@ label,
 li {
   font-family: var(--font-sans);
   font-weight: 400;
+}
+
+/* Default sans-serif for spans, but allow inheritance in headings */
+span {
+  font-family: inherit;
 }
 
 /* Serif headings for elegant titles */

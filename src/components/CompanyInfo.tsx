@@ -70,7 +70,7 @@ export default function CompanyInfo() {
                   <div className="w-12 h-12 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-300">
                     <Icon className="w-6 h-6 text-blue-300" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-200 transition-colors">
+                  <h3 className="text-lg font-bold font-serif text-white mb-2 group-hover:text-blue-200 transition-colors">
                     {feature.title}
                   </h3>
                   <p className="text-slate-400 text-sm leading-relaxed group-hover:text-slate-300">

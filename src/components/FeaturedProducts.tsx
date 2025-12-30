@@ -30,7 +30,7 @@ export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps =
       <div
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: `url('/hero/product.png')`,
+          backgroundImage: `url('/hero/product.avif')`,
           backgroundPosition: 'center',
           backgroundSize: 'cover',
           filter: 'blur(4px)',
@@ -42,7 +42,7 @@ export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps =
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold font-serif text-white mb-4">
             Featured <span className="text-blue-400">Products</span>
           </h2>
           <p className="text-lg text-slate-300 max-w-2xl mx-auto">
@@ -78,7 +78,7 @@ export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps =
                 <p className="text-sm text-blue-400 font-medium mb-2">
                   {product.category}
                 </p>
-                <h3 className="text-xl font-bold text-white mb-4">
+                <h3 className="text-xl font-bold font-serif text-white mb-4">
                   {product.name}
                 </h3>
                 <div className="inline-flex items-center gap-2 text-blue-400 font-semibold group-hover:gap-3 transition-all duration-200">

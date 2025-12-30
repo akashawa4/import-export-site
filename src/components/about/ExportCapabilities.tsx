@@ -40,7 +40,7 @@ export default function ExportCapabilities() {
           </div>
 
           <div className="space-y-6 order-1 md:order-2">
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
+            <h2 className="text-3xl md:text-4xl font-bold font-serif text-white">
               Why Choose Us?
             </h2>
             <p className="text-lg text-slate-300 leading-relaxed">

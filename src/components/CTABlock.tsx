@@ -19,7 +19,7 @@ export default function CTABlock() {
             <div className="relative max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
                 {/* Text content */}
                 <div className="text-white">
-                    <h2 className="text-4xl md:text-5xl font-bold leading-tight">
+                    <h2 className="text-4xl md:text-5xl font-bold font-serif leading-tight">
                         Looking for <span className="text-blue-400">Bulk Orders</span> or <span className="text-blue-400">Custom Requirements?</span>
                     </h2>
                     <p className="mt-6 text-lg text-slate-300 max-w-xl">

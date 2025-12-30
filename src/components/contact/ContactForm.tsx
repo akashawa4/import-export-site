@@ -78,7 +78,7 @@ ${formData.message}`;
         <div className="grid md:grid-cols-2 gap-12">
           <div className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-white mb-4">
+              <h2 className="text-3xl font-bold font-serif text-white mb-4">
                 Get in Touch
               </h2>
               <p className="text-lg text-slate-300 mb-8">
