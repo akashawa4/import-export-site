@@ -96,16 +96,6 @@ function AnimatedCounter({ value, suffix, duration = 2000 }: { value: number; su
 export default function TrustSection() {
   return (
     <section className="py-24 overflow-hidden relative">
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url('/hero/why choose u.avif')`,
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-        }}
-      >
-        <div className="absolute inset-0 bg-slate-900/90"></div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row gap-16 items-start">

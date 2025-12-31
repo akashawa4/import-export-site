@@ -65,8 +65,23 @@ function App() {
     <div className={`min-h-screen bg-white transition-opacity duration-200 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
       <Navigation onNavigate={handleNavigation} activePage="home" />
       <HeroSection onNavigate={handleNavigation} />
-      <CompanyInfo />
-      <TrustSection />
+      {/* Shared background container for CompanyInfo and TrustSection */}
+      <div className="relative">
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url('/hero/why choose u.avif')`,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+          }}
+        >
+          <div className="absolute inset-0 bg-slate-900/90"></div>
+        </div>
+        <div className="relative z-10">
+          <CompanyInfo />
+          <TrustSection />
+        </div>
+      </div>
       <FeaturedProducts onNavigate={handleNavigation} />
 
       <CTABlock />

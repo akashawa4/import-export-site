@@ -26,16 +26,6 @@ export default function CompanyInfo() {
 
   return (
     <section className="py-24 overflow-hidden relative">
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url('/hero/why choose u.avif')`,
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-        }}
-      >
-        <div className="absolute inset-0 bg-slate-900/90"></div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
