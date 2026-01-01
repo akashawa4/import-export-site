@@ -136,10 +136,10 @@ export const demoProducts: Product[] = [
   },
   {
     id: '7',
-    name: 'Terry Kitchen Towel',
+    name: 'Terry Kitchen Napkin',
     category: 'Towels',
     categorySlug: 'towels',
-    productType: 'Terry Kitchen Towel',
+    productType: 'Terry Kitchen Napkin',
     description: 'Thick, extra-absorbent, and durable terry kitchen towel for dish drying, spill soaking, and cleaning. Standard size: 40 × 60 cm (Optional: 38 × 63 cm). Heavy-duty performance.',
     price: 'Contact for Price',
     priceValue: 0,
