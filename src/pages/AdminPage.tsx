@@ -474,6 +474,16 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
               onClick={async () => {
                 try {
                   setError(null);
+
+                  // First, check if products already exist and delete them to prevent duplicates
+                  const existingSnapshot = await getDocs(collection(db, 'products'));
+                  if (!existingSnapshot.empty) {
+                    for (const docSnapshot of existingSnapshot.docs) {
+                      await deleteDoc(doc(db, 'products', docSnapshot.id));
+                    }
+                  }
+
+                  // Now add demo products
                   for (const product of demoProducts) {
                     await addDoc(collection(db, 'products'), {
                       ...product,

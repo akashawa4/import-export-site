@@ -1,4 +1,7 @@
 import { ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { auth } from '../firebase';
 
 interface FeaturedProductsProps {
   onNavigate?: (page: 'home' | 'products' | 'about' | 'contact') => void;
@@ -11,7 +14,7 @@ const products = [
     highlight: 'Export Quality',
     category: 'Towels',
     categorySlug: 'towels',
-    image: '/towel/Towelmain/banner.avif',
+    image: '/towel/banner.avif',
   },
   {
     id: 2,
@@ -24,13 +27,40 @@ const products = [
 ];
 
 export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps = {}) {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleProductClick = (categorySlug: string) => {
+    if (!currentUser) {
+      // User not signed in - trigger sign in modal
+      sessionStorage.setItem('openSignIn', 'true');
+      // Store intended destination for after sign-in
+      sessionStorage.setItem('pendingNavigation', 'products');
+      sessionStorage.setItem('pendingCategory', categorySlug);
+      // Force re-render to trigger the sign-in modal in Navigation
+      // (Navigation listens to sessionStorage 'openSignIn' flag)
+      window.dispatchEvent(new Event('storage'));
+    } else {
+      // User is signed in - navigate to products
+      sessionStorage.setItem('navigateToProducts', 'true');
+      sessionStorage.setItem('selectedCategory', categorySlug);
+      onNavigate?.('products');
+    }
+  };
+
   return (
     <section id="products" className="relative py-16 overflow-hidden">
       {/* Background Image with Blur */}
       <div
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: `url('/hero/product.avif')`,
+          backgroundImage: `url('/hero/featureproductbackground.jpg')`,
           backgroundPosition: 'center',
           backgroundSize: 'cover',
           filter: 'blur(4px)',
@@ -54,13 +84,7 @@ export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps =
           {products.map((product) => (
             <div
               key={product.id}
-              onClick={() => {
-                // Set flag to show products directly (skip categories)
-                sessionStorage.setItem('navigateToProducts', 'true');
-                // Store the selected category slug
-                sessionStorage.setItem('selectedCategory', product.categorySlug);
-                onNavigate?.('products');
-              }}
+              onClick={() => handleProductClick(product.categorySlug)}
               className="group bg-white/10 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 border border-white/20 cursor-pointer"
             >
               <div className="aspect-square bg-gradient-to-br from-slate-100 to-slate-200 relative overflow-hidden">
@@ -93,3 +117,4 @@ export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps =
     </section>
   );
 }
+

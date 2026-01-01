@@ -40,7 +40,7 @@ export default function AboutProducts() {
             <div className="p-8">
               <h3 className="text-2xl font-bold font-serif text-white mb-4">2. Cow Dung Products</h3>
               <p className="text-slate-300 leading-relaxed">
-                Our range includes dried cow dung cakes, cow dung powder, and incense made from pure desi cow dung. These eco-friendly products are commonly used for religious rituals, natural fertilizers in organic farming, and sustainable fuel alternatives. We ensure proper drying, hygiene, and safe packaging for domestic and international supply.
+                Our range includes dried cow dung cakes, cow dung powder. These eco-friendly products are commonly used for religious rituals, natural fertilizers in organic farming, and sustainable fuel alternatives. We ensure proper drying, hygiene, and safe packaging for domestic and international supply.
               </p>
             </div>
           </div>

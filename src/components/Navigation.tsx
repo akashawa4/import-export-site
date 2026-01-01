@@ -62,31 +62,66 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
   // Listen to auth state changes - this is the primary way to track if user is signed in
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      const wasNotSignedIn = !currentUser;
       setCurrentUser(user);
       setAuthInitialized(true);
-      // If user just signed in (e.g., from redirect), close the modal
-      if (user && isAuthModalOpen) {
-        setIsAuthModalOpen(false);
-        setIsAuthLoading(false);
+
+      // If user just signed in
+      if (user && wasNotSignedIn) {
+        // Close the modal if it's open
+        if (isAuthModalOpen) {
+          setIsAuthModalOpen(false);
+          setIsAuthLoading(false);
+        }
+
+        // Check for pending navigation (user was trying to view products before signing in)
+        const pendingNavigation = sessionStorage.getItem('pendingNavigation');
+        const pendingCategory = sessionStorage.getItem('pendingCategory');
+
+        if (pendingNavigation === 'products' && pendingCategory) {
+          // Clear pending navigation flags
+          sessionStorage.removeItem('pendingNavigation');
+          sessionStorage.removeItem('pendingCategory');
+          sessionStorage.removeItem('openSignIn');
+
+          // Navigate to products with the selected category
+          sessionStorage.setItem('navigateToProducts', 'true');
+          sessionStorage.setItem('selectedCategory', pendingCategory);
+
+          // Small delay to allow auth state to settle
+          setTimeout(() => {
+            onNavigate?.('products');
+          }, 100);
+        }
       }
     });
     return () => unsubscribe();
-  }, [isAuthModalOpen]);
+  }, [isAuthModalOpen, currentUser, onNavigate]);
 
   // Check if sign-in modal should be opened (redirected from enquiry)
   // Only open if auth is initialized and user is not signed in
   useEffect(() => {
-    const shouldOpenSignIn = sessionStorage.getItem('openSignIn') === 'true';
-    if (shouldOpenSignIn && authInitialized && !currentUser) {
-      sessionStorage.removeItem('openSignIn');
-      // Small delay to allow page transition
-      setTimeout(() => {
+    const checkAndOpenSignIn = () => {
+      const shouldOpenSignIn = sessionStorage.getItem('openSignIn') === 'true';
+      if (shouldOpenSignIn && authInitialized && !currentUser) {
+        sessionStorage.removeItem('openSignIn');
         setIsAuthModalOpen(true);
-      }, 300);
-    } else if (shouldOpenSignIn && currentUser) {
-      // User is already signed in, just clear the flag
-      sessionStorage.removeItem('openSignIn');
-    }
+      } else if (shouldOpenSignIn && currentUser) {
+        // User is already signed in, just clear the flag
+        sessionStorage.removeItem('openSignIn');
+      }
+    };
+
+    // Check on mount and auth state changes
+    checkAndOpenSignIn();
+
+    // Also listen for storage events (triggered by other components)
+    const handleStorageEvent = () => {
+      checkAndOpenSignIn();
+    };
+
+    window.addEventListener('storage', handleStorageEvent);
+    return () => window.removeEventListener('storage', handleStorageEvent);
   }, [currentUser, authInitialized]);
 
 

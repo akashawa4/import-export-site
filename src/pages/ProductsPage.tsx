@@ -5,7 +5,7 @@ import FilterBar from '../components/FilterBar';
 import ProductCard from '../components/ProductCard';
 import EmptyState from '../components/EmptyState';
 import { collection, getDocs } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { db, auth } from '../firebase';
 import { getProductSpecifications } from '../data/productSpecifications';
 
@@ -26,14 +26,14 @@ export interface Product {
 }
 
 export const productImageMap: Record<string, string> = {
-  // Towel products
-  'bath towel': '/towel/bathtowel/bathtowel (1).jpg',
-  napkin: '/towel/napkin/hand towel (1).jpg',
-  'face towel': '/towel/face towel/face towel (1).jpg',
-  'beach towel': '/towel/beach towel/beach towel (1).jpg',
-  bathrobe: '/towel/bathrobe/bathrobe (1).jpg',
-  'kitchen towel': '/towel/kitchn towel/kitchn towel (1).jpg',
-  'terry kitchen towel': '/towel/terry kitchen towel/terry kitchen towel (1).jpg',
+  // Towel products - updated to avif format
+  'bath towel': '/towel/terrybath.avif',
+  napkin: '/towel/terrynapkins.avif',
+  'face towel': '/towel/facetowel.avif',
+  'beach towel': '/towel/beachtowel.avif',
+  bathrobe: '/towel/bathrobe.avif',
+  'kitchen towel': '/towel/kitchen.avif',
+  'terry kitchen towel': '/towel/kitchen.avif',
   // Cow Dung products
   'spiritual use': '/hero/dungspritual.avif',
   'fertilizer use': '/hero/dungfertili.avif',
@@ -400,6 +400,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
   const [isLoading, setIsLoading] = useState(true);
 
   const [isAdmin, setIsAdmin] = useState(false);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showEnquiryForm, setShowEnquiryForm] = useState(false);
 
@@ -437,7 +438,9 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
               imageEmoji: data.imageEmoji ?? '🧺',
               highlight: data.highlight,
               createdAt: data.createdAt ?? 0,
-              imageUrl: data.imageUrl ?? imageFromType,
+              // Use calculated image from productType for local images
+              // Only preserve Firestore imageUrl if it's an external URL (e.g., Firebase Storage)
+              imageUrl: data.imageUrl?.startsWith('http') ? data.imageUrl : imageFromType,
             };
           });
           setProducts(list);
@@ -456,6 +459,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
       setIsAdmin(user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase());
     });
     return unsubscribe;
@@ -550,8 +554,18 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
   }, [selectedCategory, selectedTowelType]);
 
   const handleCategorySelect = (categorySlug: string) => {
-    setSelectedCategory(categorySlug);
-    setViewMode('products');
+    if (!currentUser) {
+      // User not signed in - trigger sign in modal
+      sessionStorage.setItem('openSignIn', 'true');
+      // Store intended destination for after sign-in
+      sessionStorage.setItem('pendingNavigation', 'products');
+      sessionStorage.setItem('pendingCategory', categorySlug);
+      onNavigate?.('home');
+    } else {
+      // User is signed in - proceed to products
+      setSelectedCategory(categorySlug);
+      setViewMode('products');
+    }
   };
 
   const categories = [
@@ -561,7 +575,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
       emoji: '🧺',
       description: 'Premium export-quality cotton towels',
       slug: 'towels',
-      image: '/towel/Towelmain/banner.avif',
+      image: '/towel/banner.avif',
     },
     {
       id: 'cow-dung',

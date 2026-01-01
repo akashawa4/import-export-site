@@ -17,7 +17,7 @@ export default function ProductCategoryGrid({ onNavigate }: ProductCategoryGridP
     {
       id: 'towels',
       name: 'Towels',
-      image: '/towel/Towelmain/banner.avif',
+      image: '/towel/banner.avif',
       description: 'Premium export-quality cotton towels',
     },
     {
