@@ -137,7 +137,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       <div className="relative h-[70vh] md:h-screen flex items-center z-20">
         <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
           {/* Fixed height container to maintain consistent text position */}
-          <div className="relative h-[280px] md:h-[350px] lg:h-[400px]">
+          <div className="relative h-[320px] md:h-[350px] lg:h-[400px]">
             {slideOrder.map((slideKey) => {
               const slide = slides[slideKey];
               const isActive = slideKey === activeSlide;
@@ -158,7 +158,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
                   <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold leading-tight md:leading-none mb-4 md:mb-6">
                     {slide.title}
                   </h1>
-                  <p className="text-sm md:text-base lg:text-lg leading-relaxed max-w-2xl h-[60px] md:h-[72px] lg:h-[80px] overflow-hidden">
+                  <p className="text-sm md:text-base lg:text-lg leading-relaxed max-w-2xl h-[84px] md:h-[72px] lg:h-[80px]">
                     {slide.description}
                   </p>
                   <button

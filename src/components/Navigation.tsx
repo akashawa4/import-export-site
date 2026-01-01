@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import {
   signInWithPopup,
-  signInWithRedirect,
-  getRedirectResult,
   signOut,
   onAuthStateChanged,
   User,
@@ -26,6 +24,7 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState<string | null>(null);
+  const [authInitialized, setAuthInitialized] = useState(false);
   const ADMIN_EMAIL = 'admin@123.com';
   const isAdmin = currentUser?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
@@ -60,54 +59,37 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
     }
   };
 
-  // Check for redirect result on mount (when user returns from Google OAuth)
-  useEffect(() => {
-    const checkRedirectResult = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result) {
-          // User successfully signed in via redirect
-          setIsAuthModalOpen(false);
-          setIsAuthLoading(false);
-          setAuthError(null);
-        }
-      } catch (error: any) {
-        console.error('Redirect sign-in error:', error);
-        // Only show error if modal is open
-        if (isAuthModalOpen) {
-          setAuthError('Failed to sign in with Google. Please try again.');
-        }
-        setIsAuthLoading(false);
-      }
-    };
-    checkRedirectResult();
-  }, []); // Empty dependency array - only run on mount
-
+  // Listen to auth state changes - this is the primary way to track if user is signed in
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
+      setAuthInitialized(true);
+      // If user just signed in (e.g., from redirect), close the modal
+      if (user && isAuthModalOpen) {
+        setIsAuthModalOpen(false);
+        setIsAuthLoading(false);
+      }
     });
     return () => unsubscribe();
-  }, []);
+  }, [isAuthModalOpen]);
 
   // Check if sign-in modal should be opened (redirected from enquiry)
+  // Only open if auth is initialized and user is not signed in
   useEffect(() => {
     const shouldOpenSignIn = sessionStorage.getItem('openSignIn') === 'true';
-    if (shouldOpenSignIn && !currentUser) {
+    if (shouldOpenSignIn && authInitialized && !currentUser) {
       sessionStorage.removeItem('openSignIn');
       // Small delay to allow page transition
       setTimeout(() => {
         setIsAuthModalOpen(true);
       }, 300);
+    } else if (shouldOpenSignIn && currentUser) {
+      // User is already signed in, just clear the flag
+      sessionStorage.removeItem('openSignIn');
     }
-  }, [currentUser]);
+  }, [currentUser, authInitialized]);
 
-  // Helper function to detect mobile devices
-  const isMobileDevice = () => {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    ) || window.innerWidth < 768;
-  };
+
 
   const openAuthModal = () => {
     setIsAuthModalOpen(true);
@@ -125,38 +107,26 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
   const handleGoogleSignIn = async () => {
     try {
       setIsAuthLoading(true);
+      setAuthError(null);
 
-      // Use redirect on mobile devices, popup on desktop
-      if (isMobileDevice()) {
-        // On mobile, use redirect which works better
-        await signInWithRedirect(auth, googleProvider);
-        // Note: The modal will close automatically when redirect happens
-        // User will be redirected back after authentication
-      } else {
-        // On desktop, use popup
-        await signInWithPopup(auth, googleProvider);
-        closeAuthModal();
-      }
+      // Use popup for all devices - more reliable than redirect on mobile
+      await signInWithPopup(auth, googleProvider);
+      closeAuthModal();
     } catch (error: any) {
       console.error('Google sign-in failed:', error);
 
-      // Check if error is due to popup being blocked (fallback to redirect)
-      if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
-        try {
-          await signInWithRedirect(auth, googleProvider);
-        } catch (redirectError) {
-          setAuthError('Failed to sign in with Google. Please try again.');
-          setIsAuthLoading(false);
-        }
+      // Handle specific error cases
+      if (error.code === 'auth/popup-closed-by-user') {
+        setAuthError('Sign-in was cancelled. Please try again.');
+      } else if (error.code === 'auth/popup-blocked') {
+        setAuthError('Popup was blocked. Please allow popups for this site and try again.');
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        // User opened another popup, ignore this error
+        return;
       } else {
         setAuthError(error.message || 'Failed to sign in with Google. Please try again.');
-        setIsAuthLoading(false);
       }
-    }
-
-    // Only set loading to false if we're not using redirect
-    // (redirect will cause page navigation)
-    if (!isMobileDevice()) {
+    } finally {
       setIsAuthLoading(false);
     }
   };

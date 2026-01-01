@@ -5,7 +5,7 @@ import FilterBar from '../components/FilterBar';
 import ProductCard from '../components/ProductCard';
 import EmptyState from '../components/EmptyState';
 import { collection, getDocs } from 'firebase/firestore';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { db, auth } from '../firebase';
 import { getProductSpecifications } from '../data/productSpecifications';
 
@@ -398,12 +398,10 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
   const [searchQuery, setSearchQuery] = useState('');
   const [products, setProducts] = useState<Product[]>(demoProducts);
   const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
+
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showEnquiryForm, setShowEnquiryForm] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -446,7 +444,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
         }
       } catch (err: any) {
         console.error('Failed to load products from Firestore', err);
-        setLoadError(err.message || 'Failed to load products');
+        // Fallback to demo products on error
         setProducts(demoProducts);
       } finally {
         setIsLoading(false);
@@ -458,7 +456,6 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
       setIsAdmin(user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase());
     });
     return unsubscribe;
@@ -466,7 +463,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
 
   // Disable body scroll when modal is open
   useEffect(() => {
-    if (selectedProduct || showEnquiryForm || showAuthPrompt) {
+    if (selectedProduct || showEnquiryForm) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -474,15 +471,11 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [selectedProduct, showEnquiryForm, showAuthPrompt]);
+  }, [selectedProduct, showEnquiryForm]);
 
-  // Handle enquiry - check if user is signed in first
+  // Handle enquiry - show enquiry form directly (no sign-in required as it goes via WhatsApp)
   const handleEnquiryClick = () => {
-    if (!currentUser) {
-      setShowAuthPrompt(true);
-    } else {
-      setShowEnquiryForm(true);
-    }
+    setShowEnquiryForm(true);
   };
 
   const filteredAndSortedProducts = useMemo(() => {
@@ -718,11 +711,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
               onTowelTypeChange={setSelectedTowelType}
               towelTypes={towelTypes}
             />
-            {loadError && (
-              <div className="text-sm text-red-400 mt-2">
-                {loadError}
-              </div>
-            )}
+            {/* Error is logged to console, app falls back to demo products */}
           </div>
         </div>
 
@@ -981,48 +970,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
         </div>
       )}
 
-      {/* Auth Prompt Modal */}
-      {showAuthPrompt && (
-        <div className="fixed inset-0 z-[1070] flex items-center justify-center px-4">
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-md"
-            onClick={() => setShowAuthPrompt(false)}
-          ></div>
-          <div className="relative z-[1071] w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <div className="p-6 text-center space-y-4">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900">Sign In Required</h3>
-              <p className="text-slate-600 text-sm">
-                Please sign in to your account to send enquiries and get pricing information.
-              </p>
-              <div className="flex gap-3 pt-2">
-                <button
-                  onClick={() => setShowAuthPrompt(false)}
-                  className="flex-1 px-4 py-2.5 border border-slate-300 text-slate-700 rounded-full font-semibold hover:bg-slate-50 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => {
-                    setShowAuthPrompt(false);
-                    // Navigate to home (the sign in modal is in Navigation)
-                    onNavigate?.('home');
-                    // Small delay then trigger sign in modal via session storage
-                    sessionStorage.setItem('openSignIn', 'true');
-                  }}
-                  className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition"
-                >
-                  Sign In
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+
     </div>
   );
 }
