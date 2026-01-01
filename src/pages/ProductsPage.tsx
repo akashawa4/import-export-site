@@ -28,12 +28,12 @@ export interface Product {
 export const productImageMap: Record<string, string> = {
   // Towel products - updated to avif format
   'bath towel': '/towel/terrybath.avif',
-  napkin: '/towel/terrynapkins.avif',
+  napkin: '/towel/napin.avif',
   'face towel': '/towel/facetowel.avif',
   'beach towel': '/towel/beachtowel.avif',
   bathrobe: '/towel/bathrobe.avif',
   'kitchen towel': '/towel/kitchen.avif',
-  'terry kitchen towel': '/towel/kitchen.avif',
+  'terry kitchen towel': '/towel/terrykitchen.avif',
   // Cow Dung products
   'spiritual use': '/hero/dungspritual.avif',
   'fertilizer use': '/hero/dungfertili.avif',
@@ -52,7 +52,7 @@ export const demoProducts: Product[] = [
   // Towels - Category 1: 7 Products
   {
     id: '1',
-    name: 'Premium Bathrobe',
+    name: 'Bathrobe',
     category: 'Towels',
     categorySlug: 'towels',
     productType: 'Bathrobe',
@@ -66,7 +66,7 @@ export const demoProducts: Product[] = [
   },
   {
     id: '2',
-    name: 'Thick Terry Bath Towel',
+    name: 'Bath Towel',
     category: 'Towels',
     categorySlug: 'towels',
     productType: 'Bath Towel',
@@ -80,7 +80,7 @@ export const demoProducts: Product[] = [
   },
   {
     id: '3',
-    name: 'Stylish Beach Towel',
+    name: 'Beach Towel',
     category: 'Towels',
     categorySlug: 'towels',
     productType: 'Beach Towel',
@@ -94,7 +94,7 @@ export const demoProducts: Product[] = [
   },
   {
     id: '4',
-    name: 'Gentle Face Towel',
+    name: 'Face Towel',
     category: 'Towels',
     categorySlug: 'towels',
     productType: 'Face Towel',
@@ -108,7 +108,7 @@ export const demoProducts: Product[] = [
   },
   {
     id: '5',
-    name: 'Durable Kitchen Towel',
+    name: 'Kitchen Towel',
     category: 'Towels',
     categorySlug: 'towels',
     productType: 'Kitchen Towel',
@@ -122,7 +122,7 @@ export const demoProducts: Product[] = [
   },
   {
     id: '6',
-    name: 'Cotton Napkins',
+    name: 'Napkins',
     category: 'Towels',
     categorySlug: 'towels',
     productType: 'Napkin',
@@ -234,8 +234,7 @@ function EnquiryForm({ product, onClose }: EnquiryFormProps) {
     const whatsappMessage = `*Product Enquiry*\n\n` +
       `*Product:* ${product.name}\n` +
       `*Category:* ${product.category}\n` +
-      `*Type:* ${product.productType || 'N/A'}\n` +
-      `*Price:* ${product.price}\n\n` +
+      `*Type:* ${product.productType || 'N/A'}\n\n` +
       `*Customer Details:*\n` +
       `Name: ${formData.name}\n` +
       `Email: ${formData.email}\n` +
@@ -477,9 +476,19 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
     };
   }, [selectedProduct, showEnquiryForm]);
 
-  // Handle enquiry - show enquiry form directly (no sign-in required as it goes via WhatsApp)
+  // Handle enquiry - require sign-in before showing enquiry form
   const handleEnquiryClick = () => {
-    setShowEnquiryForm(true);
+    if (!currentUser) {
+      // User not signed in - trigger sign in modal
+      sessionStorage.setItem('openSignIn', 'true');
+      // Store intended action for after sign-in
+      sessionStorage.setItem('pendingAction', 'enquiry');
+      // Force re-render to trigger the sign-in modal in Navigation
+      window.dispatchEvent(new Event('storage'));
+    } else {
+      // User is signed in - show enquiry form
+      setShowEnquiryForm(true);
+    }
   };
 
   const filteredAndSortedProducts = useMemo(() => {
@@ -554,18 +563,9 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
   }, [selectedCategory, selectedTowelType]);
 
   const handleCategorySelect = (categorySlug: string) => {
-    if (!currentUser) {
-      // User not signed in - trigger sign in modal
-      sessionStorage.setItem('openSignIn', 'true');
-      // Store intended destination for after sign-in
-      sessionStorage.setItem('pendingNavigation', 'products');
-      sessionStorage.setItem('pendingCategory', categorySlug);
-      onNavigate?.('home');
-    } else {
-      // User is signed in - proceed to products
-      setSelectedCategory(categorySlug);
-      setViewMode('products');
-    }
+    // Navigate directly to products - no sign-in required for browsing
+    setSelectedCategory(categorySlug);
+    setViewMode('products');
   };
 
   const categories = [
@@ -909,15 +909,9 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                   return null;
                 })()}
 
-                <div className="mt-2 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-slate-500">Price</p>
-                    <p className="text-2xl font-bold text-slate-900">{selectedProduct.price}</p>
-                  </div>
-                  <div className="text-right text-xs text-slate-500">
-                    <p>Category: {selectedProduct.category}</p>
-                    {selectedProduct.productType && <p>Type: {selectedProduct.productType}</p>}
-                  </div>
+                <div className="mt-2 text-right text-xs text-slate-500">
+                  <p>Category: {selectedProduct.category}</p>
+                  {selectedProduct.productType && <p>Type: {selectedProduct.productType}</p>}
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2 sm:gap-3">
@@ -971,7 +965,6 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                 <div className="mb-4 p-4 bg-slate-50 rounded-lg">
                   <p className="text-sm text-slate-600 mb-1">Product:</p>
                   <p className="font-semibold text-slate-900">{selectedProduct.name}</p>
-                  <p className="text-sm text-slate-600 mt-1">Price: {selectedProduct.price}</p>
                 </div>
 
                 <EnquiryForm

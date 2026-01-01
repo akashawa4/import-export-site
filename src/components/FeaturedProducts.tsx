@@ -1,7 +1,4 @@
 import { ArrowRight } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from '../firebase';
 
 interface FeaturedProductsProps {
   onNavigate?: (page: 'home' | 'products' | 'about' | 'contact') => void;
@@ -27,31 +24,11 @@ const products = [
 ];
 
 export default function FeaturedProducts({ onNavigate }: FeaturedProductsProps = {}) {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-    });
-    return () => unsubscribe();
-  }, []);
-
   const handleProductClick = (categorySlug: string) => {
-    if (!currentUser) {
-      // User not signed in - trigger sign in modal
-      sessionStorage.setItem('openSignIn', 'true');
-      // Store intended destination for after sign-in
-      sessionStorage.setItem('pendingNavigation', 'products');
-      sessionStorage.setItem('pendingCategory', categorySlug);
-      // Force re-render to trigger the sign-in modal in Navigation
-      // (Navigation listens to sessionStorage 'openSignIn' flag)
-      window.dispatchEvent(new Event('storage'));
-    } else {
-      // User is signed in - navigate to products
-      sessionStorage.setItem('navigateToProducts', 'true');
-      sessionStorage.setItem('selectedCategory', categorySlug);
-      onNavigate?.('products');
-    }
+    // Navigate directly to products - no sign-in required for browsing
+    sessionStorage.setItem('navigateToProducts', 'true');
+    sessionStorage.setItem('selectedCategory', categorySlug);
+    onNavigate?.('products');
   };
 
   return (

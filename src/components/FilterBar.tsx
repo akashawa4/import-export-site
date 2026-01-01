@@ -103,8 +103,6 @@ export default function FilterBar({
               className="flex-1 min-w-[140px] px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-800/80 backdrop-blur-md text-white cursor-pointer"
             >
               <option value="newest" className="bg-slate-800 text-white">Newest</option>
-              <option value="price-low" className="bg-slate-800 text-white">Price: Low to High</option>
-              <option value="price-high" className="bg-slate-800 text-white">Price: High to Low</option>
               <option value="name" className="bg-slate-800 text-white">Name: A to Z</option>
             </select>
           </div>
