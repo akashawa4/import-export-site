@@ -11,6 +11,7 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
   const [activeSlide, setActiveSlide] = useState<SlideKey>('welcome');
   const [_previousSlide, setPreviousSlide] = useState<SlideKey | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Check if mobile on mount and resize
   useEffect(() => {
@@ -98,17 +99,24 @@ export default function HeroSection({ onNavigate }: HeroSectionProps = {}) {
   };
 
   useEffect(() => {
+    if (isPaused) return;
+
     const interval = setInterval(() => {
       nextSlide();
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [activeSlide]);
+  }, [activeSlide, isPaused]);
 
   return (
     <section
       id="home"
       className="relative min-h-[70vh] md:min-h-screen overflow-hidden"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setIsPaused(false)}
+      onTouchCancel={() => setIsPaused(false)}
     >
       {/* Background images with smooth crossfade */}
       {slideOrder.map((slideKey) => {
