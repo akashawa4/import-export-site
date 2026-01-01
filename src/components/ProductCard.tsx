@@ -34,11 +34,11 @@ export default function ProductCard({
           <img
             src={imageUrl}
             alt={name}
-            className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-96 sm:h-80 object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
         ) : (
-          <div className="aspect-square bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center relative overflow-hidden">
+          <div className="h-96 sm:h-80 w-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center relative overflow-hidden">
             <div className="text-8xl group-hover:scale-110 transition-transform duration-300">
               {imageEmoji}
             </div>
