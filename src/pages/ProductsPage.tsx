@@ -33,7 +33,7 @@ export const productImageMap: Record<string, string> = {
   'beach towel': '/towel/beachtowel.avif',
   bathrobe: '/towel/bathrobe.avif',
   'kitchen towel': '/towel/kitchen.avif',
-  'terry kitchen towel': '/towel/terrykitchen.avif',
+  'terry kitchen napkin': '/towel/terrykitchen.avif',
   // Cow Dung products
   'spiritual use': '/hero/dungspritual.avif',
   'fertilizer use': '/hero/dungfertili.avif',
@@ -140,13 +140,13 @@ export const demoProducts: Product[] = [
     category: 'Towels',
     categorySlug: 'towels',
     productType: 'Terry Kitchen Napkin',
-    description: 'Thick, extra-absorbent, and durable terry kitchen towel for dish drying, spill soaking, and cleaning. Standard size: 40 × 60 cm (Optional: 38 × 63 cm). Heavy-duty performance.',
+    description: 'Thick, extra-absorbent, and durable terry kitchen napkin for dish drying, spill soaking, and cleaning. Standard size: 40 × 60 cm (Optional: 38 × 63 cm). Heavy-duty performance.',
     price: 'Contact for Price',
     priceValue: 0,
     imageEmoji: '🧽',
     highlight: 'Extra-Absorbent',
     createdAt: 7,
-    imageUrl: getImageForType('Terry Kitchen Towel'),
+    imageUrl: getImageForType('Terry Kitchen Napkin'),
   },
   // Cow Dung Products - Category 2: 2 Products
   {
@@ -207,8 +207,8 @@ export const towelTypesData: Record<string, { name: string; subtypes: string[] }
     name: 'Napkin',
     subtypes: ['Cotton Napkin', 'Blended Fabric Napkin']
   },
-  'Terry Kitchen Towel': {
-    name: 'Terry Kitchen Towel',
+  'Terry Kitchen Napkin': {
+    name: 'Terry Kitchen Napkin',
     subtypes: ['Thick Terry']
   }
 };

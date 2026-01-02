@@ -75,9 +75,9 @@ export const bathLineSpecs: Record<string, ProductTypeSpec> = {
             sizes: ['30 × 30 cm', '40 × 40 cm']
         }
     },
-    'Terry Kitchen Towel': {
+    'Terry Kitchen Napkin': {
         category: 'Bath Line',
-        productType: 'Terry Kitchen Towel',
+        productType: 'Terry Kitchen Napkin',
         specifications: {
             features: ['Thick', 'Extra-absorbent', 'Durable'],
             use: ['Dish drying', 'Spill soaking', 'Cleaning'],
