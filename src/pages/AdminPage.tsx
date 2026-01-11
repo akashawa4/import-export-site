@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { collection, getDocs, updateDoc, doc, addDoc, deleteDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, auth, storage } from '../firebase';
-import { demoProducts, Product as CatalogProduct, getImageForType, towelTypesData } from './ProductsPage';
+import { Product as CatalogProduct, getImageForType, towelTypesData } from './ProductsPage';
 
 // Cow Dung product types data
 const cowDungTypesData: Record<string, { name: string; subtypes: string[] }> = {
@@ -467,46 +467,8 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
         {!loading && products.length === 0 && (
           <div className="space-y-3">
             <p className="text-slate-600 text-sm">
-              No products found. You can seed demo products into the{' '}
-              <code className="font-mono text-xs">products</code> collection.
+              No products found. Use the form above to add your first product.
             </p>
-            <button
-              onClick={async () => {
-                try {
-                  setError(null);
-
-                  // First, check if products already exist and delete them to prevent duplicates
-                  const existingSnapshot = await getDocs(collection(db, 'products'));
-                  if (!existingSnapshot.empty) {
-                    for (const docSnapshot of existingSnapshot.docs) {
-                      await deleteDoc(doc(db, 'products', docSnapshot.id));
-                    }
-                  }
-
-                  // Now add demo products
-                  for (const product of demoProducts) {
-                    await addDoc(collection(db, 'products'), {
-                      ...product,
-                    });
-                  }
-                  const snapshot = await getDocs(collection(db, 'products'));
-                  const list: Product[] = snapshot.docs.map((d) => {
-                    const data = d.data() as CatalogProduct & { id?: number };
-                    const { id: _ignored, ...rest } = data;
-                    return {
-                      ...rest,
-                      id: d.id,
-                    };
-                  });
-                  setProducts(list);
-                } catch (err: any) {
-                  setError(err.message || 'Failed to create demo products');
-                }
-              }}
-              className="inline-flex items-center rounded-full border border-blue-500 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-900 hover:bg-blue-100 transition"
-            >
-              Create Demo Products
-            </button>
           </div>
         )}
 

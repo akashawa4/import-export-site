@@ -95,7 +95,7 @@ export default function AlternateContacts() {
               <Linkedin size={24} />
             </a>
             <a
-              href="https://www.facebook.com/share/1CjZXAFgmg/"
+              href="https://www.facebook.com/share/17s5S1W8Br/"
               target="_blank"
               rel="noopener noreferrer"
               className="w-12 h-12 bg-[#1877F2]/20 rounded-lg flex items-center justify-center text-[#1877F2] hover:bg-[#1877F2] hover:text-white transition-all duration-200"

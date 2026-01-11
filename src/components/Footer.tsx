@@ -149,7 +149,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                 <Linkedin size={18} />
               </a>
               <a
-                href="https://www.facebook.com/share/1CjZXAFgmg/"
+                href="https://www.facebook.com/share/17s5S1W8Br/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-[#1877F2] hover:bg-[#1877F2] hover:text-white transition-colors duration-200 min-h-0"
