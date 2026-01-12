@@ -1,4 +1,5 @@
-import { Mail, Phone, MessageCircle, Linkedin, Facebook, Instagram } from 'lucide-react';
+import { Mail, Phone, Linkedin, Facebook, Instagram } from 'lucide-react';
+import WhatsAppIcon from '../icons/WhatsAppIcon';
 
 const contactMethods = [
   {
@@ -20,7 +21,7 @@ const contactMethods = [
     iconColor: 'text-purple-400',
   },
   {
-    icon: MessageCircle,
+    icon: WhatsAppIcon,
     title: 'WhatsApp',
     description: 'Quick responses on WhatsApp Business',
     link: 'https://wa.me/919960447001',
@@ -119,7 +120,7 @@ export default function AlternateContacts() {
               className="w-12 h-12 bg-[#25D366]/20 rounded-lg flex items-center justify-center text-[#25D366] hover:bg-[#25D366] hover:text-white transition-all duration-200"
               title="WhatsApp"
             >
-              <MessageCircle size={24} />
+              <WhatsAppIcon size={24} />
             </a>
           </div>
         </div>

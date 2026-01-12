@@ -29,6 +29,8 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const [uploadingNew, setUploadingNew] = useState(false);
+  const [uploadingProductId, setUploadingProductId] = useState<string | null>(null);
   const [selectedTowelType, setSelectedTowelType] = useState<string>('Bath Towel');
   const [selectedSubtype, setSelectedSubtype] = useState<string>('');
   const towelTypes = Object.keys(towelTypesData);
@@ -353,43 +355,79 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
               />
             </div>
             <div className="space-y-2 md:col-span-2">
-              <label className="text-xs font-semibold text-slate-600 uppercase">Image URL (optional)</label>
+              <label className="text-xs font-semibold text-slate-600 uppercase">Product Image</label>
+
+              {/* Image Preview */}
+              {newProduct.imageUrl && (
+                <div className="mb-3">
+                  <p className="text-xs text-slate-500 mb-2">Current Image Preview:</p>
+                  <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-slate-200">
+                    <img
+                      src={newProduct.imageUrl}
+                      alt="Product preview"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23f1f5f9" width="100" height="100"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%2394a3b8" font-size="12">No Image</text></svg>';
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
               <input
                 type="text"
                 value={newProduct.imageUrl ?? ''}
                 onChange={(e) => setNewProduct((p) => ({ ...p, imageUrl: e.target.value }))}
                 className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                placeholder="/towel/bathtowel/bathtowel (1).jpg"
+                placeholder="Image URL (optional) - or upload below"
               />
               <p className="text-[11px] text-slate-500">
-                Use paths from the <code className="font-mono">public/towel/</code> folder, or upload an image below. If
+                Use paths from <code className="font-mono">public/towel/</code> folder, or upload an image below. If
                 left empty, we try to pick an image automatically based on type.
               </p>
               <div className="mt-2">
-                <label className="text-[11px] font-semibold text-slate-600 uppercase">Or Upload Image</label>
+                <label className="text-[11px] font-semibold text-slate-600 uppercase">Upload Image to Firebase Storage</label>
                 <input
                   type="file"
                   accept="image/*"
+                  disabled={uploadingNew}
                   onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
                     try {
                       setError(null);
+                      setUploadingNew(true);
+
+                      // Create unique filename
+                      const timestamp = Date.now();
+                      const sanitizedName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
                       const storageRef = ref(
                         storage,
-                        `product-images/new/${Date.now()}-${file.name}`
+                        `product-images/new/${timestamp}-${sanitizedName}`
                       );
+
                       await uploadBytes(storageRef, file);
                       const downloadUrl = await getDownloadURL(storageRef);
                       setNewProduct((p) => ({ ...p, imageUrl: downloadUrl }));
                     } catch (err: any) {
-                      setError(err.message || 'Failed to upload image');
+                      console.error('Upload error:', err);
+                      setError(err.message || 'Failed to upload image. Please check Firebase Storage rules.');
                     } finally {
+                      setUploadingNew(false);
                       e.target.value = '';
                     }
                   }}
-                  className="mt-1 block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  className="mt-1 block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
                 />
+                {uploadingNew && (
+                  <div className="mt-2 flex items-center gap-2 text-xs text-blue-600">
+                    <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Uploading image...
+                  </div>
+                )}
               </div>
             </div>
             <div className="space-y-2 md:col-span-2">
@@ -688,7 +726,25 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <label className="text-xs font-semibold text-slate-600 uppercase">Image URL</label>
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Product Image</label>
+
+                  {/* Image Preview */}
+                  {product.imageUrl && (
+                    <div className="mb-3">
+                      <p className="text-xs text-slate-500 mb-2">Current Image:</p>
+                      <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-slate-200">
+                        <img
+                          src={product.imageUrl}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23f1f5f9" width="100" height="100"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%2394a3b8" font-size="12">No Image</text></svg>';
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
                   <input
                     type="text"
                     value={product.imageUrl ?? ''}
@@ -698,26 +754,33 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                       )
                     }
                     className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    placeholder="/towel/bathtowel/bathtowel (1).jpg"
+                    placeholder="Image URL - or upload below"
                   />
                   <p className="text-[11px] text-slate-500">
                     Use images from <code className="font-mono">public/towel/</code>, or upload an image below. If left
                     empty, the card may fall back to the emoji.
                   </p>
                   <div className="mt-2">
-                    <label className="text-[11px] font-semibold text-slate-600 uppercase">Or Upload Image</label>
+                    <label className="text-[11px] font-semibold text-slate-600 uppercase">Upload Image to Firebase Storage</label>
                     <input
                       type="file"
                       accept="image/*"
+                      disabled={uploadingProductId === product.id}
                       onChange={async (e) => {
                         const file = e.target.files?.[0];
                         if (!file) return;
                         try {
                           setError(null);
+                          setUploadingProductId(product.id);
+
+                          // Create unique filename
+                          const timestamp = Date.now();
+                          const sanitizedName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
                           const storageRef = ref(
                             storage,
-                            `product-images/${product.id}/${Date.now()}-${file.name}`
+                            `product-images/${product.id}/${timestamp}-${sanitizedName}`
                           );
+
                           await uploadBytes(storageRef, file);
                           const downloadUrl = await getDownloadURL(storageRef);
                           setProducts((prev) =>
@@ -726,13 +789,24 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                             )
                           );
                         } catch (err: any) {
-                          setError(err.message || 'Failed to upload image');
+                          console.error('Upload error:', err);
+                          setError(err.message || 'Failed to upload image. Check Firebase Storage rules.');
                         } finally {
+                          setUploadingProductId(null);
                           e.target.value = '';
                         }
                       }}
-                      className="mt-1 block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                      className="mt-1 block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
                     />
+                    {uploadingProductId === product.id && (
+                      <div className="mt-2 flex items-center gap-2 text-xs text-blue-600">
+                        <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Uploading image...
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-2 md:col-span-2">

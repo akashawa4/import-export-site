@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Mail, Phone, Globe, MapPin, MessageCircle } from 'lucide-react';
+import { Mail, Phone, Globe, MapPin } from 'lucide-react';
+import WhatsAppIcon from '../icons/WhatsAppIcon';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -154,7 +155,7 @@ ${formData.message}`;
               rel="noopener noreferrer"
               className="w-full inline-flex items-center justify-center gap-3 px-6 py-4 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl mt-6"
             >
-              <MessageCircle size={24} />
+              <WhatsAppIcon size={24} />
               Chat on WhatsApp
             </a>
           </div>

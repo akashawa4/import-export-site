@@ -1,4 +1,5 @@
-import { Mail, Phone, MapPin, MessageCircle, Facebook, Linkedin, Instagram } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Linkedin, Instagram } from 'lucide-react';
+import WhatsAppIcon from './icons/WhatsAppIcon';
 
 interface FooterProps {
   onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
@@ -173,7 +174,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                 className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors duration-200 min-h-0"
                 aria-label="WhatsApp"
               >
-                <MessageCircle size={18} />
+                <WhatsAppIcon size={18} />
               </a>
             </div>
           </div>
