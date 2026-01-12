@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import FilterBar from '../components/FilterBar';
@@ -435,20 +436,37 @@ interface ProductsPageProps {
   onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin' | 'profile') => void;
 }
 
+// Helper function to create URL-safe slug from product name
+const createProductSlug = (name: string): string => {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+};
+
+// Helper function to find product by slug
+const findProductBySlug = (products: Product[], slug: string): Product | undefined => {
+  return products.find(p => createProductSlug(p.name) === slug || p.id === slug);
+};
+
 export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
-  // Check if we should go directly to products view (from homepage card click)
-  const shouldShowProductsDirectly = sessionStorage.getItem('navigateToProducts') === 'true';
-  const savedCategory = sessionStorage.getItem('selectedCategory') || 'all';
+  // Get URL parameters
+  const { category: urlCategory, productId: urlProductId } = useParams<{ category?: string; productId?: string }>();
+  const routerNavigate = useNavigate();
+
+  // Determine initial state from URL or session storage
+  const hasUrlCategory = Boolean(urlCategory);
+  const shouldShowProductsDirectly = hasUrlCategory || sessionStorage.getItem('navigateToProducts') === 'true';
+  const savedCategory = urlCategory || sessionStorage.getItem('selectedCategory') || 'all';
+
   const [viewMode, setViewMode] = useState<'categories' | 'products'>(shouldShowProductsDirectly ? 'products' : 'categories');
   const [selectedCategory, setSelectedCategory] = useState(savedCategory);
 
-  // Clear the flags after using them
+  // Clear the session storage flags after using them
   useEffect(() => {
-    if (shouldShowProductsDirectly) {
+    if (sessionStorage.getItem('navigateToProducts') === 'true') {
       sessionStorage.removeItem('navigateToProducts');
       sessionStorage.removeItem('selectedCategory');
     }
-  }, [shouldShowProductsDirectly]);
+  }, []);
+
   const [selectedType, setSelectedType] = useState('all');
   const [selectedTowelType, setSelectedTowelType] = useState<string>('');
   const [sortBy, setSortBy] = useState('newest');
@@ -533,6 +551,20 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
       document.body.style.overflow = '';
     };
   }, [selectedProduct, showEnquiryForm]);
+
+  // Open product from URL parameter
+  useEffect(() => {
+    if (urlProductId && products.length > 0 && !isLoading) {
+      const product = findProductBySlug(products, urlProductId);
+      if (product) {
+        setSelectedProduct(product);
+        setViewMode('products');
+        if (urlCategory) {
+          setSelectedCategory(urlCategory);
+        }
+      }
+    }
+  }, [urlProductId, products, isLoading, urlCategory]);
 
   // Handle enquiry - require sign-in before showing enquiry form
   const handleEnquiryClick = () => {
@@ -621,9 +653,53 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
   }, [selectedCategory, selectedTowelType]);
 
   const handleCategorySelect = (categorySlug: string) => {
-    // Navigate directly to products - no sign-in required for browsing
+    // Navigate directly to products with URL update
     setSelectedCategory(categorySlug);
     setViewMode('products');
+    // Update URL to enable shareable category links
+    routerNavigate(`/products/${categorySlug}`);
+  };
+
+  // Handle product selection with URL update
+  const handleProductSelect = (product: Product) => {
+    setSelectedProduct(product);
+    // Update URL to enable shareable product links
+    const productSlug = createProductSlug(product.name);
+    routerNavigate(`/products/${product.categorySlug}/${productSlug}`);
+  };
+
+  // Handle closing product modal
+  const handleCloseProduct = () => {
+    setSelectedProduct(null);
+    // Navigate back to category view
+    if (selectedCategory && selectedCategory !== 'all') {
+      routerNavigate(`/products/${selectedCategory}`);
+    } else {
+      routerNavigate('/products');
+    }
+  };
+
+  // Share product link
+  const handleShareProduct = async (product: Product) => {
+    const productSlug = createProductSlug(product.name);
+    const shareUrl = `${window.location.origin}/products/${product.categorySlug}/${productSlug}`;
+    const shareData = {
+      title: `${product.name} - Amritva Overseas`,
+      text: `Check out ${product.name} from Amritva Overseas! ${product.description.slice(0, 100)}...`,
+      url: shareUrl,
+    };
+
+    try {
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(shareUrl);
+        alert('Product link copied to clipboard!');
+      }
+    } catch (error) {
+      console.log('Share cancelled or failed', error);
+    }
   };
 
   const categories = [
@@ -813,7 +889,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                       highlight={product.highlight}
                       showAdminControls={isAdmin}
                       onEdit={() => onNavigate?.('admin')}
-                      onClick={() => setSelectedProduct(product)}
+                      onClick={() => handleProductSelect(product)}
                     />
                   ))}
                 </div>
@@ -832,7 +908,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
         <div className="fixed inset-0 z-[1050] flex items-center justify-center px-4">
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-md"
-            onClick={() => setSelectedProduct(null)}
+            onClick={handleCloseProduct}
           ></div>
           <div className="relative z-[1051] w-full max-w-4xl bg-white/95 backdrop-blur-xl rounded-t-2xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] sm:max-h-[85vh] flex flex-col">
             <div className="flex-1 min-h-0 flex flex-col md:flex-row overflow-y-auto">
@@ -851,7 +927,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                 )}
                 {/* Mobile close button - over image */}
                 <button
-                  onClick={() => setSelectedProduct(null)}
+                  onClick={handleCloseProduct}
                   className="absolute top-3 right-3 p-2.5 rounded-full bg-white/90 hover:bg-white shadow-md transition md:hidden min-h-0"
                   aria-label="Close product details"
                 >
@@ -877,7 +953,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                   </div>
                   {/* Desktop close button - top right of content card */}
                   <button
-                    onClick={() => setSelectedProduct(null)}
+                    onClick={handleCloseProduct}
                     className="hidden md:inline-flex p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition min-h-0"
                     aria-label="Close product details"
                   >
@@ -979,10 +1055,24 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
                   >
                     Enquire Now
                   </button>
+                  <button
+                    onClick={() => handleShareProduct(selectedProduct)}
+                    className="inline-flex items-center justify-center rounded-full border border-slate-300 text-slate-700 px-4 py-2 text-sm font-semibold hover:bg-slate-50 transition gap-2 min-h-0"
+                    aria-label="Share this product"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="18" cy="5" r="3"></circle>
+                      <circle cx="6" cy="12" r="3"></circle>
+                      <circle cx="18" cy="19" r="3"></circle>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                    Share
+                  </button>
                   {isAdmin && (
                     <button
                       onClick={() => {
-                        setSelectedProduct(null);
+                        handleCloseProduct();
                         onNavigate?.('admin');
                       }}
                       className="inline-flex items-center justify-center rounded-full border border-blue-600 text-blue-800 px-4 py-2 text-sm font-semibold hover:bg-blue-50 transition"

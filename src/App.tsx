@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import Navigation from './components/Navigation';
 import HeroSection from './components/HeroSection';
 import CompanyInfo from './components/CompanyInfo';
@@ -13,68 +14,13 @@ import ContactPage from './pages/ContactPage';
 import AdminPage from './pages/AdminPage';
 import ProfilePage from './pages/ProfilePage';
 
-function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'products' | 'about' | 'contact' | 'admin' | 'profile'>('home');
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  const handleNavigation = (page: 'home' | 'products' | 'about' | 'contact' | 'admin' | 'profile') => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentPage(page);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setTimeout(() => setIsTransitioning(false), 100);
-    }, 200);
-  };
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [currentPage]);
-
-  if (currentPage === 'products') {
-    return (
-      <div className={`transition-opacity duration-200 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-        <ProductsPage onNavigate={handleNavigation} />
-      </div>
-    );
-  }
-
-  if (currentPage === 'about') {
-    return (
-      <div className={`transition-opacity duration-200 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-        <AboutPage onNavigate={handleNavigation} />
-      </div>
-    );
-  }
-
-  if (currentPage === 'contact') {
-    return (
-      <div className={`transition-opacity duration-200 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-        <ContactPage onNavigate={handleNavigation} />
-      </div>
-    );
-  }
-
-  if (currentPage === 'admin') {
-    return (
-      <div className={`transition-opacity duration-200 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-        <AdminPage onNavigate={handleNavigation} />
-      </div>
-    );
-  }
-
-  if (currentPage === 'profile') {
-    return (
-      <div className={`transition-opacity duration-200 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-        <ProfilePage onNavigate={handleNavigation} />
-      </div>
-    );
-  }
-
+// Home page component
+function HomePage({ onNavigate }: { onNavigate: (page: string) => void }) {
   return (
-    <div className={`min-h-screen bg-white transition-opacity duration-200 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-      <Navigation onNavigate={handleNavigation} activePage="home" />
+    <div className="min-h-screen bg-white">
+      <Navigation onNavigate={onNavigate} activePage="home" />
       <main id="main-content" role="main">
-        <HeroSection onNavigate={handleNavigation} />
+        <HeroSection onNavigate={onNavigate} />
         {/* Shared background container for CompanyInfo and TrustSection */}
         <div className="relative">
           <div
@@ -92,11 +38,59 @@ function App() {
             <TrustSection />
           </div>
         </div>
-        <FeaturedProducts onNavigate={handleNavigation} />
+        <FeaturedProducts onNavigate={onNavigate} />
 
         <CTABlock />
       </main>
-      <Footer onNavigate={handleNavigation} />
+      <Footer onNavigate={onNavigate} />
+    </div>
+  );
+}
+
+function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Handle navigation with smooth transition
+  const handleNavigation = (page: string) => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      // Map page names to routes
+      const routes: Record<string, string> = {
+        home: '/',
+        products: '/products',
+        about: '/about',
+        contact: '/contact',
+        admin: '/admin',
+        profile: '/profile',
+      };
+
+      const route = routes[page] || '/';
+      navigate(route);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => setIsTransitioning(false), 100);
+    }, 200);
+  };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [location.pathname]);
+
+  return (
+    <div className={`transition-opacity duration-200 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+      <Routes>
+        <Route path="/" element={<HomePage onNavigate={handleNavigation} />} />
+        <Route path="/products" element={<ProductsPage onNavigate={handleNavigation} />} />
+        <Route path="/products/:category" element={<ProductsPage onNavigate={handleNavigation} />} />
+        <Route path="/products/:category/:productId" element={<ProductsPage onNavigate={handleNavigation} />} />
+        <Route path="/about" element={<AboutPage onNavigate={handleNavigation} />} />
+        <Route path="/contact" element={<ContactPage onNavigate={handleNavigation} />} />
+        <Route path="/admin" element={<AdminPage onNavigate={handleNavigation} />} />
+        <Route path="/profile" element={<ProfilePage onNavigate={handleNavigation} />} />
+        {/* Fallback to home for unknown routes */}
+        <Route path="*" element={<HomePage onNavigate={handleNavigation} />} />
+      </Routes>
     </div>
   );
 }
