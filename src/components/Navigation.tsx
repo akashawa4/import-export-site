@@ -2,17 +2,17 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import {
   signInWithPopup,
-  signOut,
   onAuthStateChanged,
   User,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
-import { auth, googleProvider } from '../firebase';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, googleProvider, db } from '../firebase';
 
 interface NavigationProps {
-  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
-  activePage?: 'home' | 'products' | 'about' | 'contact' | 'admin';
+  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin' | 'profile') => void;
+  activePage?: 'home' | 'products' | 'about' | 'contact' | 'admin' | 'profile';
 }
 
 export default function Navigation({ onNavigate, activePage }: NavigationProps = {}) {
@@ -59,15 +59,37 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
     }
   };
 
+  // Save user data to Firestore for admin panel access
+  const saveUserToFirestore = async (user: User) => {
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await setDoc(userRef, {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || null,
+        photoURL: user.photoURL || null,
+        phoneNumber: user.phoneNumber || null,
+        providerId: user.providerData[0]?.providerId || 'email',
+        lastLoginAt: serverTimestamp(),
+        createdAt: serverTimestamp(),
+      }, { merge: true }); // merge: true to not overwrite existing fields
+    } catch (error) {
+      console.error('Failed to save user to Firestore:', error);
+    }
+  };
+
   // Listen to auth state changes - this is the primary way to track if user is signed in
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       const wasNotSignedIn = !currentUser;
       setCurrentUser(user);
       setAuthInitialized(true);
 
       // If user just signed in
       if (user && wasNotSignedIn) {
+        // Save user data to Firestore
+        await saveUserToFirestore(user);
+
         // Close the modal if it's open
         if (isAuthModalOpen) {
           setIsAuthModalOpen(false);
@@ -145,8 +167,24 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
       setAuthError(null);
 
       // Use popup for all devices - more reliable than redirect on mobile
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
       closeAuthModal();
+
+      // Check if user has a complete profile
+      if (result.user) {
+        try {
+          const profileRef = doc(db, 'profiles', result.user.uid);
+          const profileSnap = await getDoc(profileRef);
+
+          // If no profile or incomplete profile, redirect to profile page
+          if (!profileSnap.exists() || !profileSnap.data()?.profileComplete) {
+            onNavigate?.('profile');
+          }
+        } catch (profileError) {
+          // If profile check fails, still redirect to profile page for new users
+          onNavigate?.('profile');
+        }
+      }
     } catch (error: any) {
       console.error('Google sign-in failed:', error);
 
@@ -166,17 +204,6 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
     }
   };
 
-  const handleSignOut = async () => {
-    try {
-      setIsAuthLoading(true);
-      await signOut(auth);
-    } catch (error) {
-      console.error('Sign-out failed:', error);
-    } finally {
-      setIsAuthLoading(false);
-    }
-  };
-
   const handleEmailAuth = async (mode: 'signin' | 'signup') => {
     if (!email || !password) {
       setAuthError('Please enter both email and password.');
@@ -186,12 +213,29 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
     try {
       setAuthError(null);
       setIsAuthLoading(true);
+      let result;
       if (mode === 'signin') {
-        await signInWithEmailAndPassword(auth, email, password);
+        result = await signInWithEmailAndPassword(auth, email, password);
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        result = await createUserWithEmailAndPassword(auth, email, password);
       }
       closeAuthModal();
+
+      // Check if user has a complete profile
+      if (result.user) {
+        try {
+          const profileRef = doc(db, 'profiles', result.user.uid);
+          const profileSnap = await getDoc(profileRef);
+
+          // If no profile or incomplete profile, redirect to profile page
+          if (!profileSnap.exists() || !profileSnap.data()?.profileComplete) {
+            onNavigate?.('profile');
+          }
+        } catch (profileError) {
+          // If profile check fails (e.g., new user), redirect to profile page
+          onNavigate?.('profile');
+        }
+      }
     } catch (error: any) {
       setAuthError(error.message || 'Something went wrong. Please try again.');
     } finally {
@@ -254,16 +298,22 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
                   Admin Panel
                 </button>
               )}
-              <button
-                onClick={currentUser ? handleSignOut : openAuthModal}
-                disabled={isAuthLoading}
-                className={`ml-2 inline-flex items-center gap-2 rounded-full border border-blue-500 px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-all duration-300 ${currentUser
-                  ? 'bg-blue-600/15 text-blue-900 hover:bg-blue-600/25'
-                  : 'bg-white/90 text-slate-800 hover:bg-white hover:shadow-lg btn-glow'
-                  } ${isAuthLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
-              >
-                {currentUser ? `Sign out (${currentUser.displayName?.split(' ')[0] ?? 'User'})` : 'Sign In'}
-              </button>
+              {currentUser ? (
+                <button
+                  onClick={() => onNavigate?.('profile')}
+                  className={`ml-2 inline-flex items-center gap-2 rounded-full border border-blue-500 px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-all duration-300 bg-blue-600/15 text-blue-900 hover:bg-blue-600/25 ${activePage === 'profile' ? 'ring-2 ring-blue-300' : ''}`}
+                >
+                  {currentUser.displayName?.split(' ')[0] ?? 'Profile'}
+                </button>
+              ) : (
+                <button
+                  onClick={openAuthModal}
+                  disabled={isAuthLoading}
+                  className={`ml-2 inline-flex items-center gap-2 rounded-full border border-blue-500 px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-all duration-300 bg-white/90 text-slate-800 hover:bg-white hover:shadow-lg btn-glow ${isAuthLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
+                >
+                  Sign In
+                </button>
+              )}
             </div>
 
             <button
@@ -329,32 +379,35 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
                   Admin Panel
                 </button>
               )}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  if (currentUser) {
+              {currentUser ? (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onNavigate?.('profile');
                     setIsMobileMenuOpen(false);
-                    handleSignOut();
-                  } else {
-                    // Close menu and open modal immediately
+                  }}
+                  className={`w-full text-left font-bold py-4 px-5 rounded-xl uppercase tracking-wider transition-all duration-300 backdrop-blur-md border-2 border-blue-300 shadow-lg bg-blue-50/80 text-blue-900 hover:bg-blue-100 ${activePage === 'profile' ? 'ring-2 ring-blue-400' : ''}`}
+                >
+                  {currentUser.displayName?.split(' ')[0] ?? 'My Profile'}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     setIsMobileMenuOpen(false);
-                    // Use requestAnimationFrame to ensure menu closes before modal opens
                     requestAnimationFrame(() => {
                       openAuthModal();
                     });
-                  }
-                }}
-                disabled={isAuthLoading}
-                className={`w-full text-left font-bold py-4 px-5 rounded-xl uppercase tracking-wider transition-all duration-300 ${currentUser
-                  ? 'text-blue-900 bg-blue-200/40 hover:bg-blue-200/60'
-                  : 'text-slate-900 bg-white/80 hover:bg-white btn-glow'
-                  } backdrop-blur-md border-2 border-blue-200/40 shadow-lg active:scale-[0.98] ${isAuthLoading ? 'opacity-60 cursor-not-allowed' : ''
-                  }`}
-              >
-                {currentUser ? `Sign out (${currentUser.displayName?.split(' ')[0] ?? 'User'})` : 'Sign In'}
-              </button>
+                  }}
+                  disabled={isAuthLoading}
+                  className={`w-full text-left font-bold py-4 px-5 rounded-xl uppercase tracking-wider transition-all duration-300 text-slate-900 bg-white/80 hover:bg-white btn-glow backdrop-blur-md border-2 border-blue-200/40 shadow-lg active:scale-[0.98] ${isAuthLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
+                >
+                  Sign In
+                </button>
+              )}
             </div>
           </div>
         </>

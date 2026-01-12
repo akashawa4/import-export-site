@@ -4,7 +4,7 @@ import Footer from '../components/Footer';
 import FilterBar from '../components/FilterBar';
 import ProductCard from '../components/ProductCard';
 import EmptyState from '../components/EmptyState';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { db, auth } from '../firebase';
 import { getProductSpecifications } from '../data/productSpecifications';
@@ -227,6 +227,64 @@ function EnquiryForm({ product, onClose }: EnquiryFormProps) {
     quantity: '',
   });
 
+  // Auto-fill form with profile data on mount
+  useEffect(() => {
+    const loadProfileData = async () => {
+      // First, try to get from session storage (fastest)
+      const cached = sessionStorage.getItem('userProfile');
+      if (cached) {
+        try {
+          const profile = JSON.parse(cached);
+          setFormData(prev => ({
+            ...prev,
+            name: profile.fullName || prev.name,
+            email: profile.email || prev.email,
+            phone: profile.phone || prev.phone,
+          }));
+          return;
+        } catch {
+          // Fall through to Firestore
+        }
+      }
+
+      // If not in session, try Firestore
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const profileRef = doc(db, 'profiles', user.uid);
+          const profileSnap = await getDoc(profileRef);
+          if (profileSnap.exists()) {
+            const profile = profileSnap.data();
+            setFormData(prev => ({
+              ...prev,
+              name: profile.fullName || user.displayName || prev.name,
+              email: profile.email || user.email || prev.email,
+              phone: profile.phone || prev.phone,
+            }));
+            // Cache for next time
+            sessionStorage.setItem('userProfile', JSON.stringify({
+              fullName: profile.fullName,
+              email: profile.email || user.email,
+              phone: profile.phone,
+              companyName: profile.companyName,
+            }));
+          } else if (user.displayName || user.email) {
+            // Use Auth data if no profile exists
+            setFormData(prev => ({
+              ...prev,
+              name: user.displayName || prev.name,
+              email: user.email || prev.email,
+            }));
+          }
+        } catch (error) {
+          console.error('Failed to load profile:', error);
+        }
+      }
+    };
+
+    loadProfileData();
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -374,7 +432,7 @@ function EnquiryForm({ product, onClose }: EnquiryFormProps) {
 }
 
 interface ProductsPageProps {
-  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
+  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin' | 'profile') => void;
 }
 
 export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {

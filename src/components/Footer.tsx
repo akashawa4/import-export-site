@@ -2,7 +2,7 @@ import { Mail, Phone, MapPin, Facebook, Linkedin, Instagram } from 'lucide-react
 import WhatsAppIcon from './icons/WhatsAppIcon';
 
 interface FooterProps {
-  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
+  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin' | 'profile') => void;
 }
 
 export default function Footer({ onNavigate }: FooterProps = {}) {

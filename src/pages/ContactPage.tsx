@@ -5,7 +5,7 @@ import ContactForm from '../components/contact/ContactForm';
 import AlternateContacts from '../components/contact/AlternateContacts';
 
 interface ContactPageProps {
-  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
+  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin' | 'profile') => void;
 }
 
 export default function ContactPage({ onNavigate }: ContactPageProps = {}) {

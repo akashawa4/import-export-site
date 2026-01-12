@@ -9,7 +9,7 @@ import AboutCTA from '../components/about/AboutCTA';
 import AboutProducts from '../components/about/AboutProducts';
 
 interface AboutPageProps {
-  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
+  onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin' | 'profile') => void;
 }
 
 export default function AboutPage({ onNavigate }: AboutPageProps = {}) {
