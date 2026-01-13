@@ -132,7 +132,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
         <div className="border-t border-slate-800 pt-6 sm:pt-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-sm text-center sm:text-left">
-              &copy; {currentYear} Amritva Overseas. All rights reserved.
+              &copy; {currentYear} Akash.Solutions. All rights reserved.
             </p>
             <div className="flex gap-3">
               <a
