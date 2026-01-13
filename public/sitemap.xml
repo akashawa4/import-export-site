@@ -7,12 +7,12 @@
   
   <!-- Homepage -->
   <url>
-    <loc>https://amritvaoverseas.com/</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://amritvaoverseas.com/companylogo.avif</image:loc>
+      <image:loc>https://www.amritvaoverseas.com/companylogo.avif</image:loc>
       <image:title>Amritva Overseas | Amrita Overseas Logo</image:title>
       <image:caption>Amritva Overseas - Amrita Import Export Company India | Amritva Import Export | Amrita Overseas Import Export</image:caption>
     </image:image>
@@ -20,20 +20,20 @@
   
   <!-- Products Page -->
   <url>
-    <loc>https://amritvaoverseas.com/products</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/products</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   
   <!-- Towels Category -->
   <url>
-    <loc>https://amritvaoverseas.com/products/towels</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/products/towels</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://amritvaoverseas.com/towel/banner.avif</image:loc>
+      <image:loc>https://www.amritvaoverseas.com/towel/banner.avif</image:loc>
       <image:title>Premium Towels Export - Amritva Overseas</image:title>
       <image:caption>High-quality cotton towels for export - Bath towels, Face towels, Beach towels, Kitchen towels</image:caption>
     </image:image>
@@ -41,12 +41,12 @@
   
   <!-- Cow Dung Products Category -->
   <url>
-    <loc>https://amritvaoverseas.com/products/cow-dung</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/products/cow-dung</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://amritvaoverseas.com/hero/cowdungbackground.avif</image:loc>
+      <image:loc>https://www.amritvaoverseas.com/hero/cowdungbackground.avif</image:loc>
       <image:title>Organic Cow Dung Products - Amritva Overseas</image:title>
       <image:caption>Natural cow dung cakes for spiritual use and organic fertilizer</image:caption>
     </image:image>
@@ -54,74 +54,74 @@
   
   <!-- Individual Products - Towels -->
   <url>
-    <loc>https://amritvaoverseas.com/products/towels/bath-towel</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/products/towels/bath-towel</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://amritvaoverseas.com/products/towels/face-towel</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/products/towels/face-towel</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://amritvaoverseas.com/products/towels/beach-towel</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/products/towels/beach-towel</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://amritvaoverseas.com/products/towels/kitchen-towel</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/products/towels/kitchen-towel</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://amritvaoverseas.com/products/towels/bathrobe</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/products/towels/bathrobe</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://amritvaoverseas.com/products/towels/napkins</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/products/towels/napkins</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <!-- Individual Products - Cow Dung -->
   <url>
-    <loc>https://amritvaoverseas.com/products/cow-dung/cow-dung-cake-fertilizer-use</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/products/cow-dung/cow-dung-cake-fertilizer-use</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://amritvaoverseas.com/products/cow-dung/cow-dung-cake-spiritual-use</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/products/cow-dung/cow-dung-cake-spiritual-use</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <!-- About Page -->
   <url>
-    <loc>https://amritvaoverseas.com/about</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/about</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <!-- Contact Page -->
   <url>
-    <loc>https://amritvaoverseas.com/contact</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://www.amritvaoverseas.com/contact</loc>
+    <lastmod>2026-01-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
