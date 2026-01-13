@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Eye, EyeOff } from 'lucide-react';
 import {
   signInWithPopup,
   onAuthStateChanged,
@@ -25,6 +25,8 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState<string | null>(null);
   const [authInitialized, setAuthInitialized] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+  const [showPassword, setShowPassword] = useState(false);
   const ADMIN_EMAIL = 'admin@123.com';
   const isAdmin = currentUser?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
@@ -159,6 +161,7 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
     setAuthError(null);
     setEmail('');
     setPassword('');
+    setAuthMode('signin');
   };
 
   const handleGoogleSignIn = async () => {
@@ -438,6 +441,31 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
             <div className="space-y-5">
               <section className="space-y-3">
                 <h4 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">Email &amp; Password</h4>
+
+                {/* Tab selector for Sign In / Create Account */}
+                <div className="flex gap-2 p-1 bg-slate-100 rounded-xl">
+                  <button
+                    type="button"
+                    onClick={() => setAuthMode('signin')}
+                    className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${authMode === 'signin'
+                      ? 'bg-white text-blue-700 shadow-md'
+                      : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAuthMode('signup')}
+                    className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${authMode === 'signup'
+                      ? 'bg-white text-blue-700 shadow-md'
+                      : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                  >
+                    Create Account
+                  </button>
+                </div>
+
                 <input
                   type="email"
                   value={email}
@@ -445,31 +473,54 @@ export default function Navigation({ onNavigate, activePage }: NavigationProps =
                   placeholder="Email address"
                   className="w-full rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                 />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password"
-                  className="w-full rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                />
-                <div className="flex gap-3">
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    className="w-full rounded-xl border border-slate-200 bg-white/80 px-4 py-3 pr-12 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  />
                   <button
-                    onClick={() => handleEmailAuth('signin')}
-                    disabled={isAuthLoading}
-                    className={`flex-1 rounded-2xl border border-blue-400 bg-blue-50 py-3 text-sm font-semibold text-blue-900 hover:bg-blue-100 transition btn-glow ${isAuthLoading ? 'opacity-60 cursor-not-allowed' : ''
-                      }`}
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
-                    Sign In
-                  </button>
-                  <button
-                    onClick={() => handleEmailAuth('signup')}
-                    disabled={isAuthLoading}
-                    className={`flex-1 rounded-2xl border border-slate-200 bg-white py-3 text-sm font-semibold text-slate-800 hover:border-blue-400 hover:bg-blue-50 transition ${isAuthLoading ? 'opacity-60 cursor-not-allowed' : ''
-                      }`}
-                  >
-                    Create Account
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
+
+                {/* Single primary action button based on selected mode */}
+                <button
+                  onClick={() => handleEmailAuth(authMode)}
+                  disabled={isAuthLoading}
+                  className={`w-full rounded-2xl py-3.5 text-sm font-semibold transition-all duration-200 ${authMode === 'signin'
+                    ? 'bg-blue-600 text-white hover:bg-blue-700 border border-blue-600'
+                    : 'bg-emerald-600 text-white hover:bg-emerald-700 border border-emerald-600'
+                    } ${isAuthLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
+                >
+                  {isAuthLoading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Processing...
+                    </span>
+                  ) : (
+                    authMode === 'signin' ? 'Sign In' : 'Create Account'
+                  )}
+                </button>
+
+                {/* Helper text based on mode */}
+                <p className="text-center text-sm text-slate-500">
+                  {authMode === 'signin' ? (
+                    <>Don't have an account? <button type="button" onClick={() => setAuthMode('signup')} className="text-blue-600 font-semibold hover:underline">Create one</button></>
+                  ) : (
+                    <>Already have an account? <button type="button" onClick={() => setAuthMode('signin')} className="text-blue-600 font-semibold hover:underline">Sign in</button></>
+                  )}
+                </p>
               </section>
 
               <section className="space-y-3">

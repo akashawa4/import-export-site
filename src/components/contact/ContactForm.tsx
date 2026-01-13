@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import { Mail, Phone, Globe, MapPin } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Mail, Phone, Globe, MapPin, Copy, Check, ChevronDown } from 'lucide-react';
 import WhatsAppIcon from '../icons/WhatsAppIcon';
+
+const COMPANY_EMAIL = 'amritva009@amritvaoverseas.com';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -12,6 +14,61 @@ export default function ContactForm() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showEmailOptions, setShowEmailOptions] = useState(false);
+  const [emailCopied, setEmailCopied] = useState(false);
+  const emailDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (emailDropdownRef.current && !emailDropdownRef.current.contains(event.target as Node)) {
+        setShowEmailOptions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(COMPANY_EMAIL);
+      setEmailCopied(true);
+      setTimeout(() => setEmailCopied(false), 2000);
+    } catch (err) {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = COMPANY_EMAIL;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setEmailCopied(true);
+      setTimeout(() => setEmailCopied(false), 2000);
+    }
+  };
+
+  const emailOptions = [
+    {
+      name: 'Gmail',
+      icon: '📧',
+      url: `https://mail.google.com/mail/?view=cm&fs=1&to=${COMPANY_EMAIL}&su=Enquiry%20from%20Website`,
+    },
+    {
+      name: 'Outlook',
+      icon: '📬',
+      url: `https://outlook.live.com/mail/0/deeplink/compose?to=${COMPANY_EMAIL}&subject=Enquiry%20from%20Website`,
+    },
+    {
+      name: 'Yahoo Mail',
+      icon: '📨',
+      url: `https://compose.mail.yahoo.com/?to=${COMPANY_EMAIL}&subject=Enquiry%20from%20Website`,
+    },
+    {
+      name: 'Default Mail App',
+      icon: '💻',
+      url: `mailto:${COMPANY_EMAIL}?subject=Enquiry%20from%20Website`,
+    },
+  ];
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -88,18 +145,64 @@ ${formData.message}`;
             </div>
 
             <div className="space-y-6">
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-4" ref={emailDropdownRef}>
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Mail size={24} className="text-blue-600" />
                 </div>
-                <div>
+                <div className="relative flex-1">
                   <h3 className="font-semibold text-white mb-1">Email</h3>
-                  <a
-                    href="mailto:amritva009@amritvaoverseas.com"
-                    className="text-slate-300 hover:text-blue-400 transition-colors"
+                  <button
+                    onClick={() => setShowEmailOptions(!showEmailOptions)}
+                    className="flex items-center gap-2 text-slate-300 hover:text-blue-400 transition-colors group"
                   >
-                    amritva009@amritvaoverseas.com
-                  </a>
+                    <span>{COMPANY_EMAIL}</span>
+                    <ChevronDown
+                      size={16}
+                      className={`transition-transform duration-200 ${showEmailOptions ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+
+                  {/* Email Options Dropdown */}
+                  {showEmailOptions && (
+                    <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-slate-200 z-50 overflow-hidden animate-in fade-in duration-200">
+                      <div className="p-2">
+                        <p className="text-xs text-slate-500 font-semibold uppercase px-3 py-2">Send via</p>
+                        {emailOptions.map((option) => (
+                          <a
+                            key={option.name}
+                            href={option.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => setShowEmailOptions(false)}
+                            className="flex items-center gap-3 px-3 py-2.5 text-slate-700 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition-colors"
+                          >
+                            <span className="text-lg">{option.icon}</span>
+                            <span className="font-medium">{option.name}</span>
+                          </a>
+                        ))}
+                        <div className="border-t border-slate-100 my-2" />
+                        <button
+                          onClick={() => {
+                            handleCopyEmail();
+                            setShowEmailOptions(false);
+                          }}
+                          className="flex items-center gap-3 px-3 py-2.5 text-slate-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-colors w-full"
+                        >
+                          {emailCopied ? (
+                            <>
+                              <Check size={18} className="text-green-600" />
+                              <span className="font-medium text-green-600">Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={18} />
+                              <span className="font-medium">Copy Email Address</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

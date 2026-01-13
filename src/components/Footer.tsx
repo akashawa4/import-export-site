@@ -1,5 +1,6 @@
-import { Mail, Phone, MapPin, Facebook, Linkedin, Instagram } from 'lucide-react';
+import { Phone, MapPin, Facebook, Linkedin, Instagram } from 'lucide-react';
 import WhatsAppIcon from './icons/WhatsAppIcon';
+import EmailButton from './EmailButton';
 
 interface FooterProps {
   onNavigate?: (page: 'home' | 'products' | 'about' | 'contact' | 'admin' | 'profile') => void;
@@ -108,14 +109,8 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
           <div className="xs:col-span-2 lg:col-span-1">
             <h4 className="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Contact Info</h4>
             <ul className="space-y-3 text-sm">
-              <li>
-                <a
-                  href="mailto:amritva009@amritvaoverseas.com"
-                  className="flex items-start gap-2 hover:text-white transition-colors duration-200"
-                >
-                  <Mail size={18} className="mt-0.5 flex-shrink-0" />
-                  <span className="break-all">amritva009@amritvaoverseas.com</span>
-                </a>
+              <li className="flex items-start gap-2">
+                <EmailButton variant="default" showIcon={true} />
               </li>
               <li>
                 <a

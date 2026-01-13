@@ -1,9 +1,9 @@
 import { useEffect, useState, useMemo } from 'react';
-import { collection, getDocs, updateDoc, doc, addDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, updateDoc, doc, addDoc, deleteDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, auth, storage } from '../firebase';
 import { Product as CatalogProduct, getImageForType, towelTypesData } from './ProductsPage';
-import { Download, Users, Package, RefreshCw } from 'lucide-react';
+import { Download, Users, Package, RefreshCw, Pencil, Trash2, X, UserPlus } from 'lucide-react';
 
 // Cow Dung product types data
 const cowDungTypesData: Record<string, { name: string; subtypes: string[] }> = {
@@ -117,6 +117,21 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
   // Users states
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  const [editingUser, setEditingUser] = useState<UserProfile | null>(null);
+  const [savingUser, setSavingUser] = useState(false);
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+  const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const [newUser, setNewUser] = useState<Partial<UserProfile>>({
+    fullName: '',
+    email: '',
+    phone: '',
+    companyName: '',
+    designation: '',
+    city: '',
+    state: '',
+    country: 'India',
+    profileComplete: false,
+  });
 
   // Compute available subtypes based on selected towel type
   const availableSubtypes = useMemo(() => {
@@ -264,6 +279,90 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
       fetchUsers();
     }
   }, [activeTab, isAdmin]);
+
+  // Update user profile
+  const handleUpdateUser = async (user: UserProfile) => {
+    try {
+      setSavingUser(true);
+      setError(null);
+      const userRef = doc(db, 'profiles', user.uid);
+      await updateDoc(userRef, {
+        fullName: user.fullName || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        companyName: user.companyName || '',
+        designation: user.designation || '',
+        city: user.city || '',
+        state: user.state || '',
+        country: user.country || '',
+        profileComplete: user.profileComplete || false,
+        updatedAt: serverTimestamp(),
+      });
+      // Update local state
+      setUsers(prev => prev.map(u => u.uid === user.uid ? { ...user } : u));
+      setEditingUser(null);
+    } catch (err: any) {
+      setError(err.message || 'Failed to update user');
+    } finally {
+      setSavingUser(false);
+    }
+  };
+
+  // Delete user profile
+  const handleDeleteUser = async (userId: string) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this user profile? This action cannot be undone.');
+    if (!confirmDelete) return;
+
+    try {
+      setDeletingUserId(userId);
+      setError(null);
+      const userRef = doc(db, 'profiles', userId);
+      await deleteDoc(userRef);
+      setUsers(prev => prev.filter(u => u.uid !== userId));
+    } catch (err: any) {
+      setError(err.message || 'Failed to delete user');
+    } finally {
+      setDeletingUserId(null);
+    }
+  };
+
+  // Add new user profile
+  const handleAddUser = async () => {
+    if (!newUser.fullName || !newUser.email) {
+      setError('Name and Email are required');
+      return;
+    }
+    try {
+      setSavingUser(true);
+      setError(null);
+      const userId = `manual_${Date.now()}`;
+      const userRef = doc(db, 'profiles', userId);
+      await setDoc(userRef, {
+        uid: userId,
+        ...newUser,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+      // Refresh users list
+      await fetchUsers();
+      setShowAddUserModal(false);
+      setNewUser({
+        fullName: '',
+        email: '',
+        phone: '',
+        companyName: '',
+        designation: '',
+        city: '',
+        state: '',
+        country: 'India',
+        profileComplete: false,
+      });
+    } catch (err: any) {
+      setError(err.message || 'Failed to add user');
+    } finally {
+      setSavingUser(false);
+    }
+  };
 
   if (!isAdmin) {
     return (
@@ -1009,6 +1108,13 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
               </div>
               <div className="flex gap-3">
                 <button
+                  onClick={() => setShowAddUserModal(true)}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition"
+                >
+                  <UserPlus size={16} />
+                  Add User
+                </button>
+                <button
                   onClick={fetchUsers}
                   disabled={loadingUsers}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition disabled:opacity-50"
@@ -1069,6 +1175,9 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                         </th>
                         <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">
                           Status
+                        </th>
+                        <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                          Actions
                         </th>
                       </tr>
                     </thead>
@@ -1166,6 +1275,29 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
                               </p>
                             </div>
                           </td>
+                          <td className="px-4 py-4">
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => setEditingUser(user)}
+                                className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 transition"
+                                title="Edit user"
+                              >
+                                <Pencil size={16} />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteUser(user.uid)}
+                                disabled={deletingUserId === user.uid}
+                                className="p-2 rounded-lg text-red-600 hover:bg-red-50 transition disabled:opacity-50"
+                                title="Delete user"
+                              >
+                                {deletingUserId === user.uid ? (
+                                  <RefreshCw size={16} className="animate-spin" />
+                                ) : (
+                                  <Trash2 size={16} />
+                                )}
+                              </button>
+                            </div>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -1174,6 +1306,243 @@ export default function AdminPage({ onNavigate }: AdminPageProps = {}) {
               </div>
             )}
           </section>
+        )}
+
+        {/* Edit User Modal */}
+        {editingUser && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setEditingUser(null)} />
+            <div className="relative z-10 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl p-6 space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-slate-900">Edit User Profile</h3>
+                <button
+                  onClick={() => setEditingUser(null)}
+                  className="p-2 rounded-lg hover:bg-slate-100 transition"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Full Name</label>
+                  <input
+                    type="text"
+                    value={editingUser.fullName || ''}
+                    onChange={(e) => setEditingUser({ ...editingUser, fullName: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Email</label>
+                  <input
+                    type="email"
+                    value={editingUser.email || ''}
+                    onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Phone</label>
+                  <input
+                    type="tel"
+                    value={editingUser.phone || ''}
+                    onChange={(e) => setEditingUser({ ...editingUser, phone: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Company Name</label>
+                  <input
+                    type="text"
+                    value={editingUser.companyName || ''}
+                    onChange={(e) => setEditingUser({ ...editingUser, companyName: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Designation</label>
+                  <input
+                    type="text"
+                    value={editingUser.designation || ''}
+                    onChange={(e) => setEditingUser({ ...editingUser, designation: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">City</label>
+                  <input
+                    type="text"
+                    value={editingUser.city || ''}
+                    onChange={(e) => setEditingUser({ ...editingUser, city: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">State</label>
+                  <input
+                    type="text"
+                    value={editingUser.state || ''}
+                    onChange={(e) => setEditingUser({ ...editingUser, state: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Country</label>
+                  <input
+                    type="text"
+                    value={editingUser.country || ''}
+                    onChange={(e) => setEditingUser({ ...editingUser, country: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={editingUser.profileComplete || false}
+                      onChange={(e) => setEditingUser({ ...editingUser, profileComplete: e.target.checked })}
+                      className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-slate-700">Profile Complete</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
+                <button
+                  onClick={() => setEditingUser(null)}
+                  className="px-4 py-2 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleUpdateUser(editingUser)}
+                  disabled={savingUser}
+                  className="px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+                >
+                  {savingUser ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Add User Modal */}
+        {showAddUserModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowAddUserModal(false)} />
+            <div className="relative z-10 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl p-6 space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-slate-900">Add New User</h3>
+                <button
+                  onClick={() => setShowAddUserModal(false)}
+                  className="p-2 rounded-lg hover:bg-slate-100 transition"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Full Name *</label>
+                  <input
+                    type="text"
+                    value={newUser.fullName || ''}
+                    onChange={(e) => setNewUser({ ...newUser, fullName: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    placeholder="Enter full name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Email *</label>
+                  <input
+                    type="email"
+                    value={newUser.email || ''}
+                    onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    placeholder="Enter email address"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Phone</label>
+                  <input
+                    type="tel"
+                    value={newUser.phone || ''}
+                    onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    placeholder="Enter phone number"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Company Name</label>
+                  <input
+                    type="text"
+                    value={newUser.companyName || ''}
+                    onChange={(e) => setNewUser({ ...newUser, companyName: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    placeholder="Enter company name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Designation</label>
+                  <input
+                    type="text"
+                    value={newUser.designation || ''}
+                    onChange={(e) => setNewUser({ ...newUser, designation: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    placeholder="Enter designation"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">City</label>
+                  <input
+                    type="text"
+                    value={newUser.city || ''}
+                    onChange={(e) => setNewUser({ ...newUser, city: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    placeholder="Enter city"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">State</label>
+                  <input
+                    type="text"
+                    value={newUser.state || ''}
+                    onChange={(e) => setNewUser({ ...newUser, state: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    placeholder="Enter state"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-600 uppercase">Country</label>
+                  <input
+                    type="text"
+                    value={newUser.country || ''}
+                    onChange={(e) => setNewUser({ ...newUser, country: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    placeholder="Enter country"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
+                <button
+                  onClick={() => setShowAddUserModal(false)}
+                  className="px-4 py-2 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAddUser}
+                  disabled={savingUser}
+                  className="px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+                >
+                  {savingUser ? 'Adding...' : 'Add User'}
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </main>
     </div>
