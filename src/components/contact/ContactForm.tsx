@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Mail, Phone, Globe, MapPin } from 'lucide-react';
 import WhatsAppIcon from '../icons/WhatsAppIcon';
 import EmailModal, { COMPANY_EMAIL } from '../EmailModal';
+import { handleEmailClick } from '../../utils/deviceUtils';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -98,7 +99,7 @@ ${formData.message}`;
                   <div>
                     <h3 className="font-semibold text-white mb-1">Email</h3>
                     <button
-                      onClick={() => setShowEmailModal(true)}
+                      onClick={() => handleEmailClick(() => setShowEmailModal(true))}
                       className="text-slate-300 hover:text-blue-400 transition-colors"
                     >
                       {COMPANY_EMAIL}

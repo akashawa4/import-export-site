@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Mail } from 'lucide-react';
 import WhatsAppIcon from '../icons/WhatsAppIcon';
 import EmailModal, { COMPANY_EMAIL } from '../EmailModal';
+import { handleEmailClick } from '../../utils/deviceUtils';
 
 export default function AboutCTA() {
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -28,7 +29,7 @@ export default function AboutCTA() {
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
-                onClick={() => setShowEmailModal(true)}
+                onClick={() => handleEmailClick(() => setShowEmailModal(true))}
                 className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-blue-900 font-semibold rounded-lg hover:bg-blue-50 hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 <Mail size={24} />

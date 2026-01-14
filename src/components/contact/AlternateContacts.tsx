@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Mail, Phone, Linkedin, Facebook, Instagram } from 'lucide-react';
 import WhatsAppIcon from '../icons/WhatsAppIcon';
 import EmailModal from '../EmailModal';
+import { handleEmailClick } from '../../utils/deviceUtils';
 
 export default function AlternateContacts() {
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -54,7 +55,7 @@ export default function AlternateContacts() {
                 Send us an email for detailed enquiries
               </p>
               <button
-                onClick={() => setShowEmailModal(true)}
+                onClick={() => handleEmailClick(() => setShowEmailModal(true))}
                 className="inline-flex items-center gap-2 text-blue-400 font-semibold hover:gap-3 transition-all duration-200"
               >
                 Send Email

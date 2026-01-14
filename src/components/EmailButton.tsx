@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { Mail } from 'lucide-react';
-import EmailModal from './EmailModal';
+import EmailModal, { COMPANY_EMAIL } from './EmailModal';
+import { handleEmailClick } from '../utils/deviceUtils';
 
 interface EmailButtonProps {
     variant?: 'default' | 'light' | 'minimal';
     showIcon?: boolean;
     className?: string;
 }
-
-const COMPANY_EMAIL = 'amritva009@amritvaoverseas.com';
 
 export default function EmailButton({ variant = 'default', showIcon = true, className = '' }: EmailButtonProps) {
     const [showModal, setShowModal] = useState(false);
@@ -19,10 +18,14 @@ export default function EmailButton({ variant = 'default', showIcon = true, clas
         minimal: 'text-blue-600 hover:text-blue-700',
     };
 
+    const handleClick = () => {
+        handleEmailClick(() => setShowModal(true));
+    };
+
     return (
         <>
             <button
-                onClick={() => setShowModal(true)}
+                onClick={handleClick}
                 className={`flex items-center gap-2 transition-colors ${baseStyles[variant]} ${className}`}
             >
                 {showIcon && <Mail size={16} />}

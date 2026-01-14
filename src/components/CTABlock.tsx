@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Mail } from 'lucide-react';
 import WhatsAppIcon from './icons/WhatsAppIcon';
 import EmailModal from './EmailModal';
+import { handleEmailClick } from '../utils/deviceUtils';
 
 export default function CTABlock() {
     const [showEmailModal, setShowEmailModal] = useState(false);
@@ -45,7 +46,7 @@ export default function CTABlock() {
                         </a>
 
                         <button
-                            onClick={() => setShowEmailModal(true)}
+                            onClick={() => handleEmailClick(() => setShowEmailModal(true))}
                             className="group inline-flex items-center justify-center gap-4 px-6 py-4 bg-white/90 text-slate-800 font-bold rounded-xl hover:bg-white transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-white/30"
                         >
                             <Mail size={24} className="transition-transform duration-300 group-hover:scale-110" />
