@@ -79,7 +79,7 @@ export default function FilterBar({
               </select>
             )}
 
-            {availableTypes.length > 0 && (
+            {selectedCategory === 'cow-dung' && availableTypes.length > 0 && (
               <select
                 value={selectedType}
                 onChange={(e) => onTypeChange(e.target.value)}
@@ -87,7 +87,7 @@ export default function FilterBar({
                   }`}
               >
                 <option value="all" className="bg-slate-800 text-white">
-                  {selectedCategory === 'towels' && selectedTowelType ? 'All Subtypes' : 'All Types'}
+                  All Types
                 </option>
                 {availableTypes.map((type) => (
                   <option key={type} value={type} className="bg-slate-800 text-white">

@@ -183,34 +183,27 @@ export const demoProducts: Product[] = [
 ];
 
 // Bath Line product types - exported for use in AdminPage
-export const towelTypesData: Record<string, { name: string; subtypes: string[] }> = {
+export const towelTypesData: Record<string, { name: string }> = {
   'Bathrobe': {
-    name: 'Bathrobe',
-    subtypes: ['Terry Bathrobe', 'Waffle Bathrobe']
+    name: 'Bathrobe'
   },
   'Bath Towel': {
-    name: 'Bath Towel',
-    subtypes: ['Thick Terry Cotton']
+    name: 'Bath Towel'
   },
   'Beach Towel': {
-    name: 'Beach Towel',
-    subtypes: ['Soft Terry Fabric']
+    name: 'Beach Towel'
   },
   'Face Towel': {
-    name: 'Face Towel',
-    subtypes: ['Skin-Friendly']
+    name: 'Face Towel'
   },
   'Kitchen Towel': {
-    name: 'Kitchen Towel',
-    subtypes: ['Durable Cotton']
+    name: 'Kitchen Towel'
   },
   'Napkin': {
-    name: 'Napkin',
-    subtypes: ['Cotton Napkin', 'Blended Fabric Napkin']
+    name: 'Napkin'
   },
   'Terry Kitchen Napkin': {
-    name: 'Terry Kitchen Napkin',
-    subtypes: ['Thick Terry']
+    name: 'Terry Kitchen Napkin'
   }
 };
 
@@ -593,13 +586,9 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
       filtered = filtered.filter((p) => p.productType === selectedTowelType);
     }
 
-    // Filter by subtype if selected
+    // Filter by type if selected
     if (selectedType !== 'all') {
-      // Filter by subtype if it exists, otherwise by productType
-      filtered = filtered.filter((p) =>
-        (p.productSubtype && p.productSubtype === selectedType) ||
-        (!p.productSubtype && p.productType === selectedType)
-      );
+      filtered = filtered.filter((p) => p.productType === selectedType);
     }
 
     if (searchQuery.trim()) {
@@ -639,18 +628,15 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps = {}) {
   const towelTypes = Object.keys(towelTypesData);
   const cowDungTypes = ['Fertilizer Use', 'Spiritual Use'];
 
-  // Get available types based on category and selected towel type
+  // Get available types based on category
   const availableTypes = useMemo(() => {
     if (selectedCategory === 'towels') {
-      if (selectedTowelType && towelTypesData[selectedTowelType]) {
-        return towelTypesData[selectedTowelType].subtypes;
-      }
-      return []; // Show empty if no towel type selected (subtypes will show in dropdown)
+      return towelTypes;
     } else if (selectedCategory === 'cow-dung') {
       return cowDungTypes;
     }
     return [];
-  }, [selectedCategory, selectedTowelType]);
+  }, [selectedCategory]);
 
   const handleCategorySelect = (categorySlug: string) => {
     // Navigate directly to products with URL update
